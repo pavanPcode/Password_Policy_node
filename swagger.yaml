@@ -1,0 +1,298 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "User Authentication API"
+  description: "APIs for user registration and login with password policy checks"
+basePath: "/"
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /register:
+    post:
+      summary: "Register a new user"
+      description: "Register a user after validating password against policy and storing secure info."
+      tags:
+        - auth
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            required:
+              - name
+              - username
+              - role
+            properties:
+              name:
+                type: string
+                example: "test12"
+              username:
+                type: string
+                example: "ravi6@domain.com"
+              role:
+                type: integer
+                example: 1
+      responses:
+        201:
+          description: "User registered successfully."
+        400:
+          description: "Validation failed or email already exists."
+        500:
+          description: "Server error"
+
+  /login:
+    post:
+      summary: "User Login"
+      description: "Login user with account lock, expiry, and failed attempts logic."
+      tags:
+        - auth
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            required:
+              - username
+              - password
+            properties:
+              username:
+                type: string
+                example: "ravi6@domain.com"
+              password:
+                type: string
+                example: "Test@1234"
+      responses:
+        200:
+          description: "Login successful."
+        401:
+          description: "Incorrect password"
+        403:
+          description: "Account locked or password expired"
+        404:
+          description: "User not found"
+        500:
+          description: "Login failed"
+  /UserChangePassword:
+    post:
+      tags:
+        - auth
+      summary: Change user's password
+      description: Change the user's password after validating the new password against the policy.
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            required:
+              - username
+              - new_password
+            properties:
+              username:
+                type: string
+                example: "ravi6@domain.com"
+              new_password:
+                type: string
+                example: "Test@1234567"
+      responses:
+        200:
+          description: Password changed successfully
+        400:
+          description: Validation failed or weak password
+        404:
+          description: User not found
+        500:
+          description: Server error
+  /adminChangePassword:
+    post:
+      tags:
+        - auth
+      summary: generate user's password to  TemporaryPassword
+      description: generate the user's password after validating the new password against the policy.
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            required:
+              - username
+            properties:
+              username:
+                type: string
+                example: "ravi6@domain.com"
+      responses:
+        200:
+          description: Password generated successfully
+        400:
+          description: Validation failed 
+        404:
+          description: User not found
+        500:
+          description: Server error
+  /updatepasswordPolicy:
+    post:
+      tags:
+        - Password Policy
+      summary: Update or create the password policy
+      description: "If a policy exists, it will be updated. If not, a new one will be created."
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            required:
+              - MinLength
+              - RequireUppercase
+              - RequireLowercase
+              - RequireDigit
+              - RequireSpecialChar
+              - ExpiryDays
+              - MaxFailedAttempts
+              - ReuseHistoryCount
+              - LockoutDurationMinutes
+              - sessionTimeoutMinutes
+            properties:
+              MinLength:
+                type: integer
+                example: 8
+              RequireUppercase:
+                type: integer
+                enum: [0, 1]
+                example: 1
+              RequireLowercase:
+                type: integer
+                enum: [0, 1]
+                example: 1
+              RequireDigit:
+                type: integer
+                enum: [0, 1]
+                example: 1
+              RequireSpecialChar:
+                type: integer
+                enum: [0, 1]
+                example: 1
+              ExpiryDays:
+                type: integer
+                example: 75
+              MaxFailedAttempts:
+                type: integer
+                example: 5
+              ReuseHistoryCount:
+                type: integer
+                example: 5
+              LockoutDurationMinutes:
+                type: integer
+                example: 15
+              sessionTimeoutMinutes:
+                type: integer
+                example: 5
+      responses:
+        200:
+          description: Password policy updated or created
+        500:
+          description: Server error
+
+  /getPasswordPolicy:
+    get:
+      tags:
+        - Password Policy
+      summary: Get current password policy
+      description: Retrieve the currently active password policy.
+      responses:
+        200:
+          description: Current password policy returned
+          schema:
+            type: object
+            properties:
+              MinLength:
+                type: integer
+                example: 8
+              RequireUppercase:
+                type: integer
+                example: 1
+              RequireLowercase:
+                type: integer
+                example: 1
+              RequireDigit:
+                type: integer
+                example: 1
+              RequireSpecialChar:
+                type: integer
+                example: 1
+              ExpiryDays:
+                type: integer
+                example: 75
+              MaxFailedAttempts:
+                type: integer
+                example: 5
+              ReuseHistoryCount:
+                type: integer
+                example: 5
+              LockoutDurationMinutes:
+                type: integer
+                example: 15
+        404:
+          description: Policy not found
+        500:
+          description: Server error
+  /addActivity:
+    post:
+      tags:
+        - Activity
+      summary: Insert user activity
+      description: Logs a new activity record for the user.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            required:
+              - ActivityType
+              - PerformedBy
+              - PerformedOn
+            properties:
+              ActivityType:
+                type: integer
+                example: 1
+              PerformedBy:
+                type: integer
+                example: 2
+              PerformedOn:
+                type: string
+                format: date-time
+                example: "2025-07-01 15:36:06"
+              Notes:
+                type: string
+                example: "tsgs"
+              Location:
+                type: string
+                example: "login"
+      responses:
+        200:
+          description: Activity inserted successfully
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Activity inserted successfully
+              status:
+                type: boolean
+                example: true
+        400:
+          description: Missing required fields
+        500:
+          description: Failed to insert activity
