@@ -5,7 +5,7 @@ info:
   description: "APIs for user registration and login with password policy checks"
 basePath: "/"
 schemes:
-  - http
+  - https
 consumes:
   - application/json
 produces:
