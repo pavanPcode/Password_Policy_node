@@ -369,5 +369,5 @@ app.post('/addActivity', async (req, res) => {
 host = '0.0.0.0'
 
 sql.connect(dbConfig).then(() => {
-  app.listen(3000,host, () => console.log("Server running on port 3000"));
+  app.listen(8080,host, () => console.log("Server running on port 3000"));
 }).catch(err => console.log("DB Connection failed:", err));
