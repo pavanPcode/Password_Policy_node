@@ -100,6 +100,9 @@ paths:
               new_password:
                 type: string
                 example: "Test@1234567"
+              old_password:
+                type: string
+                example: "Test@1234567"
       responses:
         200:
           description: Password changed successfully
