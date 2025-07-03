@@ -371,31 +371,54 @@ app.get("/getPasswordPolicy", async (req, res) => {
   }
 });
 
-// app.post('/addActivity', async (req, res) => {
-//   try {
-//     const { ActivityType, PerformedBy, PerformedOn, Notes, Location } = req.body;
+app.post('/addActivity', async (req, res) => {
+  try {
+    const { ActivityType, PerformedBy, PerformedOn, Notes, Location } = req.body;
 
-//     if (!ActivityType || !PerformedBy || !PerformedOn) {
-//       return res.status(400).json({ message: 'Missing required fields', status: false, ResultData: []  });
-//     }
+    if (!ActivityType || !PerformedBy || !PerformedOn) {
+      return res.status(400).json({ message: 'Missing required fields', status: false, ResultData: []  });
+    }
 
-//     const safeNotes = Notes || '';
-//     const safeLocation = Location || '';
+    const safeNotes = Notes || '';
+    const safeLocation = Location || '';
 
-//     await sql.connect(dbConfig);
-//     await sql.query`
-//       INSERT INTO [dbo].[pereco_ActivityLog] (ActivityType, PerformedBy, PerformedOn, Notes, Location)
-//       VALUES (${ActivityType}, ${PerformedBy}, ${PerformedOn}, ${safeNotes}, ${safeLocation})
-//     `;
+    await sql.connect(dbConfig);
+    await sql.query`
+      INSERT INTO [dbo].[pereco_ActivityLog] (ActivityType, PerformedBy, PerformedOn, Notes, Location)
+      VALUES (${ActivityType}, ${PerformedBy}, ${PerformedOn}, ${safeNotes}, ${safeLocation})
+    `;
 
-//     res.json({ message: 'Activity inserted successfully', status: true, ResultData: []  });
-//   } catch (error) {
-//     console.error('Insert error:', error.message, error);  // Updated for better logs
-//     res.status(500).json({ message: 'Failed to insert activity', status: false, ResultData: []  });
-//   }
-// });
+    res.json({ message: 'Activity inserted successfully', status: true, ResultData: []  });
+  } catch (error) {
+    console.error('Insert error:', error.message, error);  // Updated for better logs
+    res.status(500).json({ message: 'Failed to insert activity', status: false, ResultData: []  });
+  }
+});
 
+app.get('/getActivities', async (req, res) => {
+  try {
+    await sql.connect(dbConfig);
 
+    const result = await sql.query(`
+      SELECT ActivityType, PerformedBy, PerformedOn, Notes, Location 
+      FROM [dbo].[pereco_ActivityLog] 
+      ORDER BY PerformedOn DESC
+    `);
+
+    res.json({
+      message: "Activities fetched successfully",
+      status: true,
+      ResultData: result.recordset
+    });
+  } catch (error) {
+    console.error("Fetch error:", error.message, error);
+    res.status(500).json({
+      message: "Failed to fetch activities",
+      status: false,
+      ResultData: []
+    });
+  }
+});
 
 
 app.post('/addActivity', async (req, res) => {

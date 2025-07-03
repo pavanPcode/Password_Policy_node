@@ -1,6 +1,7 @@
 const express = require("express");
 const dbUtility = require("./dbUtility.js");
 const { OperationEnums } = require("./utilityEnum.js");
+const  exeQuery  = require("./exeQuery.js");
 
 // const app = express();
 const router = express.Router();
@@ -97,5 +98,26 @@ router.get("/getUsers", (req, res) => {
 // app.listen(port, () => {
 //   console.log(`services running on port ${port}`);
 // });
+
+router.get('/getmenu', (req, res) => {
+    const {RoleId } = req.query;
+    const JsonData = { "RoleId":RoleId };
+    exeQuery.GetMenu(JsonData, (error, results) => {
+        if (error) {
+            return res.status(500).json({ error: error.message });
+        }
+        //console.log(results);
+        exeQuery.GetMenuNodes(results, (err, MenuList) => {
+            if (err) {
+                return res.status(500).json({ error: err.message, Status: false });
+            }
+            res.json({
+                ResultData: MenuList,
+                Status: true
+            });
+        });
+    });
+});
+
 
 module.exports = router;

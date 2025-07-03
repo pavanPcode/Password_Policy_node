@@ -298,6 +298,61 @@ paths:
           description: Missing required fields
         500:
           description: Failed to insert activity
+  /getActivities:
+    get:
+      tags:
+        - Activity
+      summary: Retrieve all activity logs
+      description: Returns a list of all user activity logs sorted by PerformedOn in descending order.
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Successfully retrieved activity logs
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Activities fetched successfully
+              status:
+                type: boolean
+                example: true
+              ResultData:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    ActivityType:
+                      type: integer
+                      example: 1
+                    PerformedBy:
+                      type: string
+                      example: "admin"
+                    PerformedOn:
+                      type: string
+                      format: date-time
+                      example: "2025-07-03T16:32:00.000Z"
+                    Notes:
+                      type: string
+                      example: Checked HVAC system
+                    Location:
+                      type: string
+                      example: Server Room
+        500:
+          description: Failed to fetch activities
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Failed to fetch activities
+              status:
+                type: boolean
+                example: false
+              ResultData:
+                type: array
+                example: []
   /GetAHUMachines:
     get:
       tags:
