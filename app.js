@@ -373,7 +373,7 @@ app.get("/getPasswordPolicy", async (req, res) => {
 
 app.post('/addActivity', async (req, res) => {
   try {
-    const { ActivityType, PerformedBy, PerformedOn, Notes, Location } = req.body;
+    const { ActivityType, PerformedBy, PerformedOn, Notes, Location,IsSucces,LogType } = req.body;
 
     if (!ActivityType || !PerformedBy || !PerformedOn) {
       return res.status(400).json({ message: 'Missing required fields', status: false, ResultData: []  });
@@ -384,8 +384,8 @@ app.post('/addActivity', async (req, res) => {
 
     await sql.connect(dbConfig);
     await sql.query`
-      INSERT INTO [dbo].[pereco_ActivityLog] (ActivityType, PerformedBy, PerformedOn, Notes, Location)
-      VALUES (${ActivityType}, ${PerformedBy}, ${PerformedOn}, ${safeNotes}, ${safeLocation})
+      INSERT INTO [dbo].[pereco_ActivityLog] (ActivityType, PerformedBy, PerformedOn, Notes, Location,IsSucces,LogType)
+      VALUES (${ActivityType}, ${PerformedBy}, ${PerformedOn}, ${safeNotes}, ${safeLocation}, ${IsSucces}, 2)
     `;
 
     res.json({ message: 'Activity inserted successfully', status: true, ResultData: []  });
@@ -400,7 +400,7 @@ app.get('/getActivities', async (req, res) => {
     await sql.connect(dbConfig);
 
     const result = await sql.query(`
-      SELECT ActivityType, PerformedBy, PerformedOn, Notes, Location 
+      SELECT ActivityType, PerformedBy, PerformedOn, Notes, Location ,IsSucces,LogType
       FROM [dbo].[pereco_ActivityLog] 
       ORDER BY PerformedOn DESC
     `);
@@ -421,27 +421,27 @@ app.get('/getActivities', async (req, res) => {
 });
 
 
-app.post('/addActivity', async (req, res) => {
-  try {
-    const { ActivityType, PerformedBy, Notes, Location } = req.body;
+// app.post('/addActivity', async (req, res) => {
+//   try {
+//     const { ActivityType, PerformedBy, Notes, Location } = req.body;
 
-    const result = await addActivityLog(
-      ActivityType,
-      PerformedBy,
-      Notes || '',
-      Location || ''
-    );
+//     const result = await addActivityLog(
+//       ActivityType,
+//       PerformedBy,
+//       Notes || '',
+//       Location || ''
+//     );
 
-    if (!result.success) {
-      return res.status(400).json({ message: result.message, status: false, ResultData: [] });
-    }
+//     if (!result.success) {
+//       return res.status(400).json({ message: result.message, status: false, ResultData: [] });
+//     }
 
-    res.json({ message: result.message, status: true, ResultData: [] });
-  } catch (error) {
-    console.error('Unexpected error:', error.message);
-    res.status(500).json({ message: 'Internal server error', status: false, ResultData: [] });
-  }
-});
+//     res.json({ message: result.message, status: true, ResultData: [] });
+//   } catch (error) {
+//     console.error('Unexpected error:', error.message);
+//     res.status(500).json({ message: 'Internal server error', status: false, ResultData: [] });
+//   }
+// });
 
 '---------------------------------------------------'
 

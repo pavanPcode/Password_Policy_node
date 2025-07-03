@@ -282,6 +282,9 @@ paths:
               Location:
                 type: string
                 example: "login"
+              IsSucces:
+                type: bit
+                example: 1
       responses:
         200:
           description: Activity inserted successfully
