@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 const swaggerUi = require("swagger-ui-express");
 const YAML = require("yamljs");
 const cors = require("cors"); // ✅ Import CORS
+const screenRoutes = require("./server");
 
 const app = express();
 app.use(express.json());
@@ -14,6 +15,8 @@ const swaggerDocument = YAML.load('./swagger.yaml');
 // For Swagger UI at /api-docs
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
+// Mount all routes under /api
+app.use("/api", screenRoutes);
 
 const dbConfig = {
   user: "RNDAdmin",
