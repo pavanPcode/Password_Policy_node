@@ -338,36 +338,484 @@ app.get("/getPasswordPolicy", async (req, res) => {
   }
 });
 
-app.post('/addActivity', async (req, res) => {
+// app.post('/addActivity', async (req, res) => {
+//   try {
+//     const { ActivityType, PerformedBy, PerformedOn, Notes, Location } = req.body;
+
+//     if (!ActivityType || !PerformedBy || !PerformedOn) {
+//       return res.status(400).json({ message: 'Missing required fields', status: false, ResultData: []  });
+//     }
+
+//     const safeNotes = Notes || '';
+//     const safeLocation = Location || '';
+
+//     await sql.connect(dbConfig);
+//     await sql.query`
+//       INSERT INTO [dbo].[pereco_ActivityLog] (ActivityType, PerformedBy, PerformedOn, Notes, Location)
+//       VALUES (${ActivityType}, ${PerformedBy}, ${PerformedOn}, ${safeNotes}, ${safeLocation})
+//     `;
+
+//     res.json({ message: 'Activity inserted successfully', status: true, ResultData: []  });
+//   } catch (error) {
+//     console.error('Insert error:', error.message, error);  // Updated for better logs
+//     res.status(500).json({ message: 'Failed to insert activity', status: false, ResultData: []  });
+//   }
+// });
+
+async function addActivityLog(ActivityType, PerformedBy, Notes, Location = '') {
+  console.log(ActivityType, PerformedBy, Notes, Location = '')
+  if (!ActivityType || !PerformedBy ) {
+    return { success: false, message: 'Missing required fields' };
+  }
+  let PerformedOn = new Date(); // assuming current timestamp
+
   try {
-    const { ActivityType, PerformedBy, PerformedOn, Notes, Location } = req.body;
-
-    if (!ActivityType || !PerformedBy || !PerformedOn) {
-      return res.status(400).json({ message: 'Missing required fields', status: false, ResultData: []  });
-    }
-
-    const safeNotes = Notes || '';
-    const safeLocation = Location || '';
-
     await sql.connect(dbConfig);
     await sql.query`
       INSERT INTO [dbo].[pereco_ActivityLog] (ActivityType, PerformedBy, PerformedOn, Notes, Location)
-      VALUES (${ActivityType}, ${PerformedBy}, ${PerformedOn}, ${safeNotes}, ${safeLocation})
+      VALUES (${ActivityType}, ${PerformedBy}, ${PerformedOn}, ${Notes}, ${Location})
     `;
-
-    res.json({ message: 'Activity inserted successfully', status: true, ResultData: []  });
+    return { success: true, message: 'Activity inserted successfully' };
   } catch (error) {
-    console.error('Insert error:', error.message, error);  // Updated for better logs
-    res.status(500).json({ message: 'Failed to insert activity', status: false, ResultData: []  });
+    console.error('DB Insert Error:', error.message, error);
+    return { success: false, message: 'Failed to insert activity' };
+  }
+}
+
+
+app.post('/addActivity', async (req, res) => {
+  try {
+    const { ActivityType, PerformedBy, Notes, Location } = req.body;
+
+    const result = await addActivityLog(
+      ActivityType,
+      PerformedBy,
+      Notes || '',
+      Location || ''
+    );
+
+    if (!result.success) {
+      return res.status(400).json({ message: result.message, status: false, ResultData: [] });
+    }
+
+    res.json({ message: result.message, status: true, ResultData: [] });
+  } catch (error) {
+    console.error('Unexpected error:', error.message);
+    res.status(500).json({ message: 'Internal server error', status: false, ResultData: [] });
+  }
+});
+
+'---------------------------------------------------'
+
+app.get('/GetAHUMachines', async (req, res) => {
+  try {
+    // let ActivityType = '1';
+    // let PerformedBy = '2';
+    // let Notes = 'GetAHUMachines';
+    // let Location = '';
+    const result = await addActivityLog('1','2','GetAHUMachines' ,'');
+
+    if (!result.success) {
+      return res.status(400).json({ message: result.message, status: false, ResultData: [] });
+    }
+    res.json({ message: result.message, status: true, ResultData: [] });
+  } catch (error) {
+    console.error('Unexpected error:', error.message);
+    res.status(500).json({ message: 'Internal server error', status: false, ResultData: [] });
+  }
+});
+
+app.post('/AddAHUMachines', async (req, res) => {
+  try {
+    const result = await addActivityLog('2','2','AddAHUMachines' ,'');
+
+    if (!result.success) {
+      return res.status(400).json({ message: result.message, status: false, ResultData: [] });
+    }
+    res.json({ message: result.message, status: true, ResultData: [] });
+  } catch (error) {
+    console.error('Unexpected error:', error.message);
+    res.status(500).json({ message: 'Internal server error', status: false, ResultData: [] });
+  }
+});
+
+
+app.post('/EditAHUMachines', async (req, res) => {
+  try {
+    const result = await addActivityLog('3','2','EditAHUMachines' ,'');
+
+    if (!result.success) {
+      return res.status(400).json({ message: result.message, status: false, ResultData: [] });
+    }
+    res.json({ message: result.message, status: true, ResultData: [] });
+  } catch (error) {
+    console.error('Unexpected error:', error.message);
+    res.status(500).json({ message: 'Internal server error', status: false, ResultData: [] });
+  }
+});
+
+app.post('/DeleteAHUMachines', async (req, res) => {
+  try {
+    const result = await addActivityLog('4','2','DeleteAHUMachines' ,'');
+
+    if (!result.success) {
+      return res.status(400).json({ message: result.message, status: false, ResultData: [] });
+    }
+    res.json({ message: result.message, status: true, ResultData: [] });
+  } catch (error) {
+    console.error('Unexpected error:', error.message);
+    res.status(500).json({ message: 'Internal server error', status: false, ResultData: [] });
+  }
+});
+
+
+app.post('/DeleteAHUFilters', async (req, res) => {
+  try {
+    const result = await addActivityLog('5','2','DeleteAHUFilters' ,'');
+
+    if (!result.success) {
+      return res.status(400).json({ message: result.message, status: false, ResultData: [] });
+    }
+    res.json({ message: result.message, status: true, ResultData: [] });
+  } catch (error) {
+    console.error('Unexpected error:', error.message);
+    res.status(500).json({ message: 'Internal server error', status: false, ResultData: [] });
+  }
+});
+
+
+app.post('/EditAHUFilters', async (req, res) => {
+  try {
+    const result = await addActivityLog('6','2','EditAHUFilters' ,'');
+
+    if (!result.success) {
+      return res.status(400).json({ message: result.message, status: false, ResultData: [] });
+    }
+    res.json({ message: result.message, status: true, ResultData: [] });
+  } catch (error) {
+    console.error('Unexpected error:', error.message);
+    res.status(500).json({ message: 'Internal server error', status: false, ResultData: [] });
   }
 });
 
 
 
+app.post('/AddAHUFilters', async (req, res) => {
+  try {
+    const result = await addActivityLog('7','2','AddAHUFilters' ,'');
 
+    if (!result.success) {
+      return res.status(400).json({ message: result.message, status: false, ResultData: [] });
+    }
+    res.json({ message: result.message, status: true, ResultData: [] });
+  } catch (error) {
+    console.error('Unexpected error:', error.message);
+    res.status(500).json({ message: 'Internal server error', status: false, ResultData: [] });
+  }
+});
+
+
+app.get('/GetAHUFilters', async (req, res) => {
+  try {
+    const result = await addActivityLog('8','2','GetAHUFilters' ,'');
+
+    if (!result.success) {
+      return res.status(400).json({ message: result.message, status: false, ResultData: [] });
+    }
+    res.json({ message: result.message, status: true, ResultData: [] });
+  } catch (error) {
+    console.error('Unexpected error:', error.message);
+    res.status(500).json({ message: 'Internal server error', status: false, ResultData: [] });
+  }
+});
+
+
+app.post('/AHUFiltersUpdateStatus', async (req, res) => {
+  try {
+    const result = await addActivityLog('9','2','AHUFiltersUpdateStatus' ,'');
+
+    if (!result.success) {
+      return res.status(400).json({ message: result.message, status: false, ResultData: [] });
+    }
+    res.json({ message: result.message, status: true, ResultData: [] });
+  } catch (error) {
+    console.error('Unexpected error:', error.message);
+    res.status(500).json({ message: 'Internal server error', status: false, ResultData: [] });
+  }
+});
+
+app.post('/AHUFilterGenerateBarcode', async (req, res) => {
+  try {
+    const result = await addActivityLog('10','2','AHUFilterGenerateBarcode' ,'');
+
+    if (!result.success) {
+      return res.status(400).json({ message: result.message, status: false, ResultData: [] });
+    }
+    res.json({ message: result.message, status: true, ResultData: [] });
+  } catch (error) {
+    console.error('Unexpected error:', error.message);
+    res.status(500).json({ message: 'Internal server error', status: false, ResultData: [] });
+  }
+});
+
+
+app.get('/getNotifications', async (req, res) => {
+  try {
+    const result = await addActivityLog('11','2','getNotifications' ,'');
+
+    if (!result.success) {
+      return res.status(400).json({ message: result.message, status: false, ResultData: [] });
+    }
+    res.json({ message: result.message, status: true, ResultData: [] });
+  } catch (error) {
+    console.error('Unexpected error:', error.message);
+    res.status(500).json({ message: 'Internal server error', status: false, ResultData: [] });
+  }
+});
+
+
+app.get('/AuditTrial', async (req, res) => {
+  try {
+    const result = await addActivityLog('12','2','AuditTrial' ,'');
+
+    if (!result.success) {
+      return res.status(400).json({ message: result.message, status: false, ResultData: [] });
+    }
+    res.json({ message: result.message, status: true, ResultData: [] });
+  } catch (error) {
+    console.error('Unexpected error:', error.message);
+    res.status(500).json({ message: 'Internal server error', status: false, ResultData: [] });
+  }
+});
+
+
+
+app.get('/getSchedule', async (req, res) => {
+  try {
+    const result = await addActivityLog('13','2','Schedule' ,'');
+
+    if (!result.success) {
+      return res.status(400).json({ message: result.message, status: false, ResultData: [] });
+    }
+    res.json({ message: result.message, status: true, ResultData: [] });
+  } catch (error) {
+    console.error('Unexpected error:', error.message);
+    res.status(500).json({ message: 'Internal server error', status: false, ResultData: [] });
+  }
+});
+
+
+app.get('/getDeviationsAlarms', async (req, res) => {
+  try {
+    const result = await addActivityLog('14','2','getDeviationsAlarms' ,'');
+
+    if (!result.success) {
+      return res.status(400).json({ message: result.message, status: false, ResultData: [] });
+    }
+    res.json({ message: result.message, status: true, ResultData: [] });
+  } catch (error) {
+    console.error('Unexpected error:', error.message);
+    res.status(500).json({ message: 'Internal server error', status: false, ResultData: [] });
+  }
+});
+
+
+app.get('/getReplacementList', async (req, res) => {
+  try {
+    const result = await addActivityLog('15','2','getReplacementList' ,'');
+
+    if (!result.success) {
+      return res.status(400).json({ message: result.message, status: false, ResultData: [] });
+    }
+    res.json({ message: result.message, status: true, ResultData: [] });
+  } catch (error) {
+    console.error('Unexpected error:', error.message);
+    res.status(500).json({ message: 'Internal server error', status: false, ResultData: [] });
+  }
+});
+
+app.get('/getRetirementList', async (req, res) => {
+  try {
+    const result = await addActivityLog('16','2','getRetirementList' ,'');
+
+    if (!result.success) {
+      return res.status(400).json({ message: result.message, status: false, ResultData: [] });
+    }
+    res.json({ message: result.message, status: true, ResultData: [] });
+  } catch (error) {
+    console.error('Unexpected error:', error.message);
+    res.status(500).json({ message: 'Internal server error', status: false, ResultData: [] });
+  }
+});
+
+
+app.get('/getUser', async (req, res) => {
+  try {
+    const result = await addActivityLog('17','2','getUser' ,'');
+
+    if (!result.success) {
+      return res.status(400).json({ message: result.message, status: false, ResultData: [] });
+    }
+    res.json({ message: result.message, status: true, ResultData: [] });
+  } catch (error) {
+    console.error('Unexpected error:', error.message);
+    res.status(500).json({ message: 'Internal server error', status: false, ResultData: [] });
+  }
+});
+
+
+app.post('/AddUser', async (req, res) => {
+  try {
+    const result = await addActivityLog('18','2','AddUser' ,'');
+
+    if (!result.success) {
+      return res.status(400).json({ message: result.message, status: false, ResultData: [] });
+    }
+    res.json({ message: result.message, status: true, ResultData: [] });
+  } catch (error) {
+    console.error('Unexpected error:', error.message);
+    res.status(500).json({ message: 'Internal server error', status: false, ResultData: [] });
+  }
+});
+
+
+app.post('/EditUser', async (req, res) => {
+  try {
+    const result = await addActivityLog('19','2','EditUser' ,'');
+
+    if (!result.success) {
+      return res.status(400).json({ message: result.message, status: false, ResultData: [] });
+    }
+    res.json({ message: result.message, status: true, ResultData: [] });
+  } catch (error) {
+    console.error('Unexpected error:', error.message);
+    res.status(500).json({ message: 'Internal server error', status: false, ResultData: [] });
+  }
+});
+
+
+app.post('/DeleteUser', async (req, res) => {
+  try {
+    const result = await addActivityLog('20','2','DeleteUser' ,'');
+
+    if (!result.success) {
+      return res.status(400).json({ message: result.message, status: false, ResultData: [] });
+    }
+    res.json({ message: result.message, status: true, ResultData: [] });
+  } catch (error) {
+    console.error('Unexpected error:', error.message);
+    res.status(500).json({ message: 'Internal server error', status: false, ResultData: [] });
+  }
+});
+
+app.get('/getRolePermissions', async (req, res) => {
+  try {
+    const result = await addActivityLog('21','2','getRolePermissions' ,'');
+
+    if (!result.success) {
+      return res.status(400).json({ message: result.message, status: false, ResultData: [] });
+    }
+    res.json({ message: result.message, status: true, ResultData: [] });
+  } catch (error) {
+    console.error('Unexpected error:', error.message);
+    res.status(500).json({ message: 'Internal server error', status: false, ResultData: [] });
+  }
+});
+
+
+app.get('/getFilterTypes', async (req, res) => {
+  try {
+    const result = await addActivityLog('22','2','getFilterTypes' ,'');
+
+    if (!result.success) {
+      return res.status(400).json({ message: result.message, status: false, ResultData: [] });
+    }
+    res.json({ message: result.message, status: true, ResultData: [] });
+  } catch (error) {
+    console.error('Unexpected error:', error.message);
+    res.status(500).json({ message: 'Internal server error', status: false, ResultData: [] });
+  }
+});
+
+
+app.post('/addFilterTypes', async (req, res) => {
+  try {
+    const result = await addActivityLog('21','2','addFilterTypes' ,'');
+
+    if (!result.success) {
+      return res.status(400).json({ message: result.message, status: false, ResultData: [] });
+    }
+    res.json({ message: result.message, status: true, ResultData: [] });
+  } catch (error) {
+    console.error('Unexpected error:', error.message);
+    res.status(500).json({ message: 'Internal server error', status: false, ResultData: [] });
+  }
+});
+
+
+app.post('/editFilterTypes', async (req, res) => {
+  try {
+    const result = await addActivityLog('22','2','editFilterTypes' ,'');
+
+    if (!result.success) {
+      return res.status(400).json({ message: result.message, status: false, ResultData: [] });
+    }
+    res.json({ message: result.message, status: true, ResultData: [] });
+  } catch (error) {
+    console.error('Unexpected error:', error.message);
+    res.status(500).json({ message: 'Internal server error', status: false, ResultData: [] });
+  }
+});
+
+
+app.post('/deleteFilterTypes', async (req, res) => {
+  try {
+    const result = await addActivityLog('23','2','deleteFilterTypes' ,'');
+
+    if (!result.success) {
+      return res.status(400).json({ message: result.message, status: false, ResultData: [] });
+    }
+    res.json({ message: result.message, status: true, ResultData: [] });
+  } catch (error) {
+    console.error('Unexpected error:', error.message);
+    res.status(500).json({ message: 'Internal server error', status: false, ResultData: [] });
+  }
+});
+
+
+app.get('/getDashboard', async (req, res) => {
+  try {
+    const result = await addActivityLog('24','2','getDashboard' ,'');
+
+    if (!result.success) {
+      return res.status(400).json({ message: result.message, status: false, ResultData: [] });
+    }
+    res.json({ message: result.message, status: true, ResultData: [] });
+  } catch (error) {
+    console.error('Unexpected error:', error.message);
+    res.status(500).json({ message: 'Internal server error', status: false, ResultData: [] });
+  }
+});
+
+
+
+app.get('/getSidebar', async (req, res) => {
+  try {
+    const result = await addActivityLog('25','2','getSidebar' ,'');
+
+    if (!result.success) {
+      return res.status(400).json({ message: result.message, status: false, ResultData: [] });
+    }
+    res.json({ message: result.message, status: true, ResultData: [] });
+  } catch (error) {
+    console.error('Unexpected error:', error.message);
+    res.status(500).json({ message: 'Internal server error', status: false, ResultData: [] });
+  }
+});
 
 host = '0.0.0.0'
 
 sql.connect(dbConfig).then(() => {
   app.listen(8080,host, () => console.log("Server running on port 3000"));
 }).catch(err => console.log("DB Connection failed:", err));
+

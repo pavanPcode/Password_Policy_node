@@ -4,8 +4,7 @@ info:
   title: "User Authentication API"
   description: "APIs for user registration and login with password policy checks"
 basePath: "/"
-schemes:
-  - https
+
 consumes:
   - application/json
 produces:
@@ -283,6 +282,708 @@ paths:
               Location:
                 type: string
                 example: "login"
+      responses:
+        200:
+          description: Activity inserted successfully
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Activity inserted successfully
+              status:
+                type: boolean
+                example: true
+        400:
+          description: Missing required fields
+        500:
+          description: Failed to insert activity
+  /GetAHUMachines:
+    get:
+      tags:
+        - ALL
+      summary:  activity
+      description: Logs .
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Activity inserted successfully
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Activity inserted successfully
+              status:
+                type: boolean
+                example: true
+        400:
+          description: Missing required fields
+        500:
+          description: Failed to insert activity
+  /AddAHUMachines:
+    post:
+      tags:
+        - ALL
+      summary:  activity
+      description: Logs .
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Activity inserted successfully
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Activity inserted successfully
+              status:
+                type: boolean
+                example: true
+        400:
+          description: Missing required fields
+        500:
+          description: Failed to insert activity
+  /EditAHUMachines:
+    post:
+      tags:
+        - ALL
+      summary:  activity
+      description: Logs .
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Activity inserted successfully
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Activity inserted successfully
+              status:
+                type: boolean
+                example: true
+        400:
+          description: Missing required fields
+        500:
+          description: Failed to insert activity
+  /DeleteAHUMachines:
+    post:
+      tags:
+        - ALL
+      summary:  activity
+      description: Logs .
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Activity inserted successfully
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Activity inserted successfully
+              status:
+                type: boolean
+                example: true
+        400:
+          description: Missing required fields
+        500:
+          description: Failed to insert activity
+  /DeleteAHUFilters:
+    post:
+      tags:
+        - ALL
+      summary:  activity
+      description: Logs .
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Activity inserted successfully
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Activity inserted successfully
+              status:
+                type: boolean
+                example: true
+        400:
+          description: Missing required fields
+        500:
+          description: Failed to insert activity
+  /EditAHUFilters:
+    post:
+      tags:
+        - ALL
+      summary:  activity
+      description: Logs .
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Activity inserted successfully
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Activity inserted successfully
+              status:
+                type: boolean
+                example: true
+        400:
+          description: Missing required fields
+        500:
+          description: Failed to insert activity
+  /AddAHUFilters:
+    post:
+      tags:
+        - ALL
+      summary:  activity
+      description: Logs .
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Activity inserted successfully
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Activity inserted successfully
+              status:
+                type: boolean
+                example: true
+        400:
+          description: Missing required fields
+        500:
+          description: Failed to insert activity
+  /GetAHUFilters:
+    get:
+      tags:
+        - ALL
+      summary:  activity
+      description: Logs .
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Activity inserted successfully
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Activity inserted successfully
+              status:
+                type: boolean
+                example: true
+        400:
+          description: Missing required fields
+        500:
+          description: Failed to insert activity
+  /AHUFiltersUpdateStatus:
+    post:
+      tags:
+        - ALL
+      summary:  activity
+      description: Logs .
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Activity inserted successfully
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Activity inserted successfully
+              status:
+                type: boolean
+                example: true
+        400:
+          description: Missing required fields
+        500:
+          description: Failed to insert activity
+  /AHUFilterGenerateBarcode:
+    post:
+      tags:
+        - ALL
+      summary:  activity
+      description: Logs .
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Activity inserted successfully
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Activity inserted successfully
+              status:
+                type: boolean
+                example: true
+        400:
+          description: Missing required fields
+        500:
+          description: Failed to insert activity
+  /getNotifications:
+    get:
+      tags:
+        - ALL
+      summary:  activity
+      description: Logs .
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Activity inserted successfully
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Activity inserted successfully
+              status:
+                type: boolean
+                example: true
+        400:
+          description: Missing required fields
+        500:
+          description: Failed to insert activity
+  /AuditTrial:
+    get:
+      tags:
+        - ALL
+      summary:  activity
+      description: Logs .
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Activity inserted successfully
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Activity inserted successfully
+              status:
+                type: boolean
+                example: true
+        400:
+          description: Missing required fields
+        500:
+          description: Failed to insert activity
+  /getSchedule:
+    get:
+      tags:
+        - ALL
+      summary:  activity
+      description: Logs .
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Activity inserted successfully
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Activity inserted successfully
+              status:
+                type: boolean
+                example: true
+        400:
+          description: Missing required fields
+        500:
+          description: Failed to insert activity
+  /getDeviationsAlarms:
+    get:
+      tags:
+        - ALL
+      summary:  activity
+      description: Logs .
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Activity inserted successfully
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Activity inserted successfully
+              status:
+                type: boolean
+                example: true
+        400:
+          description: Missing required fields
+        500:
+          description: Failed to insert activity
+  /getReplacementList:
+    get:
+      tags:
+        - ALL
+      summary:  activity
+      description: Logs .
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Activity inserted successfully
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Activity inserted successfully
+              status:
+                type: boolean
+                example: true
+        400:
+          description: Missing required fields
+        500:
+          description: Failed to insert activity
+  /getRetirementList:
+    get:
+      tags:
+        - ALL
+      summary:  activity
+      description: Logs .
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Activity inserted successfully
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Activity inserted successfully
+              status:
+                type: boolean
+                example: true
+        400:
+          description: Missing required fields
+        500:
+          description: Failed to insert activity
+  /getUser:
+    get:
+      tags:
+        - ALL
+      summary:  activity
+      description: Logs .
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Activity inserted successfully
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Activity inserted successfully
+              status:
+                type: boolean
+                example: true
+        400:
+          description: Missing required fields
+        500:
+          description: Failed to insert activity
+  /AddUser:
+    post:
+      tags:
+        - ALL
+      summary:  activity
+      description: Logs .
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Activity inserted successfully
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Activity inserted successfully
+              status:
+                type: boolean
+                example: true
+        400:
+          description: Missing required fields
+        500:
+          description: Failed to insert activity
+  /EditUser:
+    post:
+      tags:
+        - ALL
+      summary:  activity
+      description: Logs .
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Activity inserted successfully
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Activity inserted successfully
+              status:
+                type: boolean
+                example: true
+        400:
+          description: Missing required fields
+        500:
+          description: Failed to insert activity
+  /DeleteUser:
+    post:
+      tags:
+        - ALL
+      summary:  activity
+      description: Logs .
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Activity inserted successfully
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Activity inserted successfully
+              status:
+                type: boolean
+                example: true
+        400:
+          description: Missing required fields
+        500:
+          description: Failed to insert activity
+  /getRolePermissions:
+    get:
+      tags:
+        - ALL
+      summary:  activity
+      description: Logs .
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Activity inserted successfully
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Activity inserted successfully
+              status:
+                type: boolean
+                example: true
+        400:
+          description: Missing required fields
+        500:
+          description: Failed to insert activity
+  /getFilterTypes:
+    get:
+      tags:
+        - ALL
+      summary:  activity
+      description: Logs .
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Activity inserted successfully
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Activity inserted successfully
+              status:
+                type: boolean
+                example: true
+        400:
+          description: Missing required fields
+        500:
+          description: Failed to insert activity
+  /addFilterTypes:
+    post:
+      tags:
+        - ALL
+      summary:  activity
+      description: Logs .
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Activity inserted successfully
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Activity inserted successfully
+              status:
+                type: boolean
+                example: true
+        400:
+          description: Missing required fields
+        500:
+          description: Failed to insert activity
+  /editFilterTypes:
+    post:
+      tags:
+        - ALL
+      summary:  activity
+      description: Logs .
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Activity inserted successfully
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Activity inserted successfully
+              status:
+                type: boolean
+                example: true
+        400:
+          description: Missing required fields
+        500:
+          description: Failed to insert activity
+  /deleteFilterTypes:
+    post:
+      tags:
+        - ALL
+      summary:  activity
+      description: Logs .
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Activity inserted successfully
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Activity inserted successfully
+              status:
+                type: boolean
+                example: true
+        400:
+          description: Missing required fields
+        500:
+          description: Failed to insert activity
+  /getDashboard:
+    get:
+      tags:
+        - ALL
+      summary:  activity
+      description: Logs .
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Activity inserted successfully
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Activity inserted successfully
+              status:
+                type: boolean
+                example: true
+        400:
+          description: Missing required fields
+        500:
+          description: Failed to insert activity
+  /getSidebar:
+    get:
+      tags:
+        - ALL
+      summary:  activity
+      description: Logs .
+      consumes:
+        - application/json
+      produces:
+        - application/json
       responses:
         200:
           description: Activity inserted successfully
