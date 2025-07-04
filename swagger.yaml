@@ -201,7 +201,6 @@ paths:
           description: Password policy updated or created
         500:
           description: Server error
-
   /getPasswordPolicy:
     get:
       tags:
@@ -366,6 +365,12 @@ paths:
         - application/json
       produces:
         - application/json
+      parameters:
+        - name: PerformedBy
+          in: query
+          required: false
+          type: string
+          description: ID of the person performing the action (defaults to '2' if not provided)
       responses:
         200:
           description: Activity inserted successfully
@@ -615,16 +620,11 @@ paths:
       produces:
         - application/json
       parameters:
-        - in: body
-          name: body
-          required: true
-          schema:
-            type: object
-            properties:
-              PerformedBy:
-                type: string
-                description: ID of the person performing the action (defaults to '2' if not provided)
-                example: "5"
+        - name: PerformedBy
+          in: query
+          required: false
+          type: string
+          description: ID of the person performing the action (defaults to '2' if not provided)
       responses:
         200:
           description: Activity inserted successfully
@@ -725,6 +725,12 @@ paths:
         - application/json
       produces:
         - application/json
+      parameters:
+        - name: PerformedBy
+          in: query
+          required: false
+          type: string
+          description: ID of the person performing the action (defaults to '2' if not provided)
       responses:
         200:
           description: Activity inserted successfully
@@ -751,6 +757,12 @@ paths:
         - application/json
       produces:
         - application/json
+      parameters:
+        - name: PerformedBy
+          in: query
+          required: false
+          type: string
+          description: ID of the person performing the action (defaults to '2' if not provided)
       responses:
         200:
           description: Activity inserted successfully
@@ -777,6 +789,12 @@ paths:
         - application/json
       produces:
         - application/json
+      parameters:
+        - name: PerformedBy
+          in: query
+          required: false
+          type: string
+          description: ID of the person performing the action (defaults to '2' if not provided)
       responses:
         200:
           description: Activity inserted successfully
@@ -803,6 +821,12 @@ paths:
         - application/json
       produces:
         - application/json
+      parameters:
+        - name: PerformedBy
+          in: query
+          required: false
+          type: string
+          description: ID of the person performing the action (defaults to '2' if not provided)
       responses:
         200:
           description: Activity inserted successfully
@@ -829,6 +853,12 @@ paths:
         - application/json
       produces:
         - application/json
+      parameters:
+        - name: PerformedBy
+          in: query
+          required: false
+          type: string
+          description: ID of the person performing the action (defaults to '2' if not provided)
       responses:
         200:
           description: Activity inserted successfully
@@ -855,6 +885,12 @@ paths:
         - application/json
       produces:
         - application/json
+      parameters:
+        - name: PerformedBy
+          in: query
+          required: false
+          type: string
+          description: ID of the person performing the action (defaults to '2' if not provided)
       responses:
         200:
           description: Activity inserted successfully
@@ -881,6 +917,12 @@ paths:
         - application/json
       produces:
         - application/json
+      parameters:
+        - name: PerformedBy
+          in: query
+          required: false
+          type: string
+          description: ID of the person performing the action (defaults to '2' if not provided)
       responses:
         200:
           description: Activity inserted successfully
@@ -1018,6 +1060,12 @@ paths:
         - application/json
       produces:
         - application/json
+      parameters:
+        - name: PerformedBy
+          in: query
+          required: false
+          type: string
+          description: ID of the person performing the action (defaults to '2' if not provided)
       responses:
         200:
           description: Activity inserted successfully
@@ -1044,6 +1092,12 @@ paths:
         - application/json
       produces:
         - application/json
+      parameters:
+        - name: PerformedBy
+          in: query
+          required: false
+          type: string
+          description: ID of the person performing the action (defaults to '2' if not provided)
       responses:
         200:
           description: Activity inserted successfully
@@ -1181,6 +1235,12 @@ paths:
         - application/json
       produces:
         - application/json
+      parameters:
+        - name: PerformedBy
+          in: query
+          required: false
+          type: string
+          description: ID of the person performing the action (defaults to '2' if not provided)
       responses:
         200:
           description: Activity inserted successfully
@@ -1207,6 +1267,12 @@ paths:
         - application/json
       produces:
         - application/json
+      parameters:
+        - name: PerformedBy
+          in: query
+          required: false
+          type: string
+          description: ID of the person performing the action (defaults to '2' if not provided)
       responses:
         200:
           description: Activity inserted successfully
