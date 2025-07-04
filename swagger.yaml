@@ -92,6 +92,7 @@ paths:
             required:
               - username
               - new_password
+              - old_password
             properties:
               username:
                 type: string
@@ -102,6 +103,10 @@ paths:
               old_password:
                 type: string
                 example: "Test@1234567"
+              PerformedBy:
+                type: string
+                description: ID of the person performing the action
+                example: "5"
       responses:
         200:
           description: Password changed successfully
@@ -129,6 +134,10 @@ paths:
               username:
                 type: string
                 example: "ravi6@domain.com"
+              PerformedBy:
+                type: string
+                description: ID of the person performing the action
+                example: "5"
       responses:
         200:
           description: Password generated successfully
@@ -196,6 +205,10 @@ paths:
               sessionTimeoutMinutes:
                 type: integer
                 example: 5
+              PerformedBy:
+                type: string
+                description: ID of the person performing the action
+                example: "5"
       responses:
         200:
           description: Password policy updated or created
@@ -207,6 +220,12 @@ paths:
         - Password Policy
       summary: Get current password policy
       description: Retrieve the currently active password policy.
+      parameters:
+        - name: PerformedBy
+          in: query
+          required: false
+          type: string
+          description: ID of the person performing the action (defaults to '2' if not provided)
       responses:
         200:
           description: Current password policy returned

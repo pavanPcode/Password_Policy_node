@@ -139,7 +139,7 @@ async function addActivityLog(ActivityType, PerformedBy, Notes, Location = '') {
 app.post("/register", async (req, res) => {
   try {
 
-    addActivityLog('26','2','register' ,'');
+    addActivityLog('26','','register' ,'');
 
     const { username, name, role } = req.body;
     const policy = await getPolicy();
@@ -175,7 +175,7 @@ app.post("/register", async (req, res) => {
 
 app.post("/login", async (req, res) => {
   try {
-    addActivityLog('27','2','login' ,'');
+    addActivityLog('27','','login' ,'');
     const { username, password } = req.body;
     const policy = await getPolicy();
 
@@ -232,7 +232,9 @@ app.post("/login", async (req, res) => {
 
 app.post("/adminChangePassword", async (req, res) => {
   try {
-    addActivityLog('28','2','adminChangePassword' ,'');
+    const PerformedBy = req.body.PerformedBy || '2'; // default to '2' if not provided
+    addActivityLog('28',PerformedBy,'adminChangePassword' ,'');
+
     const { username } = req.body;
     const policy = await getPolicy();
 
@@ -273,7 +275,9 @@ app.post("/adminChangePassword", async (req, res) => {
 
 app.post("/UserChangePassword", async (req, res) => {
   try {
-    addActivityLog('29','2','UserChangePassword' ,'');
+
+    const PerformedBy = req.body.PerformedBy || '2'; // default to '2' if not provided
+    addActivityLog('29',PerformedBy,'UserChangePassword' ,'');
 
     const { username, new_password, old_password } = req.body;
     const policy = await getPolicy();
@@ -338,7 +342,8 @@ app.post("/UserChangePassword", async (req, res) => {
 
 app.post("/updatepasswordPolicy", async (req, res) => {
   try {
-    addActivityLog('30','2','updatepasswordPolicy' ,'');
+    const PerformedBy = req.body.PerformedBy || '2'; // default to '2' if not provided
+    addActivityLog('30',PerformedBy,'updatepasswordPolicy' ,'');
     const d = req.body;
     const result = await sql.query`SELECT COUNT(*) as count FROM psw.PasswordPolicy`;
     const count = result.recordset[0].count;
@@ -358,7 +363,8 @@ app.post("/updatepasswordPolicy", async (req, res) => {
 
 app.get("/getPasswordPolicy", async (req, res) => {
   try {
-    addActivityLog('31','2','getPasswordPolicy' ,'');
+    const PerformedBy = req.query.PerformedBy || '2'; // default to '2' if not provided
+    addActivityLog('31',PerformedBy,'getPasswordPolicy' ,'');
     const result = await sql.query`SELECT TOP 1 * FROM psw.PasswordPolicy`;
     const row = result.recordset[0];
 
