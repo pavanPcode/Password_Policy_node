@@ -451,7 +451,8 @@ app.get('/GetAHUMachines', async (req, res) => {
     // let PerformedBy = '2';
     // let Notes = 'GetAHUMachines';
     // let Location = '';
-    const result = await addActivityLog('1','2','GetAHUMachines' ,'');
+    const PerformedBy = req.query.PerformedBy || '2'; // default to '2' if not provided
+    const result = await addActivityLog('1',PerformedBy,'GetAHUMachines' ,'');
 
     if (!result.success) {
       return res.status(400).json({ message: result.message, status: false, ResultData: [] });
@@ -465,7 +466,8 @@ app.get('/GetAHUMachines', async (req, res) => {
 
 app.post('/AddAHUMachines', async (req, res) => {
   try {
-    const result = await addActivityLog('2','2','AddAHUMachines' ,'');
+    const PerformedBy = req.body.PerformedBy || '2'; // default to '2' if not provided
+    const result = await addActivityLog('2',PerformedBy,'AddAHUMachines' ,'');
 
     if (!result.success) {
       return res.status(400).json({ message: result.message, status: false, ResultData: [] });
@@ -480,7 +482,8 @@ app.post('/AddAHUMachines', async (req, res) => {
 
 app.post('/EditAHUMachines', async (req, res) => {
   try {
-    const result = await addActivityLog('3','2','EditAHUMachines' ,'');
+    const PerformedBy = req.body.PerformedBy || '2'; // default to '2' if not provided
+    const result = await addActivityLog('3',PerformedBy,'EditAHUMachines' ,'');
 
     if (!result.success) {
       return res.status(400).json({ message: result.message, status: false, ResultData: [] });
@@ -494,7 +497,8 @@ app.post('/EditAHUMachines', async (req, res) => {
 
 app.post('/DeleteAHUMachines', async (req, res) => {
   try {
-    const result = await addActivityLog('4','2','DeleteAHUMachines' ,'');
+    const PerformedBy = req.body.PerformedBy || '2'; // default to '2' if not provided
+    const result = await addActivityLog('4',PerformedBy,'DeleteAHUMachines' ,'');
 
     if (!result.success) {
       return res.status(400).json({ message: result.message, status: false, ResultData: [] });
@@ -509,7 +513,8 @@ app.post('/DeleteAHUMachines', async (req, res) => {
 
 app.post('/DeleteAHUFilters', async (req, res) => {
   try {
-    const result = await addActivityLog('5','2','DeleteAHUFilters' ,'');
+    const PerformedBy = req.body.PerformedBy || '2'; // default to '2' if not provided
+    const result = await addActivityLog('5',PerformedBy,'DeleteAHUFilters' ,'');
 
     if (!result.success) {
       return res.status(400).json({ message: result.message, status: false, ResultData: [] });
@@ -524,7 +529,8 @@ app.post('/DeleteAHUFilters', async (req, res) => {
 
 app.post('/EditAHUFilters', async (req, res) => {
   try {
-    const result = await addActivityLog('6','2','EditAHUFilters' ,'');
+    const PerformedBy = req.body.PerformedBy || '2'; // default to '2' if not provided
+    const result = await addActivityLog('6',PerformedBy,'EditAHUFilters' ,'');
 
     if (!result.success) {
       return res.status(400).json({ message: result.message, status: false, ResultData: [] });
@@ -540,7 +546,8 @@ app.post('/EditAHUFilters', async (req, res) => {
 
 app.post('/AddAHUFilters', async (req, res) => {
   try {
-    const result = await addActivityLog('7','2','AddAHUFilters' ,'');
+    const PerformedBy = req.body.PerformedBy || '2'; // default to '2' if not provided
+    const result = await addActivityLog('7',PerformedBy,'AddAHUFilters' ,'');
 
     if (!result.success) {
       return res.status(400).json({ message: result.message, status: false, ResultData: [] });
@@ -555,7 +562,8 @@ app.post('/AddAHUFilters', async (req, res) => {
 
 app.get('/GetAHUFilters', async (req, res) => {
   try {
-    const result = await addActivityLog('8','2','GetAHUFilters' ,'');
+    const PerformedBy = req.query.PerformedBy || '2'; // default to '2' if not provided
+    const result = await addActivityLog('8',PerformedBy,'GetAHUFilters' ,'');
 
     if (!result.success) {
       return res.status(400).json({ message: result.message, status: false, ResultData: [] });
@@ -570,7 +578,8 @@ app.get('/GetAHUFilters', async (req, res) => {
 
 app.post('/AHUFiltersUpdateStatus', async (req, res) => {
   try {
-    const result = await addActivityLog('9','2','AHUFiltersUpdateStatus' ,'');
+    const PerformedBy = req.body.PerformedBy || '2'; // default to '2' if not provided
+    const result = await addActivityLog('9',PerformedBy,'AHUFiltersUpdateStatus' ,'');
 
     if (!result.success) {
       return res.status(400).json({ message: result.message, status: false, ResultData: [] });
@@ -584,7 +593,8 @@ app.post('/AHUFiltersUpdateStatus', async (req, res) => {
 
 app.post('/AHUFilterGenerateBarcode', async (req, res) => {
   try {
-    const result = await addActivityLog('10','2','AHUFilterGenerateBarcode' ,'');
+    const PerformedBy = req.body.PerformedBy || '2'; // default to '2' if not provided
+    const result = await addActivityLog('10',PerformedBy,'AHUFilterGenerateBarcode' ,'');
 
     if (!result.success) {
       return res.status(400).json({ message: result.message, status: false, ResultData: [] });
@@ -599,7 +609,8 @@ app.post('/AHUFilterGenerateBarcode', async (req, res) => {
 
 app.get('/getNotifications', async (req, res) => {
   try {
-    const result = await addActivityLog('11','2','getNotifications' ,'');
+    const PerformedBy = req.query.PerformedBy || '2'; // default to '2' if not provided
+    const result = await addActivityLog('11',PerformedBy,'getNotifications' ,'');
 
     if (!result.success) {
       return res.status(400).json({ message: result.message, status: false, ResultData: [] });
@@ -614,7 +625,8 @@ app.get('/getNotifications', async (req, res) => {
 
 app.get('/AuditTrial', async (req, res) => {
   try {
-    const result = await addActivityLog('12','2','AuditTrial' ,'');
+    const PerformedBy = req.query.PerformedBy || '2'; // default to '2' if not provided
+    const result = await addActivityLog('12',PerformedBy,'AuditTrial' ,'');
 
     if (!result.success) {
       return res.status(400).json({ message: result.message, status: false, ResultData: [] });
@@ -630,7 +642,9 @@ app.get('/AuditTrial', async (req, res) => {
 
 app.get('/getSchedule', async (req, res) => {
   try {
-    const result = await addActivityLog('13','2','Schedule' ,'');
+    const PerformedBy = req.query.PerformedBy || '2'; // default to '2' if not provided
+
+    const result = await addActivityLog('13',PerformedBy,'Schedule' ,'');
 
     if (!result.success) {
       return res.status(400).json({ message: result.message, status: false, ResultData: [] });
@@ -645,7 +659,9 @@ app.get('/getSchedule', async (req, res) => {
 
 app.get('/getDeviationsAlarms', async (req, res) => {
   try {
-    const result = await addActivityLog('14','2','getDeviationsAlarms' ,'');
+    const PerformedBy = req.query.PerformedBy || '2'; // default to '2' if not provided
+
+    const result = await addActivityLog('14',PerformedBy,'getDeviationsAlarms' ,'');
 
     if (!result.success) {
       return res.status(400).json({ message: result.message, status: false, ResultData: [] });
@@ -660,7 +676,8 @@ app.get('/getDeviationsAlarms', async (req, res) => {
 
 app.get('/getReplacementList', async (req, res) => {
   try {
-    const result = await addActivityLog('15','2','getReplacementList' ,'');
+    const PerformedBy = req.query.PerformedBy || '2'; // default to '2' if not provided
+    const result = await addActivityLog('15',PerformedBy,'getReplacementList' ,'');
 
     if (!result.success) {
       return res.status(400).json({ message: result.message, status: false, ResultData: [] });
@@ -674,7 +691,8 @@ app.get('/getReplacementList', async (req, res) => {
 
 app.get('/getRetirementList', async (req, res) => {
   try {
-    const result = await addActivityLog('16','2','getRetirementList' ,'');
+    const PerformedBy = req.query.PerformedBy || '2'; // default to '2' if not provided
+    const result = await addActivityLog('16',PerformedBy,'getRetirementList' ,'');
 
     if (!result.success) {
       return res.status(400).json({ message: result.message, status: false, ResultData: [] });
@@ -689,7 +707,8 @@ app.get('/getRetirementList', async (req, res) => {
 
 app.get('/getUser', async (req, res) => {
   try {
-    const result = await addActivityLog('17','2','getUser' ,'');
+    const PerformedBy = req.query.PerformedBy || '2'; // default to '2' if not provided
+    const result = await addActivityLog('17',PerformedBy,'getUser' ,'');
 
     if (!result.success) {
       return res.status(400).json({ message: result.message, status: false, ResultData: [] });
@@ -704,7 +723,8 @@ app.get('/getUser', async (req, res) => {
 
 app.post('/AddUser', async (req, res) => {
   try {
-    const result = await addActivityLog('18','2','AddUser' ,'');
+    const PerformedBy = req.query.PerformedBy || '2'; // default to '2' if not provided
+    const result = await addActivityLog('18',PerformedBy,'AddUser' ,'');
 
     if (!result.success) {
       return res.status(400).json({ message: result.message, status: false, ResultData: [] });
@@ -719,8 +739,8 @@ app.post('/AddUser', async (req, res) => {
 
 app.post('/EditUser', async (req, res) => {
   try {
-    const result = await addActivityLog('19','2','EditUser' ,'');
-
+    const PerformedBy = req.body.PerformedBy || '2'; // default to '2' if not provided
+    const result = await addActivityLog('19',PerformedBy,'EditUser' ,'');
     if (!result.success) {
       return res.status(400).json({ message: result.message, status: false, ResultData: [] });
     }
@@ -735,7 +755,6 @@ app.post('/EditUser', async (req, res) => {
 app.post('/DeleteUser', async (req, res) => {
   try {
     const result = await addActivityLog('20','2','DeleteUser' ,'');
-
     if (!result.success) {
       return res.status(400).json({ message: result.message, status: false, ResultData: [] });
     }
@@ -748,7 +767,8 @@ app.post('/DeleteUser', async (req, res) => {
 
 app.get('/getRolePermissions', async (req, res) => {
   try {
-    const result = await addActivityLog('21','2','getRolePermissions' ,'');
+    const PerformedBy = req.query.PerformedBy || '2'; // default to '2' if not provided
+    const result = await addActivityLog('21',PerformedBy,'getRolePermissions' ,'');
 
     if (!result.success) {
       return res.status(400).json({ message: result.message, status: false, ResultData: [] });
@@ -763,7 +783,8 @@ app.get('/getRolePermissions', async (req, res) => {
 
 app.get('/getFilterTypes', async (req, res) => {
   try {
-    const result = await addActivityLog('22','2','getFilterTypes' ,'');
+    const PerformedBy = req.query.PerformedBy || '2'; // default to '2' if not provided
+    const result = await addActivityLog('22',PerformedBy,'getFilterTypes' ,'');
 
     if (!result.success) {
       return res.status(400).json({ message: result.message, status: false, ResultData: [] });
@@ -778,7 +799,8 @@ app.get('/getFilterTypes', async (req, res) => {
 
 app.post('/addFilterTypes', async (req, res) => {
   try {
-    const result = await addActivityLog('21','2','addFilterTypes' ,'');
+    const PerformedBy = req.body.PerformedBy || '2'; // default to '2' if not provided
+    const result = await addActivityLog('21',PerformedBy,'addFilterTypes' ,'');
 
     if (!result.success) {
       return res.status(400).json({ message: result.message, status: false, ResultData: [] });
@@ -793,7 +815,8 @@ app.post('/addFilterTypes', async (req, res) => {
 
 app.post('/editFilterTypes', async (req, res) => {
   try {
-    const result = await addActivityLog('22','2','editFilterTypes' ,'');
+    const PerformedBy = req.body.PerformedBy || '2'; // default to '2' if not provided
+    const result = await addActivityLog('22',PerformedBy,'editFilterTypes' ,'');
 
     if (!result.success) {
       return res.status(400).json({ message: result.message, status: false, ResultData: [] });
@@ -808,7 +831,8 @@ app.post('/editFilterTypes', async (req, res) => {
 
 app.post('/deleteFilterTypes', async (req, res) => {
   try {
-    const result = await addActivityLog('23','2','deleteFilterTypes' ,'');
+    const PerformedBy = req.body.PerformedBy || '2'; // default to '2' if not provided
+    const result = await addActivityLog('23',PerformedBy,'deleteFilterTypes' ,'');
 
     if (!result.success) {
       return res.status(400).json({ message: result.message, status: false, ResultData: [] });
@@ -823,7 +847,8 @@ app.post('/deleteFilterTypes', async (req, res) => {
 
 app.get('/getDashboard', async (req, res) => {
   try {
-    const result = await addActivityLog('24','2','getDashboard' ,'');
+    const PerformedBy = req.query.PerformedBy || '2'; // default to '2' if not provided
+    const result = await addActivityLog('24',PerformedBy,'getDashboard' ,'');
 
     if (!result.success) {
       return res.status(400).json({ message: result.message, status: false, ResultData: [] });
@@ -836,10 +861,10 @@ app.get('/getDashboard', async (req, res) => {
 });
 
 
-
 app.get('/getSidebar', async (req, res) => {
   try {
-    const result = await addActivityLog('25','2','getSidebar' ,'');
+    const PerformedBy = req.query.PerformedBy || '2'; // default to '2' if not provided
+    const result = await addActivityLog('25',PerformedBy,'getSidebar' ,'');
 
     if (!result.success) {
       return res.status(400).json({ message: result.message, status: false, ResultData: [] });
