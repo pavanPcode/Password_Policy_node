@@ -10,7 +10,10 @@ function OperationEnums() {
     UPDATEAHUISACTIVE: 20,
     GETUSERS: 21,
     GETBCTYPE: 25,
-    AddAHUFilter:200
+    AddAHUFilter:200,
+    getAHUId:201,
+    getFilterType:202,
+    getLocationType:203,
   };
   return Operations;
 }

@@ -1398,3 +1398,87 @@ paths:
                 example: "Asset item inserted successfully"
         500:
           description: "Server error"
+  /api/getAHUIds:
+    get:
+      summary: "Get AHU IDs"
+      description: "Returns a list of AHU IDs from the system."
+      tags:
+        - Filter
+      responses:
+        200:
+          description: "List of AHU IDs"
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    AHUId:
+                      type: integer
+                      example: 5
+                    AHUName:
+                      type: string
+                      example: "AHU Block A"
+        500:
+          description: "Server error"
+  /api/getFilterType:
+    get:
+      summary: "Get Filter Types"
+      description: "Returns a list of available filter types"
+      tags:
+        - Filter
+      responses:
+        200:
+          description: "List of filter types"
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    FilterTypeId:
+                      type: integer
+                      example: 1
+                    FilterTypeName:
+                      type: string
+                      example: "HEPA Filter"
+        500:
+          description: "Server error"
+  /api/getLocationType:
+    get:
+      summary: "Get Location Types"
+      description: "Returns a list of location types"
+      tags:
+        - Filter
+      responses:
+        200:
+          description: "List of location types"
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    LocationTypeId:
+                      type: integer
+                      example: 1
+                    LocationTypeName:
+                      type: string
+                      example: "Plant Room"
+        500:
+          description: "Server error"

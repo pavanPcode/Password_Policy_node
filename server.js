@@ -150,5 +150,19 @@ router.post('/AddAHUFilter', (req, res) => {
     handleRecord(req, res, data, OperationEnums().AddAHUFilter);
 });
 
+router.get('/getAHUIds', (req, res) => {
+    const data = {};
+    handleRecord(req, res, data, OperationEnums().getAHUId);
+});
+
+router.get('/getFilterType', (req, res) => {
+    const data = {};
+    handleRecord(req, res, data, OperationEnums().getFilterType);
+});
+
+router.get('/getLocationType', (req, res) => {
+    const data = {};
+    handleRecord(req, res, data, OperationEnums().getLocationType);
+});
 
 module.exports = router;
