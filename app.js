@@ -33,6 +33,7 @@ const getPolicy = async () => {
   try {
     const result = await sql.query`SELECT TOP 1 * FROM psw.PasswordPolicy`;
     const row = result.recordset[0];
+    console.log('row"-----',row)
     return row || {
       MinLength: 8,
       RequireUppercase: 1,
@@ -60,60 +61,131 @@ const getPolicy = async () => {
   }
 };
 
+// const validatePassword = (password, policy) => {
+//   if (password.length <= policy.MinLength-1)
+//     return [false, `Password must be at least ${policy.MinLength} characters`];
+//   if (policy.RequireUppercase && !/[A-Z]/.test(password))
+//     return [false, "Must include an uppercase letter"];
+//   if (policy.RequireLowercase && !/[a-z]/.test(password))
+//     return [false, "Must include a lowercase letter"];
+//   if (policy.RequireDigit && !/\d/.test(password))
+//     return [false, "Must include a digit"];
+//   if (policy.RequireSpecialChar && !/[\W_]/.test(password))
+//     return [false, "Must include a special character"];
+//   return [true, "Valid"];
+// };
 const validatePassword = (password, policy) => {
-  if (password.length <= policy.MinLength-1)
+  if (password.length < policy.MinLength)
     return [false, `Password must be at least ${policy.MinLength} characters`];
-  if (policy.RequireUppercase && !/[A-Z]/.test(password))
-    return [false, "Must include an uppercase letter"];
-  if (policy.RequireLowercase && !/[a-z]/.test(password))
-    return [false, "Must include a lowercase letter"];
-  if (policy.RequireDigit && !/\d/.test(password))
-    return [false, "Must include a digit"];
-  if (policy.RequireSpecialChar && !/[\W_]/.test(password))
-    return [false, "Must include a special character"];
+
+  const uppercaseCount = (password.match(/[A-Z]/g) || []).length;
+  if (uppercaseCount < policy.RequireUppercase)
+    return [false, `Must include at least ${policy.RequireUppercase} uppercase letter(s)`];
+
+  const lowercaseCount = (password.match(/[a-z]/g) || []).length;
+  if (lowercaseCount < policy.RequireLowercase)
+    return [false, `Must include at least ${policy.RequireLowercase} lowercase letter(s)`];
+
+  const digitCount = (password.match(/\d/g) || []).length;
+  if (digitCount < policy.RequireDigit)
+    return [false, `Must include at least ${policy.RequireDigit} digit(s)`];
+
+  const specialCharCount = (password.match(/[\W_]/g) || []).length;
+  if (specialCharCount < policy.RequireSpecialChar)
+    return [false, `Must include at least ${policy.RequireSpecialChar} special character(s)`];
+
   return [true, "Valid"];
 };
-
 
 function generateRandomPassword(policy) {
   const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   const lowercase = 'abcdefghijklmnopqrstuvwxyz';
   const digits = '0123456789';
-  const special = '@';
-  let allChars = '';
-  let password = '';
+  const special = '@#$%&*!';
 
-  if (policy.RequireUppercase) {
-    password += uppercase[Math.floor(Math.random() * uppercase.length)];
+  let password = '';
+  let allChars = '';
+  
+  const getRandomChars = (chars, count) => {
+    let result = '';
+    for (let i = 0; i < count; i++) {
+      result += chars[Math.floor(Math.random() * chars.length)];
+    }
+    return result;
+  };
+
+  // Add required characters
+  if (policy.RequireUppercase > 0) {
+    password += getRandomChars(uppercase, policy.RequireUppercase);
     allChars += uppercase;
   }
 
-  if (policy.RequireLowercase) {
-    password += lowercase[Math.floor(Math.random() * lowercase.length)];
+  if (policy.RequireLowercase > 0) {
+    password += getRandomChars(lowercase, policy.RequireLowercase);
     allChars += lowercase;
   }
 
-  if (policy.RequireDigit) {
-    password += digits[Math.floor(Math.random() * digits.length)];
+  if (policy.RequireDigit > 0) {
+    password += getRandomChars(digits, policy.RequireDigit);
     allChars += digits;
   }
 
-  if (policy.RequireSpecialChar) {
-    password += special[Math.floor(Math.random() * special.length)];
+  if (policy.RequireSpecialChar > 0) {
+    password += getRandomChars(special, policy.RequireSpecialChar);
     allChars += special;
   }
 
-  // Fill the rest with random characters up to MinLength
-  while (password.length < policy.MinLength) {
-    password += allChars[Math.floor(Math.random() * allChars.length)];
-  }
+  // Fill the rest to meet MinLength
+  const remainingLength = policy.MinLength - password.length;
+  password += getRandomChars(allChars, remainingLength);
 
-  // Shuffle password
+  // Shuffle the password
   return password
     .split('')
     .sort(() => Math.random() - 0.5)
     .join('');
 }
+
+
+// function generateRandomPassword(policy) {
+//   const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+//   const lowercase = 'abcdefghijklmnopqrstuvwxyz';
+//   const digits = '0123456789';
+//   const special = '@';
+//   let allChars = '';
+//   let password = '';
+
+//   if (policy.RequireUppercase) {
+//     password += uppercase[Math.floor(Math.random() * uppercase.length)];
+//     allChars += uppercase;
+//   }
+
+//   if (policy.RequireLowercase) {
+//     password += lowercase[Math.floor(Math.random() * lowercase.length)];
+//     allChars += lowercase;
+//   }
+
+//   if (policy.RequireDigit) {
+//     password += digits[Math.floor(Math.random() * digits.length)];
+//     allChars += digits;
+//   }
+
+//   if (policy.RequireSpecialChar) {
+//     password += special[Math.floor(Math.random() * special.length)];
+//     allChars += special;
+//   }
+
+//   // Fill the rest with random characters up to MinLength
+//   while (password.length < policy.MinLength) {
+//     password += allChars[Math.floor(Math.random() * allChars.length)];
+//   }
+
+//   // Shuffle password
+//   return password
+//     .split('')
+//     .sort(() => Math.random() - 0.5)
+//     .join('');
+// }
 
 
 async function addActivityLog(ActivityType, PerformedBy, Notes, Location = '') {
