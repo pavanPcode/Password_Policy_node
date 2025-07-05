@@ -1308,7 +1308,7 @@ paths:
           description: Missing required fields
         500:
           description: Failed to insert activity
-  /AddAHUFilter:
+  /api/AddAHUFilter:
     post:
       summary: "Add AHU Filter"
       description: "Adds a new AHU filter. FilterId, Barcode, and Lable are auto-generated."
