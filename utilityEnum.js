@@ -9,6 +9,8 @@ function OperationEnums() {
     UPDATEAHU: 19,
     UPDATEAHUISACTIVE: 20,
     GETUSERS: 21,
+    GETBCTYPE: 25,
+    AddAHUFilter:200
   };
   return Operations;
 }

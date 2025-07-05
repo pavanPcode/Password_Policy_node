@@ -1308,3 +1308,93 @@ paths:
           description: Missing required fields
         500:
           description: Failed to insert activity
+  /AddAHUFilter:
+    post:
+      summary: "Add AHU Filter"
+      description: "Adds a new AHU filter. FilterId, Barcode, and Lable are auto-generated."
+      tags:
+        - Filter
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            required:
+              - AHUId
+              - Code
+              - AssetType
+              - Manufacturer
+              - InstalledOn
+              - Location
+              - Dimensions
+              - MicronRating
+              - CleaningLimit
+              - LastCleaningDate
+              - ValidOperationLife
+              - CurrentStatus
+              - AvailabilityStatus
+              - Specifications
+              - CreatedBy
+            properties:
+              AHUId:
+                type: integer
+                example: 5
+              Code:
+                type: string
+                example: "A100"
+              AssetType:
+                type: integer
+                example: 2
+              Manufacturer:
+                type: string
+                example: "Blue Star"
+              InstalledOn:
+                type: string
+                format: date
+                example: "2024-06-15"
+              Location:
+                type: string
+                example: "Bangalore Plant"
+              Dimensions:
+                type: string
+                example: "24x12x2"
+              MicronRating:
+                type: string
+                example: "10 Micron"
+              CleaningLimit:
+                type: string
+                example: "5 cleanings"
+              LastCleaningDate:
+                type: string
+                format: date
+                example: "2024-07-01"
+              ValidOperationLife:
+                type: integer
+                example: 365
+              CurrentStatus:
+                type: string
+                example: "Active"
+              AvailabilityStatus:
+                type: string
+                example: "Available"
+              Specifications:
+                type: string
+                example: "HEPA filter"
+              CreatedBy:
+                type: integer
+                example: 1001
+      responses:
+        200:
+          description: "Asset item inserted successfully"
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              message:
+                type: string
+                example: "Asset item inserted successfully"
+        500:
+          description: "Server error"

@@ -119,5 +119,36 @@ router.get('/getmenu', (req, res) => {
     });
 });
 
+router.get('/GetBarcodeType', (req, res) => {
+    const data = req.query;
+    handleRecord(req, res, data, OperationEnums().GETBCTYPE);
+});
+
+router.post('/AddAHUFilter', (req, res) => {
+    const data = req.body;
+    // Generate base from current datetime (YYYYMMDDHHmmss)
+    const now = new Date();
+    const pad = (n) => n.toString().padStart(2, '0');
+
+    const year = now.getFullYear();
+    const month = pad(now.getMonth() + 1);
+    const day = pad(now.getDate());
+    const hours = pad(now.getHours());
+    const minutes = pad(now.getMinutes());
+    const seconds = pad(now.getSeconds());
+
+    // Use timestamp to ensure uniqueness
+    const timestamp = `${year}${month}${day}${hours}${minutes}${seconds}`; // e.g. 20250704123045
+
+    // Generate values
+    const barcode = timestamp.slice(-8); // Last 8 digits only
+    data.FilterId = `FLT${barcode.slice(-4)}`;
+    data.Barcode = barcode;
+    data.Lable = `LBL${barcode}`;
+    console.log(data);
+
+    handleRecord(req, res, data, OperationEnums().AddAHUFilter);
+});
+
 
 module.exports = router;
