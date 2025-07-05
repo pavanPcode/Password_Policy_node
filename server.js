@@ -165,4 +165,9 @@ router.get('/getLocationType', (req, res) => {
     handleRecord(req, res, data, OperationEnums().getLocationType);
 });
 
+router.get('/getFiltersList', (req, res) => {
+    const data = {};
+    handleRecord(req, res, data, OperationEnums().getFiltersList);
+});
+
 module.exports = router;

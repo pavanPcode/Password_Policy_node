@@ -14,6 +14,7 @@ function OperationEnums() {
     getAHUId:201,
     getFilterType:202,
     getLocationType:203,
+    getFiltersList:204,
   };
   return Operations;
 }

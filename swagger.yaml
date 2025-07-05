@@ -1482,3 +1482,50 @@ paths:
                       example: "Plant Room"
         500:
           description: "Server error"
+  /api/getFiltersList:
+    get:
+      summary: "Get Filters List"
+      description: "Returns a complete list of filters from the system"
+      tags:
+        - Filter
+      responses:
+        200:
+          description: "Successful response with list of filters"
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    FilterId:
+                      type: string
+                      example: "FLT123456"
+                    AHUId:
+                      type: integer
+                      example: 5
+                    Code:
+                      type: string
+                      example: "A100"
+                    Manufacturer:
+                      type: string
+                      example: "Blue Star"
+                    InstalledOn:
+                      type: string
+                      format: date
+                      example: "2024-06-15"
+                    Location:
+                      type: string
+                      example: "Bangalore Plant"
+                    Barcode:
+                      type: string
+                      example: "12345678"
+                    Status:
+                      type: integer
+                      example: 1
+        500:
+          description: "Internal Server Error"
