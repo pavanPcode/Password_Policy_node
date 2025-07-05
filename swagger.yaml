@@ -1339,7 +1339,7 @@ paths:
             properties:
               AHUId:
                 type: integer
-                example: 5
+                example: 2
               Code:
                 type: string
                 example: "A100"
@@ -1354,8 +1354,8 @@ paths:
                 format: date
                 example: "2024-06-15"
               Location:
-                type: string
-                example: "Bangalore Plant"
+                type: integer
+                example: 2
               Dimensions:
                 type: string
                 example: "24x12x2"
