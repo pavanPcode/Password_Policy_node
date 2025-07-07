@@ -16,6 +16,8 @@ function OperationEnums() {
     getLocationType:203,
     getFiltersList:204,
     CheckOrderedStage:205,
+    getFilterHistory:206,
+    AddFilterHistory:207,
   };
   return Operations;
 }

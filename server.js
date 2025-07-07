@@ -175,4 +175,16 @@ router.post('/CheckOrderedStage', (req, res) => {
     handleRecord(req, res, data, OperationEnums().CheckOrderedStage);
 });
 
+
+router.get('/getFilterHistory', (req, res) => {
+    const data = req.query;
+    handleRecord(req, res, data, OperationEnums().getFilterHistory);
+});
+
+router.post('/AddFilterHistory', (req, res) => {
+    const data = req.body;
+    handleRecord(req, res, data, OperationEnums().AddFilterHistory);
+});
+
+
 module.exports = router;
