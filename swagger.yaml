@@ -1642,6 +1642,9 @@ paths:
                 Barcode:
                   type: string
                   example: "BARCODE12345"
+                WashingReasonId:
+                  type: integer
+                  example: 1001
       responses:
         200:
           description: "All filter history entries processed"
