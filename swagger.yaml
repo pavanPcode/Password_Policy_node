@@ -1581,10 +1581,10 @@ paths:
                 example: "true"
         500:
           description: Internal Server Error
-  /api/AddFilterHistory:
+  /api/UpdateFilterStatus:
     post:
-      summary: "Add Filter History Entry"
-      description: "Inserts a new record into the FilterHistory table with cleaning and maintenance details."
+      summary: "Add Filter History Entries (Bulk)"
+      description: "Accepts an array of filter history records and inserts them one by one into the FilterHistory table."
       tags:
         - Filter
       consumes:
@@ -1596,77 +1596,84 @@ paths:
           name: body
           required: true
           schema:
-            type: object
-            required:
-              - FilterId
-              - StageId
-              - Status
-              - performedBy
-              - Barcode
-            properties:
-              FilterId:
-                type: integer
-                example: 102
-                description: ID of the filter
-              StageId:
-                type: integer
-                example: 3
-                description: Maintenance stage ID
-              Remarks:
-                type: string
-                example: "Filter cleaned and dried"
-                description: Notes about the activity
-              Status:
-                type: integer
-                example: 1
-                description: Status of the maintenance action
-              washingEquipId:
-                type: integer
-                example: 5
-                description: ID of the washing equipment used
-              AirPressure:
-                type: string
-                example: "80 PSI"
-                description: Air pressure used
-              RoWaterPressure:
-                type: string
-                example: "60 PSI"
-                description: RO water pressure used
-              Duration:
-                type: integer
-                example: 30
-                description: Duration of the activity in minutes
-              DryerEquipId:
-                type: string
-                example: "DRY-01"
-                description: ID of the dryer equipment
-              DryerTemp:
-                type: string
-                example: "70°C"
-                description: Temperature used during drying
-              performedBy:
-                type: integer
-                example: 1001
-                description: ID of the user who performed the action
-              Barcode:
-                type: string
-                example: "BARCODE12345"
-                description: Barcode of the filter
+            type: array
+            items:
+              type: object
+              required:
+                - FilterId
+                - StageId
+                - Status
+                - performedBy
+                - Barcode
+              properties:
+                FilterId:
+                  type: integer
+                  example: 102
+                StageId:
+                  type: integer
+                  example: 3
+                Remarks:
+                  type: string
+                  example: "Filter cleaned and dried"
+                Status:
+                  type: integer
+                  example: 1
+                washingEquipId:
+                  type: integer
+                  example: 5
+                AirPressure:
+                  type: string
+                  example: "80 PSI"
+                RoWaterPressure:
+                  type: string
+                  example: "60 PSI"
+                Duration:
+                  type: integer
+                  example: 30
+                DryerEquipId:
+                  type: string
+                  example: "DRY-01"
+                DryerTemp:
+                  type: string
+                  example: "70°C"
+                performedBy:
+                  type: integer
+                  example: 1001
+                Barcode:
+                  type: string
+                  example: "BARCODE12345"
       responses:
         200:
-          description: "Filter history inserted successfully"
+          description: "All filter history entries processed"
           schema:
             type: object
             properties:
               message:
                 type: string
-                example: "Filter history added successfully"
+                example: "Processed all filter history entries"
               success:
                 type: boolean
                 example: true
+              results:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    Barcode:
+                      type: string
+                      example: "BARCODE12345"
+                    result:
+                      type: object
+                      properties:
+                        Status:
+                          type: boolean
+                          example: true
+                        message:
+                          type: string
+                          example: "Inserted successfully"
         500:
           description: "Internal Server Error"
-  /api/getFilterHistory:
+  /api/GetFilterStatus:
     get:
       summary: "Get Filter History"
       description: "Fetches the complete maintenance history of a filter using its FilterId."

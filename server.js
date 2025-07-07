@@ -47,6 +47,42 @@ const handleRecord = (req, res, data, operationId) => {
   executeStoredProcedure(req, res, data, operationId);
 };
 
+
+const handleResponseWithOutRes = (error, results) => {
+  if (error) {
+    console.error("Error:", error);
+    return { error: "Internal Server Error", Status: false };
+  } else if (results && results.length > 0) {
+    return { ResultData: results, Status: true };
+  } else {
+    return { error: "No records found", Status: false };
+  }
+};
+
+const executeStoredProcedureWithOutRes = (data, operationId) => {
+  const jsonData = JSON.stringify(data);
+  const sqlQuery = `
+          DECLARE @ResultMessage NVARCHAR(MAX);
+          DECLARE @STATUS NVARCHAR(MAX); 
+          EXEC [dbo].[SP_ScreenOperations]
+              @OperationId = '${operationId}',
+              @JsonData = '${jsonData}',
+              @ResultMessage = @ResultMessage OUTPUT,
+              @STATUS = @STATUS OUTPUT; 
+          SELECT @ResultMessage AS ResultMessage, @STATUS AS Status; 
+      `;
+
+  console.log(sqlQuery);
+  dbUtility
+    .executeQuery(sqlQuery)
+    .then((results) => handleResponseWithOutRes(null, results))
+    .catch((error) => handleResponseWithOutRes(error, null));
+};
+
+const handleRecordWithOutRes = (data, operationId) => {
+  executeStoredProcedureWithOutRes(data, operationId);
+};
+
 //region Filter types
 router.get("/getFilterTypes", (req, res) => {
   const data = {};
@@ -176,15 +212,42 @@ router.post('/CheckOrderedStage', (req, res) => {
 });
 
 
-router.get('/getFilterHistory', (req, res) => {
+router.get('/GetFilterStatus', (req, res) => {
     const data = req.query;
     handleRecord(req, res, data, OperationEnums().getFilterHistory);
 });
 
-router.post('/AddFilterHistory', (req, res) => {
-    const data = req.body;
-    handleRecord(req, res, data, OperationEnums().AddFilterHistory);
-});
+// router.post('/AddFilterHistory', (req, res) => {
+//     const data = req.body;
+//     handleRecordWithOutRes(req, res, data, OperationEnums().AddFilterHistory);
+    
+// });
 
+router.post('/UpdateFilterStatus', async (req, res) => {
+  const dataArray = req.body;
+
+  if (!Array.isArray(dataArray)) {
+    return res.status(400).json({ ResultMessage: "Request body must be an array", Status: false,ResultData:[]  });
+  }
+
+  let results = [];
+
+  for (const data of dataArray) {
+    try {
+      console.log('data :',data)
+      // Assuming handleRecordWithOutRes returns a result object
+      const result = await handleRecordWithOutRes( data, OperationEnums().AddFilterHistory);
+      results.push({ Barcode: data.Barcode, result });
+    } catch (error) {
+      results.push({ Barcode: data.Barcode, result: { ResultMessage: "Failed to insert", Status: false,ResultData:[] } });
+    }
+  }
+
+  res.json({
+    ResultMessage: "Processed all records",
+    Status: true,
+    ResultData: results
+  });
+});
 
 module.exports = router;
