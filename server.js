@@ -250,4 +250,20 @@ router.post('/UpdateFilterStatus', async (req, res) => {
   });
 });
 
+
+router.get('/GetMastersEquipment', (req, res) => {
+    const data = req.query;
+    handleRecord(req, res, data, OperationEnums().GetMastersEquipment);
+});
+
+router.get('/GetMastersReasons', (req, res) => {
+    const data = req.query;
+    handleRecord(req, res, data, OperationEnums().GetMastersReasons);
+});
+
+router.get('/GetMastersPressure', (req, res) => {
+    const data = req.query;
+    handleRecord(req, res, data, OperationEnums().GetMastersPressure);
+});
+
 module.exports = router;

@@ -18,6 +18,10 @@ function OperationEnums() {
     CheckOrderedStage:205,
     getFilterHistory:206,
     AddFilterHistory:207,
+    GetMastersEquipment:27,
+    GetMastersReasons:28,
+    GetMastersPressure:29,
+
   };
   return Operations;
 }

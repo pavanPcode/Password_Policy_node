@@ -1743,3 +1743,129 @@ paths:
           description: "FilterId is missing or invalid"
         500:
           description: "Internal Server Error"
+  /api/GetMastersEquipment:
+    get:
+      summary: "Get Master Equipment List"
+      description: "Returns the list of equipment based on whether it is a dryer or not."
+      tags:
+        - Master
+      produces:
+        - application/json
+      parameters:
+        - name: Isdryer
+          in: query
+          required: true
+          type: integer
+          description: "0 for non-dryer, 1 for dryer"
+          example: 0
+      responses:
+        200:
+          description: "List of equipment"
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    EquipmentId:
+                      type: integer
+                      example: 1
+                    EquipmentName:
+                      type: string
+                      example: "Washer 3000"
+                    IsDryer:
+                      type: boolean
+                      example: false
+        400:
+          description: "Missing or invalid query parameter"
+        500:
+          description: "Internal Server Error"
+  /api/GetMastersReasons:
+    get:
+      summary: "Get Master Reasons"
+      description: "Returns a list of reason masters based on the given type."
+      tags:
+        - Master
+      produces:
+        - application/json
+      parameters:
+        - name: Type
+          in: query
+          required: true
+          type: integer
+          description: "Type of reason to retrieve (e.g., 1 for washing reasons, 2 for drying reasons)"
+          example: 1
+      responses:
+        200:
+          description: "List of reasons fetched successfully"
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    ReasonId:
+                      type: integer
+                      example: 101
+                    ReasonText:
+                      type: string
+                      example: "Filter damaged during wash"
+                    Type:
+                      type: integer
+                      example: 1
+        400:
+          description: "Missing or invalid query parameter"
+        500:
+          description: "Internal Server Error"
+  /api/GetMastersPressure:
+    get:
+      summary: "Get Master Pressure Settings"
+      description: "Returns a list of master pressure configurations based on the specified type."
+      tags:
+        - Master
+      produces:
+        - application/json
+      parameters:
+        - name: Type
+          in: query
+          required: true
+          type: integer
+          description: "Type of pressure (e.g., 1 for Air, 2 for RO Water)"
+          example: 1
+      responses:
+        200:
+          description: "List of pressure settings fetched successfully"
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    PressureId:
+                      type: integer
+                      example: 201
+                    PressureValue:
+                      type: string
+                      example: "80 PSI"
+                    Type:
+                      type: integer
+                      example: 1
+        400:
+          description: "Missing or invalid query parameter"
+        500:
+          description: "Internal Server Error"
