@@ -1529,3 +1529,55 @@ paths:
                       example: 1
         500:
           description: "Internal Server Error"
+  /api/CheckOrderedStage:
+    post:
+      summary: "Check and Update to Next Ordered Stage"
+      description: >
+        Checks the current stage of a filter by Barcode. If it's an ordered stage, 
+        moves it to the next ordered stage and returns a success or failure message.
+      tags:
+        - Filter
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            required:
+              - BarcodeNum
+              - OrderNum
+              - PerformedBy
+            properties:
+              BarcodeNum:
+                type: string
+                description: Barcode of the filter
+                example: "skjdh767"
+              OrderNum:
+                type: integer
+                description: User's current known stage order
+                example: 3
+              PerformedBy:
+                type: integer
+                description: User ID who performed the action
+                example: 3
+      responses:
+        200:
+          description: Status of the transition to next ordered stage
+          schema:
+            type: object
+            properties:
+              UserGivenOrder:
+                type: integer
+                example: 3
+              ResultMessage:
+                type: string
+                example: "Status updated to next ordered stage: 4"
+              Status:
+                type: string
+                example: "true"
+        500:
+          description: Internal Server Error

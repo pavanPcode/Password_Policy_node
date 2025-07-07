@@ -170,4 +170,9 @@ router.get('/getFiltersList', (req, res) => {
     handleRecord(req, res, data, OperationEnums().getFiltersList);
 });
 
+router.post('/CheckOrderedStage', (req, res) => {
+    const data = req.body;
+    handleRecord(req, res, data, OperationEnums().CheckOrderedStage);
+});
+
 module.exports = router;
