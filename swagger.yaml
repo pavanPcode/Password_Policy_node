@@ -1684,7 +1684,6 @@ paths:
       parameters:
         - name: FilterId
           in: query
-          required: true
           type: integer
           description: ID of the filter to retrieve history for
           example: 101
