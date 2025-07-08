@@ -1871,3 +1871,39 @@ paths:
           description: "Missing or invalid query parameter"
         500:
           description: "Internal Server Error"
+  /api/getAllUsers:
+    get:
+      summary: Get All Users
+      description: Returns a list of all users from the system.
+      tags:
+        - User
+      produces:
+        - application/json
+      responses:
+        200:
+          description: List of users fetched successfully
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    UserId:
+                      type: integer
+                      example: 1
+                    UserName:
+                      type: string
+                      example: "john.doe"
+                    Email:
+                      type: string
+                      example: "john.doe@example.com"
+                    Role:
+                      type: string
+                      example: "Admin"
+        500:
+          description: Internal Server Error
