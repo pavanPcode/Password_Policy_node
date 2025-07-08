@@ -21,7 +21,7 @@ function OperationEnums() {
     GetMastersEquipment:27,
     GetMastersReasons:28,
     GetMastersPressure:29,
-
+    getAllUsers:30,
   };
   return Operations;
 }

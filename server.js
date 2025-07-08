@@ -266,4 +266,9 @@ router.get('/GetMastersPressure', (req, res) => {
     handleRecord(req, res, data, OperationEnums().GetMastersPressure);
 });
 
+router.get('/getAllUsers', (req, res) => {
+    const data = {};
+    handleRecord(req, res, data, OperationEnums().getAllUsers);
+});
+
 module.exports = router;
