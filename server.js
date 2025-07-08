@@ -201,8 +201,40 @@ router.get('/getLocationType', (req, res) => {
     handleRecord(req, res, data, OperationEnums().getLocationType);
 });
 
+// router.get('/getFiltersList', (req, res) => {
+//     // const data = {};
+//     const {BlockId,Status,Barcode } = req.query;
+//     if BlockId == 0:
+//       BlockId = ' b.BlockId'
+//     if Status == 0:
+//       Status = 'pa.Status'
+//     if Barcode == 0:
+//       Barcode = 'pa.Barcode'
+//     else :
+//       Barcode = f'{Barcode}'
+
+//     data = {BlockId:BlockId,Status:Status,Barcode:Barcode}
+//     handleRecord(req, res, data, OperationEnums().getFiltersList);
+// });
+
 router.get('/getFiltersList', (req, res) => {
-    const data = {};
+    let { BlockId, Status, Barcode } = req.query;
+
+    if (BlockId == 0 || BlockId === undefined) {
+        BlockId = 'b.BlockId';
+    }
+
+    if (Status == 0 || Status === undefined) {
+        Status = 'pa.Status';
+    }
+
+    if (Barcode == 0 || Barcode === undefined) {
+        Barcode = 'pa.Barcode';
+    } else {
+        Barcode = `${Barcode}`;
+    }
+    const data = { BlockId, Status, Barcode };
+
     handleRecord(req, res, data, OperationEnums().getFiltersList);
 });
 

@@ -1484,13 +1484,34 @@ paths:
           description: "Server error"
   /api/getFiltersList:
     get:
-      summary: "Get Filters List"
-      description: "Returns a complete list of filters from the system"
+      summary: Get Filters List
+      description: Returns a complete list of filters from the system based on optional filters.
       tags:
         - Filter
+      produces:
+        - application/json
+      parameters:
+        - name: BlockId
+          in: query
+          required: true
+          type: integer
+          description: ID of the block (use 0 for all blocks)
+          example: 0
+        - name: Status
+          in: query
+          required: true
+          type: integer
+          description: Status of the filter (use 0 for all statuses)
+          example: 5
+        - name: Barcode
+          in: query
+          required: true
+          type: string
+          description: Barcode of the filter (use 0 for all)
+          example: "0"
       responses:
         200:
-          description: "Successful response with list of filters"
+          description: Successful response with list of filters
           schema:
             type: object
             properties:
@@ -1528,7 +1549,7 @@ paths:
                       type: integer
                       example: 1
         500:
-          description: "Internal Server Error"
+          description: Internal Server Error
   /api/CheckOrderedStage:
     post:
       summary: "Check and Update to Next Ordered Stage"
