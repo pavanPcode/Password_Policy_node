@@ -309,4 +309,9 @@ router.get('/getStageCount', (req, res) => {
     handleRecord(req, res, data, OperationEnums().getStageCount);
 });
 
+router.post('/updateFiltersList', (req, res) => {
+    const data = req.body;
+    handleRecord(req, res, data, OperationEnums().updateFiltersList);
+});
+
 module.exports = router;

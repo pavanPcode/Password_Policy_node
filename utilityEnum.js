@@ -23,6 +23,7 @@ function OperationEnums() {
     GetMastersPressure:29,
     getAllUsers:30,
     getStageCount:208,
+    updateFiltersList:209,
   };
   return Operations;
 }

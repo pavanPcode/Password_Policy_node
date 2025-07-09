@@ -1955,3 +1955,62 @@ paths:
                       example: 10
         '500':
           description: Internal server error
+  /api/updateFiltersList:
+    post:
+      summary: Update Filter Details
+      description: Updates a filter record in the AssetItem table based on the provided ID and new field values.
+      tags:
+        - Filter
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              Id:
+                type: integer
+                example: 1
+              AHUId:
+                type: string
+                example: "2"
+              AssetType:
+                type: string
+                example: "2"
+              Manufacturer:
+                type: string
+                example: "Blue Star Pvt Ltd"
+              InstalledOn:
+                type: string
+                format: date
+                example: "2024-06-15"
+              Location:
+                type: string
+                example: "2"
+              Dimensions:
+                type: string
+                example: "24x12x2"
+              MicronRating:
+                type: string
+                example: "10 Micron"
+              CleaningLimit:
+                type: string
+                example: "5 cleanings"
+              ValidOperationLife:
+                type: string
+                example: "365"
+              Specifications:
+                type: string
+                example: "High-efficiency particulate air filter for cleanroom application."
+              updatedby:
+                type: integer
+                example: 1
+      responses:
+        200:
+          description: Filter details updated successfully
+        400:
+          description: Bad request (missing or invalid data)
+        404:
+          description: Filter not found
+        500:
+          description: Internal server error
