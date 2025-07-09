@@ -262,7 +262,7 @@ app.post("/login", async (req, res) => {
     const row = result.recordset[0];
     if (!row) return res.status(404).json({ Message: "User not found", status: false, ResultData: [] });
 
-    let { UserID, PasswordHash, FailedLoginAttempts, IsLocked, PasswordExpiryDate, LastFailedAttempt,isTemporaryPassword,Role,Name,sessionTimeoutMinutes } = row;
+    let { UserID, PasswordHash, FailedLoginAttempts, IsLocked, PasswordExpiryDate, LastFailedAttempt,isTemporaryPassword,Role,Name,sessionTimeoutMinutes,UserName } = row;
 
     // if (IsLocked) {
     //   if (LastFailedAttempt && new Date() - new Date(LastFailedAttempt) > policy.LockoutDurationMinutes * 60000) {
@@ -285,7 +285,7 @@ app.post("/login", async (req, res) => {
     const isMatch = await bcrypt.compare(password, PasswordHash);
     if (isMatch) {
       await sql.query`UPDATE psw.UserSecurity SET FailedLoginAttempts = 0, LastLogin = GETDATE() WHERE UserID = ${UserID}`;
-      return res.json({ Message: "Login successful", status: true, ResultData: {UserID:UserID,isTemporaryPassword:isTemporaryPassword,Role:Role,Name:Name,sessionTimeoutMinutes:sessionTimeoutMinutes} });
+      return res.json({ Message: "Login successful", status: true, ResultData: {UserID:UserID,isTemporaryPassword:isTemporaryPassword,Role:Role,Name:Name,sessionTimeoutMinutes:sessionTimeoutMinutes,UserName:UserName} });
     } else {
       FailedLoginAttempts += 1;
       const isLocked = FailedLoginAttempts >= policy.MaxFailedAttempts ? 1 : 0;
