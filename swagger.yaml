@@ -1322,7 +1322,7 @@ paths:
             type: object
             required:
               - AHUId
-              - Code
+              - Lable
               - AssetType
               - Manufacturer
               - InstalledOn
@@ -1340,7 +1340,7 @@ paths:
               AHUId:
                 type: integer
                 example: 2
-              Code:
+              Lable:
                 type: string
                 example: "A100"
               AssetType:

@@ -180,7 +180,7 @@ router.post('/AddAHUFilter', (req, res) => {
     const barcode = timestamp.slice(-8); // Last 8 digits only
     data.FilterId = `FLT${barcode.slice(-4)}`;
     data.Barcode = barcode;
-    data.Lable = `LBL${barcode}`;
+    // data.Lable = `LBL${barcode}`;
     console.log(data);
 
     handleRecord(req, res, data, OperationEnums().AddAHUFilter);
