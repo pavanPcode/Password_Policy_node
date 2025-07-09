@@ -303,4 +303,10 @@ router.get('/getAllUsers', (req, res) => {
     handleRecord(req, res, data, OperationEnums().getAllUsers);
 });
 
+
+router.get('/getStageCount', (req, res) => {
+    const data = {};
+    handleRecord(req, res, data, OperationEnums().getStageCount);
+});
+
 module.exports = router;

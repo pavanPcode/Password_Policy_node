@@ -1928,3 +1928,30 @@ paths:
                       example: "Admin"
         500:
           description: Internal Server Error
+  /api/getStageCount:
+    get:
+      summary: Get Maintenance Stage Counts
+      description: Returns the count of assets for each maintenance stage by joining MaintenanceStages and AssetItem tables.
+      tags:
+        - Filter
+      responses:
+        '200':
+          description: Successful response with stage count data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    StageOrder:
+                      type: integer
+                      example: 1
+                    StageName:
+                      type: string
+                      example: "Wash-in"
+                    RecordCount:
+                      type: integer
+                      example: 10
+        '500':
+          description: Internal server error
