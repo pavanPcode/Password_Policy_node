@@ -253,7 +253,7 @@ app.post("/login", async (req, res) => {
 
     const result = await sql.query`
       SELECT u.UserID, u.PasswordHash, s.FailedLoginAttempts, s.IsLocked,
-             s.PasswordExpiryDate, s.LastFailedAttempt,s.isTemporaryPassword,u.Role,u.Name,  (SELECT TOP 1 sessionTimeoutMinutes FROM psw.PasswordPolicy) AS sessionTimeoutMinutes
+             s.PasswordExpiryDate, s.LastFailedAttempt,s.isTemporaryPassword,u.Role,u.Name,u.email  UserName,  (SELECT TOP 1 sessionTimeoutMinutes FROM psw.PasswordPolicy) AS sessionTimeoutMinutes
 
       FROM dbo.pereco_Users u
       JOIN psw.UserSecurity s ON u.UserID = s.UserID
