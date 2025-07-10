@@ -2625,3 +2625,135 @@ paths:
           description: Block not found
         500:
           description: Internal server error
+  /api/AddWashInReasons:
+    post:
+      summary: Add Wash-In Reason
+      description: Adds a new Wash-In Reason to the system.
+      tags:
+        - WashInReasons
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              Reason:
+                type: string
+                example: "Type-C Clearance"
+              Category:
+                type: string
+                example: "Wash-in"
+              CreatedBy:
+                type: integer
+                example: 1
+      responses:
+        200:
+          description: Wash-In Reason added successfully
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+
+  /api/updateWashInReasons:
+    post:
+      summary: Update Wash-In Reason
+      description: Updates an existing Wash-In Reason based on ID.
+      tags:
+        - WashInReasons
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              Id:
+                type: integer
+                example: 1
+              Reason:
+                type: string
+                example: "Updated Reason"
+              Category:
+                type: string
+                example: "Updated Category"
+              UpdatedBy:
+                type: integer
+                example: 2
+      responses:
+        200:
+          description: Wash-In Reason updated successfully
+        400:
+          description: Bad request
+        404:
+          description: Reason not found
+        500:
+          description: Internal server error
+
+  /api/deleteWashInReasons:
+    post:
+      summary: Delete Wash-In Reason (Soft Delete)
+      description: Marks a Wash-In Reason as inactive.
+      tags:
+        - WashInReasons
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              Id:
+                type: integer
+                example: 1
+              UpdatedBy:
+                type: integer
+                example: 2
+              IsActive:
+                type: integer
+                example: 0
+      responses:
+        200:
+          description: Wash-In Reason deleted successfully
+        400:
+          description: Bad request
+        404:
+          description: Reason not found
+        500:
+          description: Internal server error
+
+  /api/getWashInReasons:
+    get:
+      summary: Get Wash-In Reasons
+      description: Retrieves all active Wash-In Reasons.
+      tags:
+        - WashInReasons
+      responses:
+        200:
+          description: List of Wash-In Reasons
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                Id:
+                  type: integer
+                  example: 1
+                Reason:
+                  type: string
+                  example: "Type-C Clearance"
+                Category:
+                  type: string
+                  example: "Wash-in"
+                CreatedBy:
+                  type: integer
+                  example: 1
+                CreatedOn:
+                  type: string
+                  format: date-time
+                  example: "2025-07-06T21:52:27.437Z"
+                IsActive:
+                  type: boolean
+                  example: true
+        500:
+          description: Internal server error

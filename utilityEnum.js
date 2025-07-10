@@ -40,6 +40,11 @@ function OperationEnums() {
     addlocations:421,
     editlocations:422,
     deletelocations:423,
+    AddWashInReasons:430,
+    getWashInReasons:431,
+    updateWashInReasons:432,
+    deleteWashInReasons:433,
+
   };
   return Operations;
 }

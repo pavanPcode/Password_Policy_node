@@ -406,4 +406,24 @@ router.post('/updatelocationsstatus', (req, res) => {
     handleRecord(req, res, data, OperationEnums().deletelocations);
 });
 
+router.post('/AddWashInReasons', (req, res) => {
+    const data = req.body;
+    handleRecord(req, res, data, OperationEnums().AddWashInReasons);
+});
+
+router.post('/updateWashInReasons', (req, res) => {
+    const data = req.body;
+    handleRecord(req, res, data, OperationEnums().updateWashInReasons);
+});
+router.post('/deleteWashInReasons', (req, res) => {
+    const data = req.body;
+    handleRecord(req, res, data, OperationEnums().deleteWashInReasons);
+});
+
+router.get('/getWashInReasons', (req, res) => {
+    const data = {};
+    handleRecord(req, res, data, OperationEnums().getWashInReasons);
+});
+
+
 module.exports = router;
