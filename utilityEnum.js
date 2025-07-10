@@ -36,7 +36,10 @@ function OperationEnums() {
     addMaintenanceStages:411,
     updateMaintenanceStages:412,
     deleteMaintenanceStages:413,
-
+    getlocations:420,
+    addlocations:421,
+    editlocations:422,
+    deletelocations:423,
   };
   return Operations;
 }

@@ -2476,3 +2476,139 @@ paths:
           description: Stage not found
         500:
           description: Internal server error
+  /api/getBlocks:
+    get:
+      summary: Get Block List
+      description: Retrieves all active blocks from the Block table.
+      tags:
+        - Block
+      responses:
+        200:
+          description: List of blocks
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                BlockId:
+                  type: integer
+                  example: 1
+                BlockName:
+                  type: string
+                  example: "CleanRoom"
+                Description:
+                  type: string
+                  example: "CleanRoom"
+                CreateBy:
+                  type: integer
+                  example: 1001
+                CreatedDate:
+                  type: string
+                  format: date-time
+                  example: "2025-07-05T02:01:33.717Z"
+                UpdatedBy:
+                  type: integer
+                  example: null
+                UpdateOn:
+                  type: string
+                  format: date-time
+                  example: null
+                IsActive:
+                  type: integer
+                  example: 1
+        500:
+          description: Internal server error
+
+  /api/addBlock:
+    post:
+      summary: Add Block
+      description: Inserts a new block record into the Block table.
+      tags:
+        - Block
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              BlockName:
+                type: string
+                example: "NewBlock"
+              Description:
+                type: string
+                example: "This is a new block"
+              CreateBy:
+                type: integer
+                example: 1001
+      responses:
+        200:
+          description: Block added successfully
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+
+  /api/updateBlock:
+    post:
+      summary: Update Block
+      description: Updates an existing block record.
+      tags:
+        - Block
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              BlockId:
+                type: integer
+                example: 1
+              BlockName:
+                type: string
+                example: "UpdatedBlock"
+              Description:
+                type: string
+                example: "Updated description"
+              UpdatedBy:
+                type: integer
+                example: 2002
+      responses:
+        200:
+          description: Block updated successfully
+        400:
+          description: Bad request
+        404:
+          description: Block not found
+        500:
+          description: Internal server error
+
+  /api/deleteBlock:
+    post:
+      summary: Delete Block (Soft Delete)
+      description: Marks a block as inactive (IsActive = 0).
+      tags:
+        - Block
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              BlockId:
+                type: integer
+                example: 1
+              UpdatedBy:
+                type: integer
+                example: 2002
+      responses:
+        200:
+          description: Block deleted successfully (soft delete)
+        400:
+          description: Bad request
+        404:
+          description: Block not found
+        500:
+          description: Internal server error
