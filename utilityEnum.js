@@ -44,6 +44,11 @@ function OperationEnums() {
     getWashInReasons:431,
     updateWashInReasons:432,
     deleteWashInReasons:433,
+    addPressure:440,
+    updatePressure:441,
+    deletePressure:442,
+    getPressure:443,
+
 
   };
   return Operations;

@@ -2757,3 +2757,173 @@ paths:
                   example: true
         500:
           description: Internal server error
+  /api/addPressure:
+    post:
+      summary: Add Pressure Entry
+      description: Inserts a new pressure range into the Pressure table.
+      tags:
+        - Pressure
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              Min:
+                type: number
+                format: float
+                example: 0.10
+              Max:
+                type: number
+                format: float
+                example: 7.00
+              Unit:
+                type: string
+                example: "Bar"
+              Type:
+                type: integer
+                example: 0
+              CreatedBy:
+                type: integer
+                example: 1
+      responses:
+        200:
+          description: Pressure entry added successfully
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+
+  /api/getPressure:
+    get:
+      summary: Get Pressure Entries by Type
+      description: Retrieves all active pressure entries filtered by Type.
+      tags:
+        - Pressure
+      parameters:
+        - name: Type
+          in: query
+          description: Type of pressure (e.g., 0 = Pressure, 1 = Vacuum, 2 = Temperature)
+          required: true
+          type: integer
+          example: 1
+      responses:
+        200:
+          description: Filtered list of pressure entries
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                Id:
+                  type: integer
+                  example: 2
+                Min:
+                  type: number
+                  format: float
+                  example: 0.10
+                Max:
+                  type: number
+                  format: float
+                  example: 7.00
+                Unit:
+                  type: string
+                  example: "Bar"
+                Type:
+                  type: integer
+                  example: 1
+                IsActive:
+                  type: boolean
+                  example: true
+                CreatedBy:
+                  type: integer
+                  example: 1
+                CreatedOn:
+                  type: string
+                  format: date-time
+                  example: "2025-07-06T23:41:49.390Z"
+                UpdatedBy:
+                  type: integer
+                  example: null
+                UpdatedOn:
+                  type: string
+                  format: date-time
+                  example: null
+        400:
+          description: Bad request (e.g., missing or invalid Type)
+        500:
+          description: Internal server error
+
+  /api/updatePressure:
+    post:
+      summary: Update Pressure Entry
+      description: Updates an existing pressure entry by ID.
+      tags:
+        - Pressure
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              Id:
+                type: integer
+                example: 1
+              Min:
+                type: number
+                example: 0.15
+              Max:
+                type: number
+                example: 6.50
+              Unit:
+                type: string
+                example: "Bar"
+              Type:
+                type: integer
+                example: 1
+              UpdatedBy:
+                type: integer
+                example: 2
+      responses:
+        200:
+          description: Pressure entry updated successfully
+        400:
+          description: Bad request
+        404:
+          description: Entry not found
+        500:
+          description: Internal server error
+
+  /api/updatePressurestatus:
+    post:
+      summary: Delete Pressure Entry (Soft Delete)
+      description: Marks a pressure entry as inactive.
+      tags:
+        - Pressure
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              Id:
+                type: integer
+                example: 1
+              UpdatedBy:
+                type: integer
+                example: 2
+              IsActive:
+                type: integer
+                example: 0
+      responses:
+        200:
+          description: Pressure entry deleted successfully (soft delete)
+        400:
+          description: Bad request
+        404:
+          description: Entry not found
+        500:
+          description: Internal server error

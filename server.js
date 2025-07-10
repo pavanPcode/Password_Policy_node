@@ -425,5 +425,24 @@ router.get('/getWashInReasons', (req, res) => {
     handleRecord(req, res, data, OperationEnums().getWashInReasons);
 });
 
+router.post('/addPressure', (req, res) => {
+    const data = req.body;
+    handleRecord(req, res, data, OperationEnums().addPressure);
+});
+
+router.post('/updatePressure', (req, res) => {
+    const data = req.body;
+    handleRecord(req, res, data, OperationEnums().updatePressure);
+});
+router.post('/updatePressurestatus', (req, res) => {
+    const data = req.body;
+    handleRecord(req, res, data, OperationEnums().deletePressure);
+});
+
+
+router.get('/getPressure', (req, res) => {
+    const data = req.query;
+    handleRecord(req, res, data, OperationEnums().getPressure);
+});
 
 module.exports = router;
