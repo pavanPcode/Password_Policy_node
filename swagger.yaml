@@ -2190,6 +2190,10 @@ paths:
               id:
                 type: integer
                 example: 1
+              IsActive:
+                type: integer
+                example: 0
+
       responses:
         200:
           description: AHU asset deleted successfully
@@ -2316,6 +2320,9 @@ paths:
               Updatedby:
                 type: integer
                 example: 2
+              IsActive:
+                type: integer
+                example: 0
       responses:
         200:
           description: Asset type deleted (soft delete) successfully
@@ -2467,6 +2474,9 @@ paths:
               Updatedby:
                 type: integer
                 example: 101
+              IsActive:
+                type: integer
+                example: 0
       responses:
         200:
           description: Maintenance stage deleted (soft delete)
@@ -2603,6 +2613,9 @@ paths:
               UpdatedBy:
                 type: integer
                 example: 2002
+              IsActive:
+                type: integer
+                example: 0
       responses:
         200:
           description: Block deleted successfully (soft delete)

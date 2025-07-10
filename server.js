@@ -324,6 +324,12 @@ router.post('/updateAHU', (req, res) => {
     handleRecord(req, res, data, OperationEnums().updateAHUEnum);
 });
 
+router.post('/deleteAHU', (req, res) => {
+    const data = req.body;
+    handleRecord(req, res, data, OperationEnums().deleteAHU);
+});
+
+
 router.get('/getAHUList', (req, res) => {
     let { location } = req.query;
 
