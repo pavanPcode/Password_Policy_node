@@ -48,6 +48,11 @@ function OperationEnums() {
     updatePressure:441,
     deletePressure:442,
     getPressure:443,
+    addEquipments:450,
+    updateEquipments:451,
+    deleteEquipments:452,
+    getEquipments:453
+
 
 
   };

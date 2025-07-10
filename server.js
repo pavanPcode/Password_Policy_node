@@ -445,4 +445,21 @@ router.get('/getPressure', (req, res) => {
     handleRecord(req, res, data, OperationEnums().getPressure);
 });
 
+router.get('/getEquipments', (req, res) => {
+    const data = req.query;
+    handleRecord(req, res, data, OperationEnums().getEquipments);
+});
+
+router.post('/addEquipments', (req, res) => {
+    const data = req.body;
+    handleRecord(req, res, data, OperationEnums().addEquipments);
+});
+router.post('/updateEquipments', (req, res) => {
+    const data = req.body;
+    handleRecord(req, res, data, OperationEnums().updateEquipments);
+});
+router.post('/updateEquipmentsstatus', (req, res) => {
+    const data = req.body;
+    handleRecord(req, res, data, OperationEnums().deleteEquipments);
+});
 module.exports = router;

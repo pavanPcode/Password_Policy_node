@@ -2927,3 +2927,153 @@ paths:
           description: Entry not found
         500:
           description: Internal server error
+  /api/getEquipments:
+    get:
+      summary: Get Equipments by Type
+      description: Retrieves active equipment filtered by whether they are dryers.
+      tags:
+        - Equipments
+      parameters:
+        - name: Isdryer
+          in: query
+          required: true
+          type: integer
+          enum: [0, 1]
+          description: "0 = Washer, 1 = Dryer"
+          example: 1
+      responses:
+        200:
+          description: List of equipment
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                Id:
+                  type: integer
+                  example: 1
+                EquipmentName:
+                  type: string
+                  example: "Rotary Washer"
+                SerialNumber:
+                  type: string
+                  example: "DRY-A-001"
+                Isdryer:
+                  type: integer
+                  example: 0
+                CreatedBy:
+                  type: integer
+                  example: 1
+                CreatedOn:
+                  type: string
+                  format: date-time
+                  example: "2025-07-05T00:00:00"
+                IsActive:
+                  type: boolean
+                  example: true
+        500:
+          description: Internal server error
+
+  /api/addEquipments:
+    post:
+      summary: Add Equipment
+      description: Adds a new equipment record to the database.
+      tags:
+        - Equipments
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              EquipmentName:
+                type: string
+                example: "Rotary Washer"
+              SerialNumber:
+                type: string
+                example: "DRY-A-001"
+              Isdryer:
+                type: integer
+                example: 0
+              CreatedBy:
+                type: integer
+                example: 1
+      responses:
+        200:
+          description: Equipment added successfully
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+
+  /api/updateEquipments:
+    post:
+      summary: Update Equipment
+      description: Updates an existing equipment record.
+      tags:
+        - Equipments
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              Id:
+                type: integer
+                example: 1
+              EquipmentName:
+                type: string
+                example: "Updated Washer"
+              SerialNumber:
+                type: string
+                example: "DRY-B-001"
+              Isdryer:
+                type: integer
+                example: 1
+              UpdatedBy:
+                type: integer
+                example: 2
+      responses:
+        200:
+          description: Equipment updated successfully
+        400:
+          description: Bad request
+        404:
+          description: Equipment not found
+        500:
+          description: Internal server error
+
+  /api/updateEquipmentsstatus:
+    post:
+      summary: Delete Equipment (Soft Delete)
+      description: Sets IsActive = 0 for the given equipment ID.
+      tags:
+        - Equipments
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              Id:
+                type: integer
+                example: 1
+              UpdatedBy:
+                type: integer
+                example: 2
+              IsActive:
+                type: integer
+                example: 0
+              
+      responses:
+        200:
+          description: Equipment deleted (soft) successfully
+        400:
+          description: Bad request
+        404:
+          description: Equipment not found
+        500:
+          description: Internal server error
