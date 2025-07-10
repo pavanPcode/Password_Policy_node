@@ -415,7 +415,7 @@ router.post('/updateWashInReasons', (req, res) => {
     const data = req.body;
     handleRecord(req, res, data, OperationEnums().updateWashInReasons);
 });
-router.post('/deleteWashInReasons', (req, res) => {
+router.post('/updateWashInReasonsstatus', (req, res) => {
     const data = req.body;
     handleRecord(req, res, data, OperationEnums().deleteWashInReasons);
 });

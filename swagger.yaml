@@ -2690,7 +2690,7 @@ paths:
         500:
           description: Internal server error
 
-  /api/deleteWashInReasons:
+  /api/updateWashInReasonsstatus:
     post:
       summary: Delete Wash-In Reason (Soft Delete)
       description: Marks a Wash-In Reason as inactive.
