@@ -380,4 +380,24 @@ router.post('/deleteMaintenanceStages', (req, res) => {
     handleRecord(req, res, data, OperationEnums().deleteMaintenanceStages);
 });
 
+router.get('/getlocations', (req, res) => {
+    const data = {};
+    handleRecord(req, res, data, OperationEnums().getlocations);
+});
+
+router.post('/addlocations', (req, res) => {
+    const data = req.body;
+    handleRecord(req, res, data, OperationEnums().addlocations);
+});
+
+router.post('/editlocations', (req, res) => {
+    const data = req.body;
+    handleRecord(req, res, data, OperationEnums().editlocations);
+});
+
+router.post('/deletelocations', (req, res) => {
+    const data = req.body;
+    handleRecord(req, res, data, OperationEnums().deletelocations);
+});
+
 module.exports = router;

@@ -2476,9 +2476,9 @@ paths:
           description: Stage not found
         500:
           description: Internal server error
-  /api/getBlocks:
+  /api/getlocations:
     get:
-      summary: Get Block List
+      summary: Get getlocations List
       description: Retrieves all active blocks from the Block table.
       tags:
         - Block
@@ -2519,7 +2519,7 @@ paths:
         500:
           description: Internal server error
 
-  /api/addBlock:
+  /api/addlocations:
     post:
       summary: Add Block
       description: Inserts a new block record into the Block table.
@@ -2549,7 +2549,7 @@ paths:
         500:
           description: Internal server error
 
-  /api/updateBlock:
+  /api/editlocations:
     post:
       summary: Update Block
       description: Updates an existing block record.
@@ -2584,7 +2584,7 @@ paths:
         500:
           description: Internal server error
 
-  /api/deleteBlock:
+  /api/deletelocations:
     post:
       summary: Delete Block (Soft Delete)
       description: Marks a block as inactive (IsActive = 0).
