@@ -2174,3 +2174,28 @@ paths:
           description: Bad request
         500:
           description: Internal server error
+  /api/deleteAHU:
+    post:
+      summary: Delete AHU Asset
+      description: Deletes an existing Air Handling Unit (AHU) record based on the provided ID.
+      tags:
+        - AHU
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 1
+      responses:
+        200:
+          description: AHU asset deleted successfully
+        400:
+          description: Bad request (missing or invalid ID)
+        404:
+          description: AHU asset not found
+        500:
+          description: Internal server error

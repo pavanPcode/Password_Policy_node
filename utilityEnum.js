@@ -27,6 +27,7 @@ function OperationEnums() {
     AddAHUEnum:300,
     updateAHUEnum:301,
     getAHUListEnum:302,
+    deleteAHU:303,
   };
   return Operations;
 }

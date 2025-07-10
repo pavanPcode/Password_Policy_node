@@ -337,5 +337,9 @@ router.get('/getAHUList', (req, res) => {
     handleRecord(req, res, data, OperationEnums().getAHUListEnum);
 });
 
+router.post('/deleteAHU', (req, res) => {
+    const data = req.body;
+    handleRecord(req, res, data, OperationEnums().deleteAHU);
+});
 
 module.exports = router;
