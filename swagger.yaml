@@ -2054,10 +2054,123 @@ paths:
               Remarks:
                 type: string
                 example: "New installation for server cooling"
+              CreatedBy:
+                type: integer
+                example: 4
       responses:
         200:
           description: AHU asset added successfully
         400:
           description: Bad request (missing or invalid data)
+        500:
+          description: Internal server error
+  /api/updateAHU:
+    post:
+      summary: "Update AHU Asset"
+      description: "Updates an existing AHU record in the pereco_HostAsset table based on ID."
+      tags:
+        - AHU
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 1
+              Code:
+                type: string
+                example: "AHU-002"
+              Description:
+                type: string
+                example: "Air Handler for Server Room"
+              Location:
+                type: string
+                example: "1"
+              Department:
+                type: string
+                example: "IT"
+              Manufacturer:
+                type: string
+                example: "Voltas"
+              ModelNo:
+                type: string
+                example: "VRF-200X"
+              Capacity:
+                type: integer
+                example: 2000
+              Sparescount:
+                type: integer
+                example: 4
+              Remarks:
+                type: string
+                example: "Updated remarks for maintenance"
+              Updatedby:
+                type: integer
+                example: 101
+      responses:
+        200:
+          description: "AHU asset updated successfully"
+        400:
+          description: "Bad request"
+        404:
+          description: "AHU asset not found"
+        500:
+          description: "Internal server error"
+  /api/getAHUList:
+    get:
+      summary: Get AHU List
+      description: Retrieves a list of Air Handling Units (AHUs). If `location` is 0, all AHUs are returned.
+      tags:
+        - AHU
+      parameters:
+        - name: location
+          in: query
+          description: Location ID to filter AHUs (0 returns all)
+          required: false
+          type: string
+          example: "0"
+      responses:
+        200:
+          description: List of AHU assets
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                ID:
+                  type: integer
+                  example: 1
+                Code:
+                  type: string
+                  example: "AHU-002"
+                Description:
+                  type: string
+                  example: "Air Handler for Server Room"
+                Location:
+                  type: string
+                  example: "1"
+                Department:
+                  type: string
+                  example: "IT"
+                Manufacturer:
+                  type: string
+                  example: "Voltas"
+                ModelNo:
+                  type: string
+                  example: "VRF-200X"
+                Capacity:
+                  type: integer
+                  example: 2000
+                Sparescount:
+                  type: integer
+                  example: 4
+                Remarks:
+                  type: string
+                  example: "Installed in 2024"
+        400:
+          description: Bad request
         500:
           description: Internal server error

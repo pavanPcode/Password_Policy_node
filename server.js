@@ -105,7 +105,7 @@ router.post("/updateFilterTypeStatus", async (req, res) => {
 });
 
 //region AHU
-router.get("/getAhuList", (req, res) => {
+router.get("/getAhuListold", (req, res) => {
   const data = {};
   handleRecord(req, res, data, OperationEnums().GETAHULIST);
 });
@@ -115,7 +115,7 @@ router.post("/addAhuold", async (req, res) => {
   handleRecord(req, res, data, OperationEnums().ADDAHU);
 });
 
-router.post("/updateAhu", async (req, res) => {
+router.post("/updateAhuold", async (req, res) => {
   const data = req.body;
   handleRecord(req, res, data, OperationEnums().UPDATEAHU);
 });
@@ -318,5 +318,24 @@ router.post('/AddAHU', (req, res) => {
     const data = req.body;
     handleRecord(req, res, data, OperationEnums().AddAHUEnum);
 });
+
+router.post('/updateAHU', (req, res) => {
+    const data = req.body;
+    handleRecord(req, res, data, OperationEnums().updateAHUEnum);
+});
+
+router.get('/getAHUList', (req, res) => {
+    let { location } = req.query;
+
+    if (location == 0 || location === undefined) {
+        location = 'phs.location';
+    }
+
+    
+    const data = { location };
+
+    handleRecord(req, res, data, OperationEnums().getAHUListEnum);
+});
+
 
 module.exports = router;

@@ -25,6 +25,8 @@ function OperationEnums() {
     getStageCount:208,
     updateFiltersList:209,
     AddAHUEnum:300,
+    updateAHUEnum:301,
+    getAHUListEnum:302,
   };
   return Operations;
 }
