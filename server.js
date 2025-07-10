@@ -337,9 +337,24 @@ router.get('/getAHUList', (req, res) => {
     handleRecord(req, res, data, OperationEnums().getAHUListEnum);
 });
 
-router.post('/deleteAHU', (req, res) => {
+router.get('/getAssetType', (req, res) => {
+    const data = {};
+    handleRecord(req, res, data, OperationEnums().getAssetType);
+});
+
+router.post('/deleteAssetType', (req, res) => {
     const data = req.body;
-    handleRecord(req, res, data, OperationEnums().deleteAHU);
+    handleRecord(req, res, data, OperationEnums().deleteAssetType);
+});
+
+router.post('/updateAssetType', (req, res) => {
+    const data = req.body;
+    handleRecord(req, res, data, OperationEnums().updateAssetType);
+});
+
+router.post('/AddAssetType', (req, res) => {
+    const data = req.body;
+    handleRecord(req, res, data, OperationEnums().AddAssetType);
 });
 
 module.exports = router;

@@ -2199,3 +2199,129 @@ paths:
           description: AHU asset not found
         500:
           description: Internal server error
+  /api/getAssetType:
+    get:
+      summary: Get Asset Types
+      description: Retrieves a list of all asset types from the AssetTypeMaster table.
+      tags:
+        - AssetType
+      responses:
+        200:
+          description: List of asset types
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                Id:
+                  type: integer
+                  example: 1
+                AssetType:
+                  type: string
+                  example: "Carbon Filters"
+                Note:
+                  type: string
+                  example: "remove gases and odors"
+                IsActive:
+                  type: integer
+                  example: 1
+                CreatedBy:
+                  type: integer
+                  example: 1
+                CreatedOn:
+                  type: string
+                  format: date-time
+                  example: "2025-06-03T15:34:34.570Z"
+        500:
+          description: Internal server error
+  /api/AddAssetType:
+    post:
+      summary: Add Asset Type
+      description: Inserts a new asset type into the pereco_AssetType table.
+      tags:
+        - AssetType
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              AssetType:
+                type: string
+                example: "Carbon Filters"
+              Note:
+                type: string
+                example: "Removes gases and odors"
+              CreatedBy:
+                type: integer
+                example: 1
+      responses:
+        200:
+          description: Asset type added successfully
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+  /api/updateAssetType:
+    post:
+      summary: Update Asset Type
+      description: Updates an existing asset type in the pereco_AssetType table.
+      tags:
+        - AssetType
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 1
+              AssetType:
+                type: string
+                example: "Carbon Filters"
+              Note:
+                type: string
+                example: "Updated note"
+              Updatedby:
+                type: integer
+                example: 2
+      responses:
+        200:
+          description: Asset type updated successfully
+        400:
+          description: Bad request
+        404:
+          description: Asset type not found
+        500:
+          description: Internal server error
+  /api/deleteAssetType:
+    post:
+      summary: Delete Asset Type (Soft Delete)
+      description: Soft-deletes an asset type by setting IsActive = 0.
+      tags:
+        - AssetType
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 1
+              Updatedby:
+                type: integer
+                example: 2
+      responses:
+        200:
+          description: Asset type deleted (soft delete) successfully
+        400:
+          description: Bad request
+        404:
+          description: Asset type not found
+        500:
+          description: Internal server error

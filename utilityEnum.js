@@ -28,6 +28,10 @@ function OperationEnums() {
     updateAHUEnum:301,
     getAHUListEnum:302,
     deleteAHU:303,
+    getAssetType:400,
+    AddAssetType:401,
+    updateAssetType:402,
+    deleteAssetType:403,
   };
   return Operations;
 }
