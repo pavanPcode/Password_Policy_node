@@ -1955,7 +1955,7 @@ paths:
                       example: 10
         '500':
           description: Internal server error
-  /api/updateFiltersList:
+  /api/updateFilter:
     post:
       summary: Update Filter Details
       description: Updates a filter record in the AssetItem table based on the provided ID and new field values.
