@@ -357,4 +357,27 @@ router.post('/AddAssetType', (req, res) => {
     handleRecord(req, res, data, OperationEnums().AddAssetType);
 });
 
+
+
+
+router.get('/getMaintenanceStages', (req, res) => {
+    const data = {};
+    handleRecord(req, res, data, OperationEnums().getMaintenanceStages);
+});
+
+router.post('/addMaintenanceStages', (req, res) => {
+    const data = req.body;
+    handleRecord(req, res, data, OperationEnums().addMaintenanceStages);
+});
+
+router.post('/updateMaintenanceStages', (req, res) => {
+    const data = req.body;
+    handleRecord(req, res, data, OperationEnums().updateMaintenanceStages);
+});
+
+router.post('/deleteMaintenanceStages', (req, res) => {
+    const data = req.body;
+    handleRecord(req, res, data, OperationEnums().deleteMaintenanceStages);
+});
+
 module.exports = router;

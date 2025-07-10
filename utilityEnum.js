@@ -32,6 +32,11 @@ function OperationEnums() {
     AddAssetType:401,
     updateAssetType:402,
     deleteAssetType:403,
+    getMaintenanceStages:410,
+    addMaintenanceStages:411,
+    updateMaintenanceStages:412,
+    deleteMaintenanceStages:413,
+
   };
   return Operations;
 }

@@ -2034,8 +2034,8 @@ paths:
                 type: string
                 example: "Air Handler for Server Room"
               Location:
-                type: string
-                example: "1"
+                type: integer
+                example: 1
               Department:
                 type: string
                 example: "IT"
@@ -2087,8 +2087,8 @@ paths:
                 type: string
                 example: "Air Handler for Server Room"
               Location:
-                type: string
-                example: "1"
+                type: integer
+                example: 1
               Department:
                 type: string
                 example: "IT"
@@ -2150,8 +2150,8 @@ paths:
                   type: string
                   example: "Air Handler for Server Room"
                 Location:
-                  type: string
-                  example: "1"
+                  type: integer
+                  example: 1
                 Department:
                   type: string
                   example: "IT"
@@ -2323,5 +2323,156 @@ paths:
           description: Bad request
         404:
           description: Asset type not found
+        500:
+          description: Internal server error
+  /api/getMaintenanceStages:
+    get:
+      summary: Get Maintenance Stages
+      description: Retrieves all maintenance stages ordered by `StageOrder`.
+      tags:
+        - MaintenanceStages
+      responses:
+        200:
+          description: List of maintenance stages
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                Id:
+                  type: integer
+                  example: 1
+                StageName:
+                  type: string
+                  example: "New"
+                Description:
+                  type: string
+                  example: "Initial Stage"
+                IsOrder:
+                  type: integer
+                  example: 0
+                StageOrder:
+                  type: integer
+                  example: 0
+                IsActive:
+                  type: integer
+                  example: 1
+                CreatedOn:
+                  type: string
+                  format: date-time
+                  example: "2025-07-05T03:08:34.360Z"
+                Updatedby:
+                  type: integer
+                  example: null
+                UpdatedOn:
+                  type: string
+                  format: date-time
+                  example: null
+        500:
+          description: Internal server error
+
+  /api/addMaintenanceStages:
+    post:
+      summary: Add Maintenance Stage
+      description: Inserts a new maintenance stage into the StageMaster table.
+      tags:
+        - MaintenanceStages
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              StageName:
+                type: string
+                example: "Inspection"
+              Description:
+                type: string
+                example: "Stage for initial inspection"
+              IsOrder:
+                type: integer
+                example: 1
+              StageOrder:
+                type: integer
+                example: 2
+              Createdby:
+                type: integer
+                example: 101
+      responses:
+        200:
+          description: Maintenance stage added successfully
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+
+  /api/updateMaintenanceStages:
+    post:
+      summary: Update Maintenance Stage
+      description: Updates an existing maintenance stage.
+      tags:
+        - MaintenanceStages
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              Id:
+                type: integer
+                example: 1
+              StageName:
+                type: string
+                example: "Updated Stage Name"
+              Description:
+                type: string
+                example: "Updated description"
+              IsOrder:
+                type: integer
+                example: 1
+              StageOrder:
+                type: integer
+                example: 3
+              Updatedby:
+                type: integer
+                example: 101
+      responses:
+        200:
+          description: Maintenance stage updated successfully
+        400:
+          description: Bad request
+        404:
+          description: Stage not found
+        500:
+          description: Internal server error
+
+  /api/deleteMaintenanceStages:
+    post:
+      summary: Delete Maintenance Stage (Soft Delete)
+      description: Marks a maintenance stage as inactive (IsActive = 0).
+      tags:
+        - MaintenanceStages
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              Id:
+                type: integer
+                example: 1
+              Updatedby:
+                type: integer
+                example: 101
+      responses:
+        200:
+          description: Maintenance stage deleted (soft delete)
+        400:
+          description: Bad request
+        404:
+          description: Stage not found
         500:
           description: Internal server error
