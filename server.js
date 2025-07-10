@@ -324,7 +324,7 @@ router.post('/updateAHU', (req, res) => {
     handleRecord(req, res, data, OperationEnums().updateAHUEnum);
 });
 
-router.post('/deleteAHU', (req, res) => {
+router.post('/updateAHUstatus', (req, res) => {
     const data = req.body;
     handleRecord(req, res, data, OperationEnums().deleteAHU);
 });
@@ -348,7 +348,7 @@ router.get('/getAssetType', (req, res) => {
     handleRecord(req, res, data, OperationEnums().getAssetType);
 });
 
-router.post('/deleteAssetType', (req, res) => {
+router.post('/updateAssetTypestatus', (req, res) => {
     const data = req.body;
     handleRecord(req, res, data, OperationEnums().deleteAssetType);
 });
@@ -381,7 +381,7 @@ router.post('/updateMaintenanceStages', (req, res) => {
     handleRecord(req, res, data, OperationEnums().updateMaintenanceStages);
 });
 
-router.post('/deleteMaintenanceStages', (req, res) => {
+router.post('/updateMaintenanceStagesstatus', (req, res) => {
     const data = req.body;
     handleRecord(req, res, data, OperationEnums().deleteMaintenanceStages);
 });
@@ -401,7 +401,7 @@ router.post('/editlocations', (req, res) => {
     handleRecord(req, res, data, OperationEnums().editlocations);
 });
 
-router.post('/deletelocations', (req, res) => {
+router.post('/updatelocationsstatus', (req, res) => {
     const data = req.body;
     handleRecord(req, res, data, OperationEnums().deletelocations);
 });

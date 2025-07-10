@@ -2174,7 +2174,7 @@ paths:
           description: Bad request
         500:
           description: Internal server error
-  /api/deleteAHU:
+  /api/updateAHUstatus:
     post:
       summary: Delete AHU Asset
       description: Deletes an existing Air Handling Unit (AHU) record based on the provided ID.
@@ -2301,7 +2301,7 @@ paths:
           description: Asset type not found
         500:
           description: Internal server error
-  /api/deleteAssetType:
+  /api/updateAssetTypestatus:
     post:
       summary: Delete Asset Type (Soft Delete)
       description: Soft-deletes an asset type by setting IsActive = 0.
@@ -2455,7 +2455,7 @@ paths:
         500:
           description: Internal server error
 
-  /api/deleteMaintenanceStages:
+  /api/updateMaintenanceStagesstatus:
     post:
       summary: Delete Maintenance Stage (Soft Delete)
       description: Marks a maintenance stage as inactive (IsActive = 0).
@@ -2594,7 +2594,7 @@ paths:
         500:
           description: Internal server error
 
-  /api/deletelocations:
+  /api/updatelocationsstatus:
     post:
       summary: Delete Block (Soft Delete)
       description: Marks a block as inactive (IsActive = 0).
