@@ -2014,3 +2014,50 @@ paths:
           description: Filter not found
         500:
           description: Internal server error
+  /api/AddAHU:
+    post:
+      summary: Add New AHU Asset
+      description: Inserts a new Air Handling Unit (AHU) record into the pereco_HostAsset table.
+      tags:
+        - AHU
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              Code:
+                type: string
+                example: "AHU-002"
+              Description:
+                type: string
+                example: "Air Handler for Server Room"
+              Location:
+                type: string
+                example: "1"
+              Department:
+                type: string
+                example: "IT"
+              Manufacturer:
+                type: string
+                example: "Voltas"
+              ModelNo:
+                type: string
+                example: "VRF-200X"
+              Capacity:
+                type: integer
+                example: 2000
+              Sparescount:
+                type: integer
+                example: 4
+              Remarks:
+                type: string
+                example: "New installation for server cooling"
+      responses:
+        200:
+          description: AHU asset added successfully
+        400:
+          description: Bad request (missing or invalid data)
+        500:
+          description: Internal server error

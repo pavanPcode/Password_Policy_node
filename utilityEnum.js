@@ -24,6 +24,7 @@ function OperationEnums() {
     getAllUsers:30,
     getStageCount:208,
     updateFiltersList:209,
+    AddAHUEnum:300,
   };
   return Operations;
 }

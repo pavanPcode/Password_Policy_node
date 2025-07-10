@@ -110,7 +110,7 @@ router.get("/getAhuList", (req, res) => {
   handleRecord(req, res, data, OperationEnums().GETAHULIST);
 });
 
-router.post("/addAhu", async (req, res) => {
+router.post("/addAhuold", async (req, res) => {
   const data = { ...req.body };
   handleRecord(req, res, data, OperationEnums().ADDAHU);
 });
@@ -312,6 +312,11 @@ router.get('/getStageCount', (req, res) => {
 router.post('/updateFilter', (req, res) => {
     const data = req.body;
     handleRecord(req, res, data, OperationEnums().updateFiltersList);
+});
+
+router.post('/AddAHU', (req, res) => {
+    const data = req.body;
+    handleRecord(req, res, data, OperationEnums().AddAHUEnum);
 });
 
 module.exports = router;
