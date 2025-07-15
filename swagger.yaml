@@ -1336,6 +1336,11 @@ paths:
               - AvailabilityStatus
               - Specifications
               - CreatedBy
+              - cleaningFreqAllowance
+              - ROmax
+              - ROmin
+              - AirMax
+              - AirMin
             properties:
               AHUId:
                 type: integer
@@ -1384,6 +1389,25 @@ paths:
               CreatedBy:
                 type: integer
                 example: 1001
+              cleaningFreqAllowance:
+                type: integer
+                example: 3
+              ROmax:
+                type: number
+                format: float
+                example: 4.5
+              ROmin:
+                type: number
+                format: float
+                example: 3.2
+              AirMax:
+                type: number
+                format: float
+                example: 6.0
+              AirMin:
+                type: number
+                format: float
+                example: 4.8
       responses:
         200:
           description: "Asset item inserted successfully"
@@ -1398,6 +1422,7 @@ paths:
                 example: "Asset item inserted successfully"
         500:
           description: "Server error"
+
   /api/getAHUIds:
     get:
       summary: "Get AHU IDs"
