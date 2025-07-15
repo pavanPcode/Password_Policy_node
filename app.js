@@ -957,6 +957,5 @@ app.get('/getSidebar', async (req, res) => {
 host = '0.0.0.0'
 
 sql.connect(dbConfig).then(() => {
-  app.listen(8080,host, () => console.log("Server running on port 3000"));
+  app.listen(8080,host, () => console.log("Server running on port 8080 : http://localhost:8080/api-docs"));
 }).catch(err => console.log("DB Connection failed:", err));
-

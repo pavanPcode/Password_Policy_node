@@ -446,7 +446,16 @@ router.get('/getPressure', (req, res) => {
 });
 
 router.get('/getEquipments', (req, res) => {
-    const data = req.query;
+    // const data = req.query;
+
+    let { Isdryer,blockid } = req.query;
+
+    if (blockid == 0 || blockid === undefined) {
+        blockid = 'blockid';
+    }
+
+    
+    const data = { Isdryer,blockid};
     handleRecord(req, res, data, OperationEnums().getEquipments);
 });
 

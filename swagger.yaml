@@ -2941,6 +2941,12 @@ paths:
           enum: [0, 1]
           description: "0 = Washer, 1 = Dryer"
           example: 1
+        - name: blockid
+          in: query
+          description: blockid ID  (0 returns all)
+          required: false
+          type: integer
+          example: 0
       responses:
         200:
           description: List of equipment
@@ -2999,6 +3005,9 @@ paths:
               CreatedBy:
                 type: integer
                 example: 1
+              blockid:
+                type: integer
+                example: 1
       responses:
         200:
           description: Equipment added successfully
@@ -3033,6 +3042,9 @@ paths:
                 type: integer
                 example: 1
               UpdatedBy:
+                type: integer
+                example: 2
+              blockid:
                 type: integer
                 example: 2
       responses:
