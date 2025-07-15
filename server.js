@@ -451,7 +451,7 @@ router.get('/getEquipments', (req, res) => {
     let { Isdryer,blockid } = req.query;
 
     if (blockid == 0 || blockid === undefined) {
-        blockid = 'blockid';
+        blockid = 'pe.blockid';
     }
 
     
