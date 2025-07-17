@@ -471,4 +471,11 @@ router.post('/updateEquipmentsstatus', (req, res) => {
     const data = req.body;
     handleRecord(req, res, data, OperationEnums().deleteEquipments);
 });
+
+router.get('/getUserDashboardCount', (req, res) => {
+
+    const data = {};
+    handleRecord(req, res, data, OperationEnums().getUserDashboardCount);
+});
+
 module.exports = router;

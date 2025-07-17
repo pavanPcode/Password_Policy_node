@@ -51,7 +51,8 @@ function OperationEnums() {
     addEquipments:450,
     updateEquipments:451,
     deleteEquipments:452,
-    getEquipments:453
+    getEquipments:453,
+    getUserDashboardCount:500,
 
 
 

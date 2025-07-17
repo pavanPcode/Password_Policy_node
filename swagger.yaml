@@ -3133,3 +3133,42 @@ paths:
           description: Equipment not found
         500:
           description: Internal server error
+  /api/getUserDashboardCount:
+    get:
+      summary: Get User Dashboard Count
+      description: Returns count-related metrics for the user dashboard.
+      tags:
+        - Dashboard
+      parameters:
+        - in: query
+          name: userId
+          required: true
+          schema:
+            type: integer
+          example: 1
+          description: ID of the user to get dashboard count for.
+      responses:
+        200:
+          description: Successfully fetched dashboard counts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  taskCount:
+                    type: integer
+                    example: 5
+                  notificationCount:
+                    type: integer
+                    example: 2
+                  projectCount:
+                    type: integer
+                    example: 3
+        400:
+          description: Bad request
+        401:
+          description: Unauthorized
+        404:
+          description: User not found
+        500:
+          description: Internal server error
