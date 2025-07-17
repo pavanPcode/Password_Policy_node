@@ -3141,7 +3141,7 @@ paths:
         - Dashboard
       responses:
         200:
-          description: Successfully fetched dashboard counts
+          description: Successfully fetched dashboard counts.
           content:
             application/json:
               schema:
