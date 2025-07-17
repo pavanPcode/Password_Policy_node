@@ -3201,7 +3201,7 @@ paths:
       summary: Get Bar Graph Data
       description: Returns monthly stage-wise record counts for asset items.
       tags:
-        - Graph
+        - Dashboard
       responses:
         '200':
           description: Successfully retrieved bar graph data
