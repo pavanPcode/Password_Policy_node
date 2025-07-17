@@ -3172,3 +3172,35 @@ paths:
           description: User not found
         500:
           description: Internal server error
+  /api/getAdminDashboardCount:
+    get:
+      summary: Get Admin Dashboard Count
+      description: Retrieves various count metrics for the admin dashboard such as total users, equipments, and notifications.
+      tags:
+        - Dashboard
+      responses:
+        '200':
+          description: Admin dashboard count retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalUsers:
+                    type: integer
+                    example: 150
+                  totalEquipments:
+                    type: integer
+                    example: 45
+                  activeUsers:
+                    type: integer
+                    example: 120
+                  pendingRequests:
+                    type: integer
+                    example: 10
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error

@@ -478,4 +478,11 @@ router.get('/getUserDashboardCount', (req, res) => {
     handleRecord(req, res, data, OperationEnums().getUserDashboardCount);
 });
 
+
+router.get('/getAdminDashboardCount', (req, res) => {
+    const data = {};
+    handleRecord(req, res, data, OperationEnums().getAdminDashboardCount);
+});
+
+
 module.exports = router;
