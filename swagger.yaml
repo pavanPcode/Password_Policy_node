@@ -3196,3 +3196,36 @@ paths:
           description: Unauthorized
         '500':
           description: Internal server error
+  /api/getbarGraph:
+    get:
+      summary: Get Bar Graph Data
+      description: Returns monthly stage-wise record counts for asset items.
+      tags:
+        - Graph
+      responses:
+        '200':
+          description: Successfully retrieved bar graph data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        month:
+                          type: string
+                          example: "July"
+                        stageOrder:
+                          type: integer
+                          example: 0
+                        stageName:
+                          type: string
+                          example: "New"
+                        recordCount:
+                          type: integer
+                          example: 15
+        '500':
+          description: Internal Server Error

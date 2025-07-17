@@ -484,5 +484,9 @@ router.get('/getAdminDashboardCount', (req, res) => {
     handleRecord(req, res, data, OperationEnums().getAdminDashboardCount);
 });
 
+router.get('/getbarGraph', (req, res) => {
+    const data = {};
+    handleRecord(req, res, data, OperationEnums().getbarGraph);
+});
 
 module.exports = router;

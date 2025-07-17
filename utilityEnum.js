@@ -54,6 +54,7 @@ function OperationEnums() {
     getEquipments:453,
     getUserDashboardCount:500,
     getAdminDashboardCount:501,
+    getbarGraph:502
 
 
 
