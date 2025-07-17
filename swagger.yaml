@@ -3139,14 +3139,6 @@ paths:
       description: Returns count-related metrics for the user dashboard.
       tags:
         - Dashboard
-      parameters:
-        - in: query
-          name: userId
-          required: true
-          schema:
-            type: integer
-          example: 1
-          description: ID of the user to get dashboard count for.
       responses:
         200:
           description: Successfully fetched dashboard counts
