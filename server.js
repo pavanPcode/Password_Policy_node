@@ -489,4 +489,25 @@ router.get('/getbarGraph', (req, res) => {
     handleRecord(req, res, data, OperationEnums().getbarGraph);
 });
 
+
+router.get('/getmenu', (req, res) => {
+    const {RoleId } = req.query;
+    const JsonData = { "RoleId":RoleId };
+    exeQuery.GetMenu(JsonData, (error, results) => {
+        if (error) {
+            return res.status(500).json({ error: error.message });
+        }
+        //console.log(results);
+        exeQuery.GetMenuNodes(results, (err, MenuList) => {
+            if (err) {
+                return res.status(500).json({ error: err.message, Status: false });
+            }
+            res.json({
+                ResultData: MenuList,
+                Status: true
+            });
+        });
+    });
+});
+
 module.exports = router;

@@ -3229,3 +3229,45 @@ paths:
                           example: 15
         '500':
           description: Internal Server Error
+  /api/getmenu:
+    get:
+      summary: Get Menu by Role ID
+      description: Returns the menu items available for a given role.
+      tags:
+        - Menu
+      parameters:
+        - name: RoleId
+          in: query
+          required: true
+          type: integer
+          description: ID of the role for which to fetch menu items.
+      responses:
+        200:
+          description: Successful response with menu items.
+          schema:
+            type: object
+            properties:
+              status:
+                type: boolean
+                example: true
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    MenuId:
+                      type: integer
+                      example: 1
+                    MenuName:
+                      type: string
+                      example: Dashboard
+                    Url:
+                      type: string
+                      example: /dashboard
+                    Icon:
+                      type: string
+                      example: fa-dashboard
+        400:
+          description: Missing or invalid RoleId.
+        500:
+          description: Server error while processing the request.
