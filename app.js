@@ -451,9 +451,10 @@ app.get("/getPasswordPolicy", async (req, res) => {
 
 app.post('/addActivity', async (req, res) => {
   try {
-    const { ActivityType, PerformedBy, PerformedOn, Notes, Location,IsSucces,LogType } = req.body;
-
-    if (!ActivityType || !PerformedBy || !PerformedOn) {
+    console.log(req.body)
+    const { ActivityType, PerformedBy, PerformedOn, Notes, Location,IsSucces } = req.body;
+    console.log(ActivityType, PerformedBy, PerformedOn, Notes, Location,IsSucces)
+    if (!ActivityType  || !PerformedOn) {
       return res.status(400).json({ message: 'Missing required fields', status: false, ResultData: []  });
     }
 
