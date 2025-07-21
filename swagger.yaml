@@ -1308,106 +1308,250 @@ paths:
           description: Missing required fields
         500:
           description: Failed to insert activity
+  # /api/AddAHUFilter:
+  #   post:
+  #     summary: "Add AHU Filter"
+  #     description: "Adds a new AHU filter. FilterId, Barcode, and Lable are auto-generated."
+  #     tags:
+  #       - Filter
+  #     parameters:
+  #       - in: body
+  #         name: body
+  #         required: true
+  #         schema:
+  #           type: object
+  #           required:
+  #             - AHUId
+  #             - Lable
+  #             - AssetType
+  #             - Manufacturer
+  #             - InstalledOn
+  #             - Location
+  #             - Dimensions
+  #             - MicronRating
+  #             - CleaningLimit
+  #             - LastCleaningDate
+  #             - ValidOperationLife
+  #             - CurrentStatus
+  #             - AvailabilityStatus
+  #             - Specifications
+  #             - CreatedBy
+  #             - cleaningFreqAllowance
+  #             - ROmax
+  #             - ROmin
+  #             - AirMax
+  #             - AirMin
+  #           properties:
+  #             AHUId:
+  #               type: integer
+  #               example: 2
+  #             Lable:
+  #               type: string
+  #               example: "A100"
+  #             AssetType:
+  #               type: integer
+  #               example: 2
+  #             Manufacturer:
+  #               type: string
+  #               example: "Blue Star"
+  #             InstalledOn:
+  #               type: string
+  #               format: date
+  #               example: "2024-06-15"
+  #             Location:
+  #               type: integer
+  #               example: 2
+  #             Dimensions:
+  #               type: string
+  #               example: "24x12x2"
+  #             MicronRating:
+  #               type: string
+  #               example: "10 Micron"
+  #             CleaningLimit:
+  #               type: string
+  #               example: "5 cleanings"
+  #             LastCleaningDate:
+  #               type: string
+  #               format: date
+  #               example: "2024-07-01"
+  #             ValidOperationLife:
+  #               type: integer
+  #               example: 365
+  #             CurrentStatus:
+  #               type: string
+  #               example: "Active"
+  #             AvailabilityStatus:
+  #               type: string
+  #               example: "Available"
+  #             Specifications:
+  #               type: string
+  #               example: "HEPA filter"
+  #             CreatedBy:
+  #               type: integer
+  #               example: 1001
+  #             cleaningFreqAllowance:
+  #               type: integer
+  #               example: 3
+  #             ROmax:
+  #               type: number
+  #               format: float
+  #               example: 4.5
+  #             ROmin:
+  #               type: number
+  #               format: float
+  #               example: 3.2
+  #             AirMax:
+  #               type: number
+  #               format: float
+  #               example: 6.0
+  #             AirMin:
+  #               type: number
+  #               format: float
+  #               example: 4.8
+  #     responses:
+  #       200:
+  #         description: "Asset item inserted successfully"
+  #         schema:
+  #           type: object
+  #           properties:
+  #             success:
+  #               type: boolean
+  #               example: true
+  #             message:
+  #               type: string
+  #               example: "Asset item inserted successfully"
+  #       500:
+  #         description: "Server error"
   /api/AddAHUFilter:
     post:
       summary: "Add AHU Filter"
-      description: "Adds a new AHU filter. FilterId, Barcode, and Lable are auto-generated."
+      description: >
+        Adds a new AHU filter. `FilterId` and `Barcode` are auto-generated on the backend.
+        Include all required filter details inside the `NewValues` object.
       tags:
         - Filter
+      consumes:
+        - application/json
+      produces:
+        - application/json
       parameters:
         - in: body
           name: body
           required: true
+          description: AHU Filter creation payload with screen metadata
           schema:
             type: object
             required:
-              - AHUId
-              - Lable
-              - AssetType
-              - Manufacturer
-              - InstalledOn
-              - Location
-              - Dimensions
-              - MicronRating
-              - CleaningLimit
-              - LastCleaningDate
-              - ValidOperationLife
-              - CurrentStatus
-              - AvailabilityStatus
-              - Specifications
+              - ScreenName
+              - ApiName
+              - NewValues
               - CreatedBy
-              - cleaningFreqAllowance
-              - ROmax
-              - ROmin
-              - AirMax
-              - AirMin
             properties:
-              AHUId:
-                type: integer
-                example: 2
-              Lable:
+              ScreenName:
                 type: string
-                example: "A100"
-              AssetType:
-                type: integer
-                example: 2
-              Manufacturer:
+                example: "AddAHUFilter"
+              ApiName:
                 type: string
-                example: "Blue Star"
-              InstalledOn:
+                example: "AddAHUFilter"
+              NewValues:
+                type: object
+                required:
+                  - AHUId
+                  - Lable
+                  - AssetType
+                  - Manufacturer
+                  - InstalledOn
+                  - Location
+                  - Dimensions
+                  - MicronRating
+                  - CleaningLimit
+                  - LastCleaningDate
+                  - ValidOperationLife
+                  - CurrentStatus
+                  - AvailabilityStatus
+                  - Specifications
+                  - CreatedBy
+                  - cleaningFreqAllowance
+                  - ROmax
+                  - ROmin
+                  - AirMax
+                  - AirMin
+                properties:
+                  AHUId:
+                    type: integer
+                    example: 2
+                  Lable:
+                    type: string
+                    example: "A10054"
+                  AssetType:
+                    type: integer
+                    example: 2
+                  Manufacturer:
+                    type: string
+                    example: "Blue Star"
+                  InstalledOn:
+                    type: string
+                    format: date
+                    example: "2024-06-15"
+                  Location:
+                    type: integer
+                    example: 2
+                  Dimensions:
+                    type: string
+                    example: "24x12x2"
+                  MicronRating:
+                    type: string
+                    example: "10 Micron"
+                  CleaningLimit:
+                    type: string
+                    example: "5 cleanings"
+                  LastCleaningDate:
+                    type: string
+                    format: date
+                    example: "2024-07-01"
+                  ValidOperationLife:
+                    type: integer
+                    example: 365
+                  CurrentStatus:
+                    type: string
+                    example: "Active"
+                  AvailabilityStatus:
+                    type: string
+                    example: "Available"
+                  Specifications:
+                    type: string
+                    example: "HEPA filter"
+                  CreatedBy:
+                    type: integer
+                    example: 1001
+                  cleaningFreqAllowance:
+                    type: integer
+                    example: 3
+                  ROmax:
+                    type: number
+                    format: float
+                    example: 4.5
+                  ROmin:
+                    type: number
+                    format: float
+                    example: 3.2
+                  AirMax:
+                    type: number
+                    format: float
+                    example: 6.0
+                  AirMin:
+                    type: number
+                    format: float
+                    example: 4.8
+              UpdateValues:
                 type: string
-                format: date
-                example: "2024-06-15"
-              Location:
-                type: integer
-                example: 2
-              Dimensions:
+                example: "Manufacturer"
+              ScreenValues:
                 type: string
-                example: "24x12x2"
-              MicronRating:
-                type: string
-                example: "10 Micron"
-              CleaningLimit:
-                type: string
-                example: "5 cleanings"
-              LastCleaningDate:
-                type: string
-                format: date
-                example: "2024-07-01"
-              ValidOperationLife:
-                type: integer
-                example: 365
-              CurrentStatus:
-                type: string
-                example: "Active"
-              AvailabilityStatus:
-                type: string
-                example: "Available"
-              Specifications:
-                type: string
-                example: "HEPA filter"
+                example: "Manufacturer"
               CreatedBy:
                 type: integer
-                example: 1001
-              cleaningFreqAllowance:
-                type: integer
-                example: 3
-              ROmax:
-                type: number
-                format: float
-                example: 4.5
-              ROmin:
-                type: number
-                format: float
-                example: 3.2
-              AirMax:
-                type: number
-                format: float
-                example: 6.0
-              AirMin:
-                type: number
-                format: float
-                example: 4.8
+                example: 1
       responses:
         200:
           description: "Asset item inserted successfully"
@@ -1420,6 +1564,8 @@ paths:
               message:
                 type: string
                 example: "Asset item inserted successfully"
+        400:
+          description: "Invalid request"
         500:
           description: "Server error"
 

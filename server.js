@@ -160,54 +160,54 @@ router.get('/GetBarcodeType', (req, res) => {
     handleRecord(req, res, data, OperationEnums().GETBCTYPE);
 });
 
-router.post('/AddAHUFilter', (req, res) => {
-    const data = req.body;
-    // Generate base from current datetime (YYYYMMDDHHmmss)
-    const now = new Date();
-    const pad = (n) => n.toString().padStart(2, '0');
-
-    const year = now.getFullYear();
-    const month = pad(now.getMonth() + 1);
-    const day = pad(now.getDate());
-    const hours = pad(now.getHours());
-    const minutes = pad(now.getMinutes());
-    const seconds = pad(now.getSeconds());
-
-    // Use timestamp to ensure uniqueness
-    const timestamp = `${year}${month}${day}${hours}${minutes}${seconds}`; // e.g. 20250704123045
-
-    // Generate values
-    const barcode = timestamp.slice(-8); // Last 8 digits only
-    data.FilterId = `FLT${barcode.slice(-4)}`;
-    data.Barcode = barcode;
-    // data.Lable = `LBL${barcode}`;
-    console.log(data);
-
-    handleRecord(req, res, data, OperationEnums().AddAHUFilter);
-});
-
 // router.post('/AddAHUFilter', (req, res) => {
-//     const pad = (n) => n.toString().padStart(2, '0');
+//     const data = req.body;
+//     // Generate base from current datetime (YYYYMMDDHHmmss)
 //     const now = new Date();
-//     const timestamp = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
-//     const barcode = timestamp.slice(-8);
+//     const pad = (n) => n.toString().padStart(2, '0');
 
-//     // Update NewValues with generated keys
-//     req.body.NewValues.FilterId = `FLT${barcode.slice(-4)}`;
-//     req.body.NewValues.Barcode = barcode;
+//     const year = now.getFullYear();
+//     const month = pad(now.getMonth() + 1);
+//     const day = pad(now.getDate());
+//     const hours = pad(now.getHours());
+//     const minutes = pad(now.getMinutes());
+//     const seconds = pad(now.getSeconds());
 
-//     // Construct the full payload with ScreenOperationId and Approvaltype
-//     const totaldata = {
-//         ...req.body,
-//         ScreenOperationId: OperationEnums().AddAHUFilter,
-//         Approvaltype: 1,
-//         OldValues: {}
-//     };
+//     // Use timestamp to ensure uniqueness
+//     const timestamp = `${year}${month}${day}${hours}${minutes}${seconds}`; // e.g. 20250704123045
 
-//     console.log(totaldata.NewValues);
+//     // Generate values
+//     const barcode = timestamp.slice(-8); // Last 8 digits only
+//     data.FilterId = `FLT${barcode.slice(-4)}`;
+//     data.Barcode = barcode;
+//     // data.Lable = `LBL${barcode}`;
+//     console.log(data);
 
-//     handleRecord(req, res, totaldata, OperationEnums().addApprovalSetting);
+//     handleRecord(req, res, data, OperationEnums().AddAHUFilter);
 // });
+
+router.post('/AddAHUFilter', (req, res) => {
+    const pad = (n) => n.toString().padStart(2, '0');
+    const now = new Date();
+    const timestamp = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
+    const barcode = timestamp.slice(-8);
+
+    // Update NewValues with generated keys
+    req.body.NewValues.FilterId = `FLT${barcode.slice(-4)}`;
+    req.body.NewValues.Barcode = barcode;
+
+    // Construct the full payload with ScreenOperationId and Approvaltype
+    const totaldata = {
+        ...req.body,
+        ScreenOperationId: OperationEnums().AddAHUFilter,
+        Approvaltype: 1,
+        OldValues: {}
+    };
+
+    console.log(totaldata.NewValues);
+
+    handleRecord(req, res, totaldata, OperationEnums().addApprovalSetting);
+});
 
 router.get('/getAHUIds', (req, res) => {
     const data = {};
