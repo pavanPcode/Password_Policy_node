@@ -439,7 +439,7 @@ router.post('/addPressure', (req, res) => {
 
 router.post('/updatePressurestatus', (req, res) => {
     const data = req.body;
-    handleRecord(req, res, data, OperationEnums().deletePressure);
+    handleRecord(req, res, data, OperationEnums().updatePressure);
 });
 
 
