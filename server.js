@@ -186,6 +186,29 @@ router.post('/AddAHUFilter', (req, res) => {
     handleRecord(req, res, data, OperationEnums().AddAHUFilter);
 });
 
+// router.post('/AddAHUFilter', (req, res) => {
+//     const pad = (n) => n.toString().padStart(2, '0');
+//     const now = new Date();
+//     const timestamp = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
+//     const barcode = timestamp.slice(-8);
+
+//     // Update NewValues with generated keys
+//     req.body.NewValues.FilterId = `FLT${barcode.slice(-4)}`;
+//     req.body.NewValues.Barcode = barcode;
+
+//     // Construct the full payload with ScreenOperationId and Approvaltype
+//     const totaldata = {
+//         ...req.body,
+//         ScreenOperationId: OperationEnums().AddAHUFilter,
+//         Approvaltype: 1,
+//         OldValues: {}
+//     };
+
+//     console.log(totaldata.NewValues);
+
+//     handleRecord(req, res, totaldata, OperationEnums().addApprovalSetting);
+// });
+
 router.get('/getAHUIds', (req, res) => {
     const data = {};
     handleRecord(req, res, data, OperationEnums().getAHUId);
@@ -515,7 +538,7 @@ router.get('/getmenu', (req, res) => {
 
 
 router.post('/updatePressure', (req, res) => {
-    const data = {...req.body,ScreenOperationId:OperationEnums().updatePressure};
+    const data = {...req.body,ScreenOperationId:OperationEnums().updatePressure,Approvaltype:2};
     console.log(data)
     handleRecord(req, res, data, OperationEnums().addApprovalSetting);
 });
