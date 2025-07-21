@@ -337,10 +337,10 @@ router.get('/getStageCount', (req, res) => {
 //     handleRecord(req, res, data, OperationEnums().updateFiltersList);
 // });
 
-router.post('/AddAHU', (req, res) => {
-    const data = req.body;
-    handleRecord(req, res, data, OperationEnums().AddAHUEnum);
-});
+// router.post('/AddAHU', (req, res) => {
+//     const data = req.body;
+//     handleRecord(req, res, data, OperationEnums().AddAHUEnum);
+// });
 
 // router.post('/updateAHU', (req, res) => {
 //     const data = req.body;
@@ -569,5 +569,13 @@ router.post('/updateAHU', (req, res) => {
     handleRecord(req, res, data, OperationEnums().addApprovalSetting);
 });
 
+router.post('/AddAHU', (req, res) => {
+    // const data = req.body;
+    // handleRecord(req, res, data, OperationEnums().AddAHUEnum);
+
+    const data = {...req.body,ScreenOperationId:OperationEnums().AddAHUEnum,Approvaltype:1,OldValues: {}};
+    console.log(data)
+    handleRecord(req, res, data, OperationEnums().addApprovalSetting);
+});
 
 module.exports = router;
