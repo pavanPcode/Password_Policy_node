@@ -2963,9 +2963,6 @@ paths:
               ApiName:
                 type: string
                 example: "updatePressure"
-              ScreenOperationId:
-                type: integer
-                example: 1
               OldValues:
                 type: object
                 properties:
