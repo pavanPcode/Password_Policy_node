@@ -54,9 +54,10 @@ function OperationEnums() {
     getEquipments:453,
     getUserDashboardCount:500,
     getAdminDashboardCount:501,
-    getbarGraph:502
-
-
+    getbarGraph:502,
+    addApprovalSetting:1000,
+    getApprovalSetting:1001,
+    updateApprovalSetting:1002,
 
   };
   return Operations;

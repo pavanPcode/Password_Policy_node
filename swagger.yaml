@@ -2848,7 +2848,7 @@ paths:
       parameters:
         - name: Type
           in: query
-          description: Type of pressure (e.g., 0 = Pressure, 1 = Vacuum, 2 = Temperature)
+          description: Type of pressure (e.g., 0 = airPressure, 1 = Ro water, 2 = Temperature range)
           required: true
           type: integer
           example: 1
@@ -2899,44 +2899,128 @@ paths:
         500:
           description: Internal server error
 
+  # /api/updatePressure:
+  #   post:
+  #     summary: Update Pressure Entry
+  #     description: Updates an existing pressure entry by ID.
+  #     tags:
+  #       - Pressure
+  #     parameters:
+  #       - in: body
+  #         name: body
+  #         required: true
+  #         schema:
+  #           type: object
+  #           properties:
+  #             Id:
+  #               type: integer
+  #               example: 1
+  #             Min:
+  #               type: number
+  #               example: 0.15
+  #             Max:
+  #               type: number
+  #               example: 6.50
+  #             Unit:
+  #               type: string
+  #               example: "Bar"
+  #             Type:
+  #               type: integer
+  #               example: 1
+  #             UpdatedBy:
+  #               type: integer
+  #               example: 2
+  #     responses:
+  #       200:
+  #         description: Pressure entry updated successfully
+  #       400:
+  #         description: Bad request
+  #       404:
+  #         description: Entry not found
+  #       500:
+  #         description: Internal server error
   /api/updatePressure:
     post:
-      summary: Update Pressure Entry
-      description: Updates an existing pressure entry by ID.
+      summary: Update Pressure Entry (with Approval Flow)
+      description: Submits an update request for a pressure entry with old and new values, tracked for approval.
       tags:
         - Pressure
+      consumes:
+        - application/json
+      produces:
+        - application/json
       parameters:
         - in: body
           name: body
+          description: Approval data to update pressure
           required: true
           schema:
             type: object
             properties:
-              Id:
-                type: integer
-                example: 1
-              Min:
-                type: number
-                example: 0.15
-              Max:
-                type: number
-                example: 6.50
-              Unit:
+              ScreenName:
                 type: string
-                example: "Bar"
-              Type:
+                example: "updatePressure"
+              ApiName:
+                type: string
+                example: "updatePressure"
+              ScreenOperationId:
                 type: integer
                 example: 1
-              UpdatedBy:
+              OldValues:
+                type: object
+                properties:
+                  Id:
+                    type: integer
+                    example: 1
+                  Min:
+                    type: number
+                    example: 0.15
+                  Max:
+                    type: number
+                    example: 6.5
+                  Unit:
+                    type: string
+                    example: "Bar"
+                  Type:
+                    type: integer
+                    example: 1
+                  UpdatedBy:
+                    type: integer
+                    example: 2
+              NewValues:
+                type: object
+                properties:
+                  Id:
+                    type: integer
+                    example: 1
+                  Min:
+                    type: number
+                    example: 0.26
+                  Max:
+                    type: number
+                    example: 6.5
+                  Unit:
+                    type: string
+                    example: "Bar"
+                  Type:
+                    type: integer
+                    example: 1
+                  UpdatedBy:
+                    type: integer
+                    example: 2
+              UpdateValues:
+                type: string
+                example: "Min"
+              CreatedBy:
                 type: integer
-                example: 2
+                example: 1
       responses:
         200:
-          description: Pressure entry updated successfully
+          description: Approval request for pressure update submitted successfully
         400:
-          description: Bad request
+          description: Bad request – invalid input
         404:
-          description: Entry not found
+          description: Original pressure entry not found
         500:
           description: Internal server error
 
@@ -3271,3 +3355,114 @@ paths:
           description: Missing or invalid RoleId.
         500:
           description: Server error while processing the request.
+
+  /api/getApprovalSetting:
+    get:
+      summary: Get Approval Setting Entries
+      description: Retrieves a list of approval setting entries based on filters (if any).
+      tags:
+        - Approval
+      produces:
+        - application/json
+      
+      responses:
+        200:
+          description: A list of approval setting entries
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                Id:
+                  type: integer
+                  example: 1
+                ScreenName:
+                  type: string
+                  example: "updatePressure"
+                ApiName:
+                  type: string
+                  example: "updatePressure"
+                ScreenOperationId:
+                  type: integer
+                  example: 1
+                OldValues:
+                  type: object
+                  example: {"Min": 0.15, "Max": 6.5}
+                NewValues:
+                  type: object
+                  example: {"Min": 0.26, "Max": 6.5}
+                UpdateValues:
+                  type: string
+                  example: "Min"
+                IsUpdated:
+                  type: boolean
+                  example: false
+                Status:
+                  type: integer
+                  example: 1
+                Remarks:
+                  type: string
+                  example: "Pending approval"
+                IsActive:
+                  type: boolean
+                  example: true
+                CreatedBy:
+                  type: integer
+                  example: 1
+                CreatedOn:
+                  type: string
+                  format: date-time
+                  example: "2025-07-21T10:30:00"
+                UpdatedBy:
+                  type: integer
+                  example: null
+                UpdatedOn:
+                  type: string
+                  format: date-time
+                  example: null
+        500:
+          description: Internal server error
+
+  /api/updateApprovalSetting:
+    post:
+      summary: Update Approval Setting Status
+      description: Updates the status, remarks, and updater information of an existing approval setting.
+      tags:
+        - Approval
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          description: Approval update request payload
+          schema:
+            type: object
+            required:
+              - Id
+              - Status
+              - UpdatedBy
+            properties:
+              Id:
+                type: integer
+                example: 1
+              Status:
+                type: integer
+                example: 2
+              Remarks:
+                type: string
+                example: "test"
+              UpdatedBy:
+                type: integer
+                example: 15
+      responses:
+        200:
+          description: Approval setting updated successfully
+        400:
+          description: Invalid input
+        404:
+          description: Approval setting not found
+        500:
+          description: Internal server error

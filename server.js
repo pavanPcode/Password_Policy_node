@@ -430,10 +430,13 @@ router.post('/addPressure', (req, res) => {
     handleRecord(req, res, data, OperationEnums().addPressure);
 });
 
-router.post('/updatePressure', (req, res) => {
-    const data = req.body;
-    handleRecord(req, res, data, OperationEnums().updatePressure);
-});
+// router.post('/updatePressure', (req, res) => {
+//     const data = req.body;
+//     handleRecord(req, res, data, OperationEnums().updatePressure);
+// });
+
+
+
 router.post('/updatePressurestatus', (req, res) => {
     const data = req.body;
     handleRecord(req, res, data, OperationEnums().deletePressure);
@@ -509,5 +512,23 @@ router.get('/getmenu', (req, res) => {
         });
     });
 });
+
+
+router.post('/updatePressure', (req, res) => {
+    const data = {...req.body,ScreenOperationId:OperationEnums().addApprovalSetting};
+    console.log(data)
+    handleRecord(req, res, data, OperationEnums().addApprovalSetting);
+});
+
+router.get('/getApprovalSetting', (req, res) => {
+    const data = {}
+    handleRecord(req, res, data, OperationEnums().getApprovalSetting);
+});
+
+router.post('/updateApprovalSetting', (req, res) => {
+    const data = req.body
+    handleRecord(req, res, data, OperationEnums().updateApprovalSetting);
+});
+
 
 module.exports = router;
