@@ -3011,6 +3011,9 @@ paths:
               UpdateValues:
                 type: string
                 example: "Min"
+              ScreenValues:
+                type: string
+                example: "Minumum"
               CreatedBy:
                 type: integer
                 example: 1
