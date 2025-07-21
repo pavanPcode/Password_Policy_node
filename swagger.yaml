@@ -3013,7 +3013,7 @@ paths:
                 example: "Min"
               ScreenValues:
                 type: string
-                example: "Minumum"
+                example: "Minimum"
               CreatedBy:
                 type: integer
                 example: 1
