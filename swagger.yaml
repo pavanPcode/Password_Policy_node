@@ -3423,51 +3423,51 @@ paths:
         500:
           description: Internal server error
 
-/api/updateApprovalSetting:
-  post:
-    summary: Update Approval Setting Status
-    description: Updates the status, remarks, and updater information of an existing approval setting.
-    tags:
-      - Approval
-    consumes:
-      - application/json
-    produces:
-      - application/json
-    parameters:
-      - in: body
-        name: body
-        required: true
-        description: Approval update request payload
-        schema:
-          type: object
-          required:
-            - Id
-            - Status
-            - UpdatedBy
-          properties:
-            Id:
-              type: integer
-              example: 1
-              description: Unique ID of the approval setting
-            Status:
-              type: integer
-              enum: [2, 3]
-              example: 2
-              description: Status code (2 = Approve, 3 = Reject)
-            Remarks:
-              type: string
-              example: "Approved by supervisor"
-              description: Optional remarks for the update
-            UpdatedBy:
-              type: integer
-              example: 15
-              description: User ID of the person updating the record
-    responses:
-      200:
-        description: Approval setting updated successfully
-      400:
-        description: Invalid input
-      404:
-        description: Approval setting not found
-      500:
-        description: Internal server error
+  /api/updateApprovalSetting:
+    post:
+      summary: Update Approval Setting Status
+      description: Updates the status, remarks, and updater information of an existing approval setting.
+      tags:
+        - Approval
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          description: Approval update request payload
+          schema:
+            type: object
+            required:
+              - Id
+              - Status
+              - UpdatedBy
+            properties:
+              Id:
+                type: integer
+                example: 1
+                description: Unique ID of the approval setting
+              Status:
+                type: integer
+                enum: [2, 3]
+                example: 2
+                description: Status code (2 = Approve, 3 = Reject)
+              Remarks:
+                type: string
+                example: "Approved by supervisor"
+                description: Optional remarks for the update
+              UpdatedBy:
+                type: integer
+                example: 15
+                description: User ID of the person updating the record
+      responses:
+        200:
+          description: Approval setting updated successfully
+        400:
+          description: Invalid input
+        404:
+          description: Approval setting not found
+        500:
+          description: Internal server error
