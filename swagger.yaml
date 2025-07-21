@@ -2434,61 +2434,171 @@ paths:
           description: Bad request (missing or invalid data)
         500:
           description: Internal server error
+  # /api/updateAHU:
+  #   post:
+  #     summary: "Update AHU Asset"
+  #     description: "Updates an existing AHU record in the pereco_HostAsset table based on ID."
+  #     tags:
+  #       - AHU
+  #     parameters:
+  #       - in: body
+  #         name: body
+  #         required: true
+  #         schema:
+  #           type: object
+  #           properties:
+  #             id:
+  #               type: integer
+  #               example: 1
+  #             Code:
+  #               type: string
+  #               example: "AHU-002"
+  #             Description:
+  #               type: string
+  #               example: "Air Handler for Server Room"
+  #             Location:
+  #               type: integer
+  #               example: 1
+  #             Department:
+  #               type: string
+  #               example: "IT"
+  #             Manufacturer:
+  #               type: string
+  #               example: "Voltas"
+  #             ModelNo:
+  #               type: string
+  #               example: "VRF-200X"
+  #             Capacity:
+  #               type: integer
+  #               example: 2000
+  #             Sparescount:
+  #               type: integer
+  #               example: 4
+  #             Remarks:
+  #               type: string
+  #               example: "Updated remarks for maintenance"
+  #             Updatedby:
+  #               type: integer
+  #               example: 101
+  #     responses:
+  #       200:
+  #         description: "AHU asset updated successfully"
+  #       400:
+  #         description: "Bad request"
+  #       404:
+  #         description: "AHU asset not found"
+  #       500:
+  #         description: "Internal server error"
   /api/updateAHU:
     post:
       summary: "Update AHU Asset"
-      description: "Updates an existing AHU record in the pereco_HostAsset table based on ID."
+      description: "Updates an existing AHU record. Sends both old and new values for supervisor approval."
       tags:
         - AHU
-      parameters:
-        - in: body
-          name: body
-          required: true
-          schema:
-            type: object
-            properties:
-              id:
-                type: integer
-                example: 1
-              Code:
-                type: string
-                example: "AHU-002"
-              Description:
-                type: string
-                example: "Air Handler for Server Room"
-              Location:
-                type: integer
-                example: 1
-              Department:
-                type: string
-                example: "IT"
-              Manufacturer:
-                type: string
-                example: "Voltas"
-              ModelNo:
-                type: string
-                example: "VRF-200X"
-              Capacity:
-                type: integer
-                example: 2000
-              Sparescount:
-                type: integer
-                example: 4
-              Remarks:
-                type: string
-                example: "Updated remarks for maintenance"
-              Updatedby:
-                type: integer
-                example: 101
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ScreenName:
+                  type: string
+                  example: "updateAHU"
+                ApiName:
+                  type: string
+                  example: "updateAHU"
+                OldValues:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    Code:
+                      type: string
+                      example: "AHU-002"
+                    Description:
+                      type: string
+                      example: "Air Handler for Server Room"
+                    Location:
+                      type: integer
+                      example: 1
+                    Department:
+                      type: string
+                      example: "IT"
+                    Manufacturer:
+                      type: string
+                      example: "Voltas"
+                    ModelNo:
+                      type: string
+                      example: "VRF-200X"
+                    Capacity:
+                      type: integer
+                      example: 2000
+                    Sparescount:
+                      type: integer
+                      example: 4
+                    Remarks:
+                      type: string
+                      example: "Updated remarks for maintenance"
+                    Updatedby:
+                      type: integer
+                      example: 101
+                NewValues:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    Code:
+                      type: string
+                      example: "AHU-019"
+                    Description:
+                      type: string
+                      example: "Air Handler for Server Room"
+                    Location:
+                      type: integer
+                      example: 1
+                    Department:
+                      type: string
+                      example: "IT"
+                    Manufacturer:
+                      type: string
+                      example: "Voltas"
+                    ModelNo:
+                      type: string
+                      example: "VRF-200X"
+                    Capacity:
+                      type: integer
+                      example: 2000
+                    Sparescount:
+                      type: integer
+                      example: 4
+                    Remarks:
+                      type: string
+                      example: "Updated remarks for maintenance"
+                    Updatedby:
+                      type: integer
+                      example: 101
+                UpdateValues:
+                  type: string
+                  example: "ModelNo"
+                ScreenValues:
+                  type: string
+                  example: "ModelNo"
+                CreatedBy:
+                  type: integer
+                  example: 1
       responses:
         200:
-          description: "AHU asset updated successfully"
+          description: "AHU asset update request sent for approval successfully"
         400:
           description: "Bad request"
         404:
           description: "AHU asset not found"
         500:
           description: "Internal server error"
+
   /api/getAHUList:
     get:
       summary: Get AHU List

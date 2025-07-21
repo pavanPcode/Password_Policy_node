@@ -342,10 +342,10 @@ router.post('/AddAHU', (req, res) => {
     handleRecord(req, res, data, OperationEnums().AddAHUEnum);
 });
 
-router.post('/updateAHU', (req, res) => {
-    const data = req.body;
-    handleRecord(req, res, data, OperationEnums().updateAHUEnum);
-});
+// router.post('/updateAHU', (req, res) => {
+//     const data = req.body;
+//     handleRecord(req, res, data, OperationEnums().updateAHUEnum);
+// });
 
 router.post('/updateAHUstatus', (req, res) => {
     const data = req.body;
@@ -561,6 +561,13 @@ router.post('/updateFilter', (req, res) => {
     handleRecord(req, res, data, OperationEnums().addApprovalSetting);
 });
 
+router.post('/updateAHU', (req, res) => {
+    // const data = req.body;
+    // handleRecord(req, res, data, OperationEnums().updateAHUEnum);
+    const data = {...req.body,ScreenOperationId:OperationEnums().updateAHUEnum,Approvaltype:2};
+    console.log(data)
+    handleRecord(req, res, data, OperationEnums().addApprovalSetting);
+});
 
 
 module.exports = router;
