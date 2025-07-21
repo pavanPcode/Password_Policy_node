@@ -2126,84 +2126,264 @@ paths:
                       example: 10
         '500':
           description: Internal server error
+  # /api/updateFilter:
+  #   post:
+  #     summary: Update Filter Details
+  #     description: Updates a filter record in the AssetItem table based on the provided ID and new field values.
+  #     tags:
+  #       - Filter
+  #     parameters:
+  #       - in: body
+  #         name: body
+  #         required: true
+  #         schema:
+  #           type: object
+  #           properties:
+  #             Id:
+  #               type: integer
+  #               example: 1
+  #             AHUId:
+  #               type: string
+  #               example: "2"
+  #             AssetType:
+  #               type: string
+  #               example: "2"
+  #             Manufacturer:
+  #               type: string
+  #               example: "Blue Star Pvt Ltd"
+  #             InstalledOn:
+  #               type: string
+  #               format: date
+  #               example: "2024-06-15"
+  #             Location:
+  #               type: string
+  #               example: "2"
+  #             Dimensions:
+  #               type: string
+  #               example: "24x12x2"
+  #             MicronRating:
+  #               type: string
+  #               example: "10 Micron"
+  #             CleaningLimit:
+  #               type: string
+  #               example: "5 cleanings"
+  #             ValidOperationLife:
+  #               type: string
+  #               example: "365"
+  #             Specifications:
+  #               type: string
+  #               example: "High-efficiency particulate air filter for cleanroom application."
+  #             updatedby:
+  #               type: integer
+  #               example: 1
+  #             cleaningFreqAllowance:
+  #               type: integer
+  #               example: 3
+  #             ROmax:
+  #               type: number
+  #               format: float
+  #               example: 4.5
+  #             ROmin:
+  #               type: number
+  #               format: float
+  #               example: 3.2
+  #             AirMax:
+  #               type: number
+  #               format: float
+  #               example: 6.0
+  #             AirMin:
+  #               type: number
+  #               format: float
+  #               example: 4.8
+  #     responses:
+  #       200:
+  #         description: Filter details updated successfully
+  #       400:
+  #         description: Bad request (missing or invalid data)
+  #       404:
+  #         description: Filter not found
+  #       500:
+  #         description: Internal server error
   /api/updateFilter:
     post:
       summary: Update Filter Details
-      description: Updates a filter record in the AssetItem table based on the provided ID and new field values.
+      description: >
+        Updates a filter record in the AssetItem table. Both previous (OldValues) and updated (NewValues)
+        data should be passed along with metadata for tracking and approval flow.
       tags:
         - Filter
+      consumes:
+        - application/json
+      produces:
+        - application/json
       parameters:
         - in: body
           name: body
           required: true
+          description: Payload with both old and new filter values for update tracking
           schema:
             type: object
+            required:
+              - ScreenName
+              - ApiName
+              - OldValues
+              - NewValues
+              - UpdateValues
+              - ScreenValues
+              - CreatedBy
             properties:
-              Id:
+              ScreenName:
+                type: string
+                example: "updateFilter"
+              ApiName:
+                type: string
+                example: "updateFilter"
+              OldValues:
+                type: object
+                properties:
+                  Id:
+                    type: integer
+                    example: 1
+                  AHUId:
+                    type: string
+                    example: "2"
+                  AssetType:
+                    type: string
+                    example: "2"
+                  Manufacturer:
+                    type: string
+                    example: "Blue Star Pvt Ltd"
+                  InstalledOn:
+                    type: string
+                    format: date
+                    example: "2024-06-15"
+                  Location:
+                    type: string
+                    example: "2"
+                  Dimensions:
+                    type: string
+                    example: "24x12x2"
+                  MicronRating:
+                    type: string
+                    example: "10 Micron"
+                  CleaningLimit:
+                    type: string
+                    example: "5 cleanings"
+                  ValidOperationLife:
+                    type: string
+                    example: "365"
+                  Specifications:
+                    type: string
+                    example: "High-efficiency particulate air filter for cleanroom application."
+                  updatedby:
+                    type: integer
+                    example: 1
+                  cleaningFreqAllowance:
+                    type: integer
+                    example: 3
+                  ROmax:
+                    type: number
+                    format: float
+                    example: 4.5
+                  ROmin:
+                    type: number
+                    format: float
+                    example: 3.2
+                  AirMax:
+                    type: number
+                    format: float
+                    example: 6.0
+                  AirMin:
+                    type: number
+                    format: float
+                    example: 4.8
+              NewValues:
+                type: object
+                properties:
+                  Id:
+                    type: integer
+                    example: 1
+                  AHUId:
+                    type: string
+                    example: "2"
+                  AssetType:
+                    type: string
+                    example: "2"
+                  Manufacturer:
+                    type: string
+                    example: "Blue Star Pvt Ltd"
+                  InstalledOn:
+                    type: string
+                    format: date
+                    example: "2024-06-15"
+                  Location:
+                    type: string
+                    example: "2"
+                  Dimensions:
+                    type: string
+                    example: "24x12x2"
+                  MicronRating:
+                    type: string
+                    example: "10 Micron"
+                  CleaningLimit:
+                    type: string
+                    example: "5 cleanings"
+                  ValidOperationLife:
+                    type: string
+                    example: "365"
+                  Specifications:
+                    type: string
+                    example: "High-efficiency particulate air filter for cleanroom application."
+                  updatedby:
+                    type: integer
+                    example: 1
+                  cleaningFreqAllowance:
+                    type: integer
+                    example: 3
+                  ROmax:
+                    type: number
+                    format: float
+                    example: 4.5
+                  ROmin:
+                    type: number
+                    format: float
+                    example: 3.2
+                  AirMax:
+                    type: number
+                    format: float
+                    example: 6.0
+                  AirMin:
+                    type: number
+                    format: float
+                    example: 4.8
+              UpdateValues:
+                type: string
+                example: "Dimensions"
+              ScreenValues:
+                type: string
+                example: "Dimensions"
+              CreatedBy:
                 type: integer
                 example: 1
-              AHUId:
-                type: string
-                example: "2"
-              AssetType:
-                type: string
-                example: "2"
-              Manufacturer:
-                type: string
-                example: "Blue Star Pvt Ltd"
-              InstalledOn:
-                type: string
-                format: date
-                example: "2024-06-15"
-              Location:
-                type: string
-                example: "2"
-              Dimensions:
-                type: string
-                example: "24x12x2"
-              MicronRating:
-                type: string
-                example: "10 Micron"
-              CleaningLimit:
-                type: string
-                example: "5 cleanings"
-              ValidOperationLife:
-                type: string
-                example: "365"
-              Specifications:
-                type: string
-                example: "High-efficiency particulate air filter for cleanroom application."
-              updatedby:
-                type: integer
-                example: 1
-              cleaningFreqAllowance:
-                type: integer
-                example: 3
-              ROmax:
-                type: number
-                format: float
-                example: 4.5
-              ROmin:
-                type: number
-                format: float
-                example: 3.2
-              AirMax:
-                type: number
-                format: float
-                example: 6.0
-              AirMin:
-                type: number
-                format: float
-                example: 4.8
       responses:
         200:
           description: Filter details updated successfully
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              message:
+                type: string
+                example: "Filter details updated successfully"
         400:
           description: Bad request (missing or invalid data)
         404:
           description: Filter not found
         500:
           description: Internal server error
+
   /api/AddAHU:
     post:
       summary: Add New AHU Asset

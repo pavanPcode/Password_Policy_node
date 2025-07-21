@@ -332,10 +332,10 @@ router.get('/getStageCount', (req, res) => {
     handleRecord(req, res, data, OperationEnums().getStageCount);
 });
 
-router.post('/updateFilter', (req, res) => {
-    const data = req.body;
-    handleRecord(req, res, data, OperationEnums().updateFiltersList);
-});
+// router.post('/updateFilter', (req, res) => {
+//     const data = req.body;
+//     handleRecord(req, res, data, OperationEnums().updateFiltersList);
+// });
 
 router.post('/AddAHU', (req, res) => {
     const data = req.body;
@@ -552,6 +552,15 @@ router.post('/updateApprovalSetting', (req, res) => {
     const data = req.body
     handleRecord(req, res, data, OperationEnums().updateApprovalSetting);
 });
+
+router.post('/updateFilter', (req, res) => {
+    // const data = req.body;
+    // handleRecord(req, res, data, OperationEnums().updateFiltersList);
+    const data = {...req.body,ScreenOperationId:OperationEnums().updateFiltersList,Approvaltype:2};
+    console.log(data)
+    handleRecord(req, res, data, OperationEnums().addApprovalSetting);
+});
+
 
 
 module.exports = router;
