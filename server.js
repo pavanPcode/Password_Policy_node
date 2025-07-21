@@ -515,7 +515,7 @@ router.get('/getmenu', (req, res) => {
 
 
 router.post('/updatePressure', (req, res) => {
-    const data = {...req.body,ScreenOperationId:OperationEnums().addApprovalSetting};
+    const data = {...req.body,ScreenOperationId:OperationEnums().updatePressure};
     console.log(data)
     handleRecord(req, res, data, OperationEnums().addApprovalSetting);
 });
