@@ -285,7 +285,17 @@ app.post("/login", async (req, res) => {
     const isMatch = await bcrypt.compare(password, PasswordHash);
     if (isMatch) {
       await sql.query`UPDATE psw.UserSecurity SET FailedLoginAttempts = 0, LastLogin = GETDATE() WHERE UserID = ${UserID}`;
-      return res.json({ Message: "Login successful", status: true, ResultData: {UserID:UserID,isTemporaryPassword:isTemporaryPassword,Role:Role,Name:Name,sessionTimeoutMinutes:sessionTimeoutMinutes,UserName:UserName} });
+        // Fetch RoleMenu data
+      const roleMenuResult = await sql.query`
+        SELECT   rm.RoleId, rm.AppMenuId, rm.[Read], rm.[Write],  rm.[Delete], rm.[Export],  am.MenuName, am.MenuPath, am.IconName
+          FROM [dbo].[RoleMenu] rm
+          INNER JOIN [dbo].[AppMenu] am ON am.id = rm.AppMenuId
+        WHERE rm.RoleId = ${Role} and rm.IsActive = 1 and am.IsActive = 1`;
+
+      // Extract the recordset from the result
+      const roleMenu = roleMenuResult.recordset;
+
+      return res.json({ Message: "Login successful", status: true, ResultData: {UserID:UserID,isTemporaryPassword:isTemporaryPassword,Role:Role,Name:Name,sessionTimeoutMinutes:sessionTimeoutMinutes,UserName:UserName},roleMenu });
     } else {
       FailedLoginAttempts += 1;
       const isLocked = FailedLoginAttempts >= policy.MaxFailedAttempts ? 1 : 0;

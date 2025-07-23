@@ -578,4 +578,86 @@ router.post('/AddAHU', (req, res) => {
     handleRecord(req, res, data, OperationEnums().addApprovalSetting);
 });
 
+router.get('/api/save-cleaning-schedule', async (req, res) => {
+    try {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        let insertedSchedules = [];
+      const result = await handleRecordWithOutRes( data, OperationEnums().AddFilterHistory);
+
+        const ahuResult = await pool.request().query(`
+            SELECT AHUId, InstalledOn, IntervalDays, ValidOperationLife
+            FROM AHUDetails
+            WHERE CurrentStatus = 'Active'
+        `);
+
+        for (const row of ahuResult.recordset) {
+            const ahuId = row.AHUId;
+            const installedOn = new Date(row.InstalledOn);
+            const interval = row.IntervalDays;
+            const validDays = row.ValidOperationLife;
+            const expiryDate = new Date(installedOn.getTime() + validDays * 24 * 60 * 60 * 1000);
+
+            // Get last scheduled date
+            const lastScheduleResult = await pool.request()
+                .input('AHUId', sql.Int, ahuId)
+                .query(`
+                    SELECT TOP 1 ScheduledDate 
+                    FROM AHUCleaningSchedule 
+                    WHERE AHUId = @AHUId 
+                    ORDER BY ScheduledDate DESC
+                `);
+
+            let lastScheduleDate = lastScheduleResult.recordset.length > 0
+                ? new Date(lastScheduleResult.recordset[0].ScheduledDate)
+                : installedOn;
+
+            const nextDueDate = new Date(lastScheduleDate.getTime() + interval * 24 * 60 * 60 * 1000);
+
+            // Compare only date part
+            if (
+                nextDueDate.toDateString() === today.toDateString() &&
+                nextDueDate <= expiryDate
+            ) {
+                // Check if already inserted
+                const existsResult = await pool.request()
+                    .input('AHUId', sql.Int, ahuId)
+                    .input('ScheduledDate', sql.Date, nextDueDate)
+                    .query(`
+                        SELECT COUNT(*) AS count 
+                        FROM AHUCleaningSchedule 
+                        WHERE AHUId = @AHUId AND ScheduledDate = @ScheduledDate
+                    `);
+
+                if (existsResult.recordset[0].count === 0) {
+                    await pool.request()
+                        .input('AHUId', sql.Int, ahuId)
+                        .input('ScheduledDate', sql.Date, nextDueDate)
+                        .query(`
+                            INSERT INTO AHUCleaningSchedule (AHUId, ScheduledDate)
+                            VALUES (@AHUId, @ScheduledDate)
+                        `);
+
+                    insertedSchedules.push({
+                        AHUId: ahuId,
+                        ScheduledDate: nextDueDate.toISOString().slice(0, 10)
+                    });
+                }
+            }
+        }
+
+        res.json({
+            message: `${insertedSchedules.length} schedule(s) added`,
+            schedules: insertedSchedules
+        });
+
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+
+
+
 module.exports = router;
