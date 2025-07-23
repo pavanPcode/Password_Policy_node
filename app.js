@@ -287,7 +287,7 @@ app.post("/login", async (req, res) => {
       await sql.query`UPDATE psw.UserSecurity SET FailedLoginAttempts = 0, LastLogin = GETDATE() WHERE UserID = ${UserID}`;
         // Fetch RoleMenu data
       const roleMenuResult = await sql.query`
-        SELECT   rm.RoleId, rm.AppMenuId, rm.[Read], rm.[Write],  rm.[Delete], rm.[Export],  am.MenuName, am.MenuPath, am.IconName
+        SELECT   rm.RoleId, rm.AppMenuId, rm.[Read], rm.[Write],  rm.[Delete], rm.[Export],  am.MenuName, am.MenuPath, am.IconName,rm.id RoleMenuid
           FROM [dbo].[RoleMenu] rm
           INNER JOIN [dbo].[AppMenu] am ON am.id = rm.AppMenuId
         WHERE rm.RoleId = ${Role} and rm.IsActive = 1 and am.IsActive = 1`;

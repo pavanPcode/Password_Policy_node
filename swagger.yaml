@@ -3985,3 +3985,121 @@ paths:
           description: Approval setting not found
         500:
           description: Internal server error
+  /api/getRoleMenu:
+    get:
+      summary: Get Role Menu
+      description: Fetches role menu items and permissions for the given RoleId
+      tags:
+        - Menu
+      parameters:
+        - name: RoleId
+          in: query
+          description: ID of the role to fetch menu permissions
+          required: true
+          type: integer
+      responses:
+        200:
+          description: Successful response with role menu data
+          schema:
+            type: object
+            properties:
+              status:
+                type: boolean
+                example: true
+              Message:
+                type: string
+                example: "Role menu fetched successfully"
+              rolemenu:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    RoleId:
+                      type: integer
+                      example: 1
+                    AppMenuId:
+                      type: integer
+                      example: 5
+                    Read:
+                      type: boolean
+                      example: true
+                    Write:
+                      type: boolean
+                      example: false
+                    Delete:
+                      type: boolean
+                      example: false
+                    Export:
+                      type: boolean
+                      example: true
+                    MenuName:
+                      type: string
+                      example: "Dashboard"
+                    MenuPath:
+                      type: string
+                      example: "/dashboard"
+                    IconName:
+                      type: string
+                      example: "dashboard-icon"
+        400:
+          description: Missing or invalid RoleId parameter
+        500:
+          description: Server error
+  /api/updateRoleMenu:
+    post:
+      summary: Update Role Menu
+      description: Updates Read, Write, Delete, Export permissions for the given RoleMenu ID
+      tags:
+        - Menu
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            required:
+              - RoleMenuid
+              - Read
+              - Write
+              - Delete
+              - Export
+              - UpdatedBy
+            properties:
+              RoleMenuid:
+                type: integer
+                example: 12
+              Read:
+                type: integer
+                example: 1
+              Write:
+                type: integer
+                example: 0
+              Delete:
+                type: integer
+                example: 0
+              Export:
+                type: integer
+                example: 1
+              UpdatedBy:
+                type: integer
+                example: 1
+      responses:
+        200:
+          description: Update successful
+          schema:
+            type: object
+            properties:
+              status:
+                type: boolean
+                example: true
+              message:
+                type: string
+                example: "Role menu updated successfully"
+        400:
+          description: Invalid input
+        500:
+          description: Server error

@@ -658,6 +658,15 @@ router.get('/api/save-cleaning-schedule', async (req, res) => {
 });
 
 
+router.get('/getRoleMenu', (req, res) => {
+    const data = req.query;
+    handleRecord(req, res, data, OperationEnums().getRoleMenu);
+});
+
+router.post('/updateRoleMenu', (req, res) => {
+    const data = req.body;
+    handleRecord(req, res, data, OperationEnums().updateRoleMenu);
+});
 
 
 module.exports = router;
