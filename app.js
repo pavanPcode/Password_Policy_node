@@ -301,7 +301,7 @@ app.post("/login", async (req, res) => {
       const isLocked = FailedLoginAttempts >= policy.MaxFailedAttempts ? 1 : 0;
       await sql.query`UPDATE psw.UserSecurity SET FailedLoginAttempts = ${FailedLoginAttempts}, IsLocked = ${isLocked}, LastFailedAttempt = GETDATE() WHERE UserID = ${UserID}`;
       if (isLocked)
-        // return res.status(403).json({ Message: `Account is locked due to too many failed attempts. Try again after ${policy.LockoutDurationMinutes} minutes.`, status: false, ResultData: [] });
+        // return res.status(403).json({ Message: `Account is locked due to too many failed attempts. Try again after ${policy.LockoutDurationMinutes} minutes.`, status: false, ResultData: [] }).;
         return res.status(403).json({ Message: `Account is locked due to too many failed attempts.  Contact Admin to Unlock.`, status: false, ResultData: [] });
 
       return res.status(401).json({ Message: "Incorrect password", status: false, ResultData: [] });
