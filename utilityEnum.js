@@ -61,6 +61,10 @@ function OperationEnums() {
     getRoleMenu:600,
     updateRoleMenu:601,
     getRoles:603,
+    GetSchedules:700,
+    GetTasks:710,
+    canceltasks:711,
+
 
   };
   return Operations;

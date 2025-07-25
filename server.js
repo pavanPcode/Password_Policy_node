@@ -673,4 +673,19 @@ router.get('/getRoles', (req, res) => {
     handleRecord(req, res, data, OperationEnums().getRoles);
 });
 
+router.get('/GetSchedules', (req, res) => {
+    const data = {};
+    handleRecord(req, res, data, OperationEnums().GetSchedules);
+});
+
+router.get('/GetTasks', (req, res) => {
+    const data = {};
+    handleRecord(req, res, data, OperationEnums().GetTasks);
+});
+
+router.post('/canceltasks', (req, res) => {
+    const data = req.body;
+    handleRecord(req, res, data, OperationEnums().canceltasks);
+});
+
 module.exports = router;

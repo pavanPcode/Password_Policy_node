@@ -1476,6 +1476,7 @@ paths:
                   - ROmin
                   - AirMax
                   - AirMin
+                  - cleaningdays
                 properties:
                   AHUId:
                     type: integer
@@ -1543,6 +1544,9 @@ paths:
                     type: number
                     format: float
                     example: 4.8
+                  cleaningdays:
+                    type: integer
+                    example: 3
               UpdateValues:
                 type: string
                 example: "Manufacturer"
@@ -2297,6 +2301,9 @@ paths:
                     type: number
                     format: float
                     example: 4.8
+                  cleaningdays:
+                    type: integer
+                    example: 3
               NewValues:
                 type: object
                 properties:
@@ -2356,6 +2363,9 @@ paths:
                     type: number
                     format: float
                     example: 4.8
+                  cleaningdays:
+                    type: integer
+                    example: 3
               UpdateValues:
                 type: string
                 example: "Dimensions"
@@ -4125,5 +4135,120 @@ paths:
                 RoleName:
                   type: string
                   example: Admin
+        500:
+          description: Internal server error
+  /runScheduleJob:
+    post:
+      summary: "Insert cleaning schedules"
+      description: "Triggers the logic to insert new cleaning schedules for eligible filters."
+      tags:
+        - schedule
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        200:
+          description: "Schedule inserted successfully"
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Schedule inserted successfully"
+        500:
+          description: "Internal Server Error"
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+  /GetSchedules:
+    get:
+      summary: "Get Cleaning Schedules"
+      description: "Returns a list of cleaning schedules."
+      tags:
+        - schedule
+      produces:
+        - application/json
+      responses:
+        200:
+          description: "List of schedules"
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                ScheduleId:
+                  type: integer
+                FilterId:
+                  type: integer
+                ScheduledDate:
+                  type: string
+                  format: date
+                Status:
+                  type: string
+        500:
+          description: "Internal Server Error"
+
+  /GetTasks:
+    get:
+      summary: "Get Cleaning Tasks"
+      description: "Returns a list of scheduled cleaning tasks."
+      tags:
+        - Tasks
+      produces:
+        - application/json
+      responses:
+        200:
+          description: "List of tasks"
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                TaskId:
+                  type: integer
+                ScheduleId:
+                  type: integer
+                AssignedTo:
+                  type: string
+                Status:
+                  type: string
+                Remarks:
+                  type: string
+        500:
+          description: "Internal Server Error"
+  /api/canceltasks:
+    post:
+      tags:
+        - Tasks
+      summary: cancel a task by ID
+      description: cancel a task based on its ID and updatedby value.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            required:
+              - id
+              - updatedby
+            properties:
+              id:
+                type: integer
+                example: 123
+              updatedby:
+                type: integer
+                example: 101
+      responses:
+        200:
+          description: Task cancel successfully
+        400:
+          description: Invalid request data
         500:
           description: Internal server error

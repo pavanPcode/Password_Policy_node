@@ -977,6 +977,107 @@ app.get('/getSidebar', async (req, res) => {
   }
 });
 
+
+app.get('/runScheduleJob', async (req, res) => {
+  let pool;
+  const today = new Date();
+  const todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  const inserted = [];
+
+  try {
+    pool = await sql.connect(dbConfig);
+
+    const ahus = await pool.request().query(`
+      SELECT id, InstalledOn, cleaningFreqAllowance, cleaningdays
+      FROM [pereco_AssetItem]
+      WHERE IsActive = 1
+    `);
+
+    for (const ahu of ahus.recordset) {
+      const ahuId = ahu.id;
+      const installedOn = new Date(ahu.InstalledOn);
+      const cleaningFreq = ahu.cleaningFreqAllowance || 0;
+      const cleaningDays = ahu.cleaningdays || 0;
+
+      // Check if already scheduled today
+      const checkResult = await pool.request()
+        .input('FilterId', sql.Int, ahuId)
+        .input('ScheduledDate', sql.Date, todayDate)
+        .query(`
+          SELECT COUNT(*) AS count FROM RNDAdmin.AHUCleaningSchedule
+          WHERE FilterId = @FilterId AND ScheduledDate = @ScheduledDate
+        `);
+
+      if (checkResult.recordset[0].count > 0) {
+        continue;
+      }
+
+      // Get last schedule
+      const lastScheduleResult = await pool.request()
+        .input('FilterId', sql.Int, ahuId)
+        .query(`
+          SELECT TOP 1 ScheduledDate FROM RNDAdmin.AHUCleaningSchedule
+          WHERE FilterId = @FilterId
+          ORDER BY ScheduledDate DESC
+        `);
+
+      if (lastScheduleResult.recordset.length > 0) {
+        const lastScheduled = new Date(lastScheduleResult.recordset[0].ScheduledDate);
+        const nextDue = new Date(lastScheduled);
+        nextDue.setDate(nextDue.getDate() + cleaningDays);
+
+        const startDate = new Date(nextDue);
+        startDate.setDate(startDate.getDate() - cleaningFreq);
+        const endDate = new Date(nextDue);
+        endDate.setDate(endDate.getDate() + cleaningFreq);
+
+        if (todayDate >= startDate && todayDate <= endDate) {
+          await pool.request()
+            .input('FilterId', sql.Int, ahuId)
+            .input('ScheduledDate', sql.Date, todayDate)
+            .query(`
+              INSERT INTO RNDAdmin.AHUCleaningSchedule (FilterId, ScheduledDate)
+              VALUES (@FilterId, @ScheduledDate)
+            `);
+          inserted.push({ FilterId: ahuId, ScheduledDate: todayDate.toISOString().split('T')[0] });
+        }
+      } else {
+        // No schedule yet → use installed date ± allowance
+        const startDate = new Date(installedOn);
+        startDate.setDate(startDate.getDate() - cleaningFreq);
+        const endDate = new Date(installedOn);
+        endDate.setDate(endDate.getDate() + cleaningFreq);
+
+        if (todayDate >= startDate && todayDate <= endDate) {
+          await pool.request()
+            .input('FilterId', sql.Int, ahuId)
+            .input('ScheduledDate', sql.Date, todayDate)
+            .query(`
+              INSERT INTO RNDAdmin.AHUCleaningSchedule (FilterId, ScheduledDate)
+              VALUES (@FilterId, @ScheduledDate)
+            `);
+          inserted.push({ FilterId: ahuId, ScheduledDate: todayDate.toISOString().split('T')[0] });
+        }
+      }
+    }
+
+    res.json({
+      message: `${inserted.length} schedule(s) inserted.`,
+      inserted: inserted,
+    });
+
+  } catch (err) {
+    console.error('Error:', err);
+    res.status(500).send('Internal server error');
+  } finally {
+    if (pool) {
+      await pool.close();
+    }
+  }
+});
+
+
+
 // host = '0.0.0.0'
 
 // sql.connect(dbConfig).then(() => {
