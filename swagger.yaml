@@ -4163,7 +4163,7 @@ paths:
             properties:
               error:
                 type: string
-  /GetSchedules:
+  /api/GetSchedules:
     get:
       summary: "Get Cleaning Schedules"
       description: "Returns a list of cleaning schedules."
@@ -4191,7 +4191,7 @@ paths:
         500:
           description: "Internal Server Error"
 
-  /GetTasks:
+  /api/GetTasks:
     get:
       summary: "Get Cleaning Tasks"
       description: "Returns a list of scheduled cleaning tasks."
@@ -4219,7 +4219,7 @@ paths:
                   type: string
         500:
           description: "Internal Server Error"
-  /api/canceltasks:
+  /api/api/canceltasks:
     post:
       tags:
         - Tasks
