@@ -60,6 +60,7 @@ function OperationEnums() {
     updateApprovalSetting:1002,
     getRoleMenu:600,
     updateRoleMenu:601,
+    getRoles:603,
 
   };
   return Operations;

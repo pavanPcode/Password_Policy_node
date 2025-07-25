@@ -5,6 +5,7 @@ const swaggerUi = require("swagger-ui-express");
 const YAML = require("yamljs");
 const cors = require("cors"); // ✅ Import CORS
 const screenRoutes = require("./server");
+require('dotenv').config(); // load environment variables from .env
 
 const app = express();
 app.use(express.json());
@@ -18,11 +19,22 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 // Mount all routes under /api
 app.use("/api", screenRoutes);
 
+// const dbConfig = {
+//   user: "RNDAdmin",
+//   password: "0f8$4rfT1",
+//   server: "132.148.105.23",
+//   database: "RND_HR",
+//   options: {
+//     encrypt: false,
+//     trustServerCertificate: true,
+//   },
+// };
 const dbConfig = {
-  user: "RNDAdmin",
-  password: "0f8$4rfT1",
-  server: "132.148.105.23",
-  database: "RND_HR",
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  server: process.env.DB_SERVER,
+  database: process.env.DB_DATABASE,
+  port: parseInt(process.env.DB_PORT, 10),
   options: {
     encrypt: false,
     trustServerCertificate: true,
@@ -965,8 +977,18 @@ app.get('/getSidebar', async (req, res) => {
   }
 });
 
-host = '0.0.0.0'
+// host = '0.0.0.0'
+
+// sql.connect(dbConfig).then(() => {
+//   app.listen(8080,host, () => console.log("Server running on port 8080 : http://localhost:8080/api-docs"));
+// }).catch(err => console.log("DB Connection failed:", err));
+
 
 sql.connect(dbConfig).then(() => {
-  app.listen(8080,host, () => console.log("Server running on port 8080 : http://localhost:8080/api-docs"));
-}).catch(err => console.log("DB Connection failed:", err));
+  const port = process.env.PORT || 8080;
+  app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+  });
+}).catch(err => {
+  console.log("DB Connection failed:", err);
+});

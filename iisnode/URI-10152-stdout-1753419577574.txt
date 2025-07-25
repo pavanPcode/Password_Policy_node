@@ -1,0 +1,11 @@
+[dotenv@17.2.0] injecting env (5) from .env (tip: ⚙️  write to custom object with { processEnv: myObject })
+db con {
+  user: 'RNDAdmin',
+  password: '0f8$4rfT1',
+  server: '132.148.105.23',
+  database: 'RND_HR',
+  port: 1433,
+  options: { encrypt: false, trustServerCertificate: true }
+}
+[dotenv@17.2.0] injecting env (0) from .env (tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild)
+Server running on port \\.\pipe\4d2deff6-df93-4d4d-8a12-f426fa8cdb19

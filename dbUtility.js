@@ -1,18 +1,28 @@
 const sql = require("mssql");
 require("dotenv").config();
 
+// const config = {
+//   user: "RNDAdmin",
+//   password: "0f8$4rfT1",
+//   server: "132.148.105.23",
+//   database: "RND_HR",
+//   port: parseInt(process.env.DB_PORT),
+//   options: {
+//     encrypt: true,
+//     trustServerCertificate: true,
+//   },
+// };
 const config = {
-  user: "RNDAdmin",
-  password: "0f8$4rfT1",
-  server: "132.148.105.23",
-  database: "RND_HR",
-  port: parseInt(process.env.DB_PORT),
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  server: process.env.DB_SERVER,
+  database: process.env.DB_DATABASE,
+  port: parseInt(process.env.DB_PORT, 10),
   options: {
-    encrypt: true,
+    encrypt: false,
     trustServerCertificate: true,
   },
 };
-
 let pool;
 
 console.log("db con", config);

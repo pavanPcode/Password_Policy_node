@@ -668,5 +668,9 @@ router.post('/updateRoleMenu', (req, res) => {
     handleRecord(req, res, data, OperationEnums().updateRoleMenu);
 });
 
+router.get('/getRoles', (req, res) => {
+    const data = {};
+    handleRecord(req, res, data, OperationEnums().getRoles);
+});
 
 module.exports = router;
