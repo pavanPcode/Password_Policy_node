@@ -19,27 +19,27 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 // Mount all routes under /api
 app.use("/api", screenRoutes);
 
-// const dbConfig = {
-//   user: "RNDAdmin",
-//   password: "0f8$4rfT1",
-//   server: "132.148.105.23",
-//   database: "RND_HR",
-//   options: {
-//     encrypt: false,
-//     trustServerCertificate: true,
-//   },
-// };
 const dbConfig = {
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  server: process.env.DB_SERVER,
-  database: process.env.DB_DATABASE,
-  port: parseInt(process.env.DB_PORT, 10),
+  user: "RNDAdmin",
+  password: "0f8$4rfT1",
+  server: "132.148.105.23",
+  database: "RND_HR",
   options: {
     encrypt: false,
     trustServerCertificate: true,
   },
 };
+// const dbConfig = {
+//   user: process.env.DB_USER,
+//   password: process.env.DB_PASSWORD,
+//   server: process.env.DB_SERVER,
+//   database: process.env.DB_DATABASE,
+//   port: parseInt(process.env.DB_PORT, 10),
+//   options: {
+//     encrypt: false,
+//     trustServerCertificate: true,
+//   },
+// };
 
 const getPolicy = async () => {
   try {
