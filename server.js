@@ -688,4 +688,69 @@ router.post('/canceltasks', (req, res) => {
     handleRecord(req, res, data, OperationEnums().canceltasks);
 });
 
+router.post('/addFilterReplaceOrRetirement', (req, res) => {
+    const data = req.body;
+    handleRecord(req, res, data, OperationEnums().addFilterReplaceOrRetirement);
+});
+
+
+router.get('/getReplacementList', (req, res) => {
+    let { BlockId, Status, Barcode } = req.query;
+
+    if (BlockId == 0 || BlockId === undefined) {
+        BlockId = 'b.BlockId';
+    }
+
+    if (Barcode == 0 || Barcode === undefined) {
+        Barcode = 'pa.Barcode';
+    } else {
+        Barcode = `${Barcode}`;
+    }
+    const data = { BlockId, Status, Barcode };
+
+    handleRecord(req, res, data, OperationEnums().getReplacementList);
+});
+
+router.get('/getRetirementList', (req, res) => {
+    let { BlockId, Status, Barcode } = req.query;
+
+    if (BlockId == 0 || BlockId === undefined) {
+        BlockId = 'b.BlockId';
+    }
+
+    if (Barcode == 0 || Barcode === undefined) {
+        Barcode = 'pa.Barcode';
+    } else {
+        Barcode = `${Barcode}`;
+    }
+    const data = { BlockId, Status, Barcode };
+
+    handleRecord(req, res, data, OperationEnums().getRetirementList);
+});
+
+
+
+router.post('/AddprinterIpAdress', (req, res) => {
+    const data = req.body;
+    handleRecord(req, res, data, OperationEnums().AddprinterIpAdress);
+});
+
+
+router.post('/EditprinterIpAdress', (req, res) => {
+    const data = req.body;
+    handleRecord(req, res, data, OperationEnums().EditprinterIpAdress);
+});
+
+
+router.post('/deleteprinterIpAdress', (req, res) => {
+    const data = req.body;
+    handleRecord(req, res, data, OperationEnums().deleteprinterIpAdress);
+});
+
+router.get('/getprinterIpAdress', (req, res) => {
+    const data = {  };
+    handleRecord(req, res, data, OperationEnums().getprinterIpAdress);
+});
+
+
 module.exports = router;

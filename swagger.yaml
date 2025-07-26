@@ -4252,3 +4252,364 @@ paths:
           description: Invalid request data
         500:
           description: Internal server error
+  /api/addFilterReplaceOrRetirement:
+    post:
+      summary: Update Asset Status
+      description: Updates the status of an asset to either Retired (104) or Replacement (105)
+      tags:
+        - Filter
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Asset status update payload
+          required: true
+          schema:
+            type: object
+            required:
+              - id
+              - Status
+              - remarks
+              - updatedby
+            properties:
+              id:
+                type: integer
+                example: 101
+              Status:
+                type: integer
+                enum: [104, 105]
+                description: 104 for Retired, 105 for Replacement
+                example: 104
+              remarks:
+                type: string
+                example: "Retired due to condition"
+              updatedby:
+                type: string
+                example: "admin"
+      responses:
+        200:
+          description: Status updated successfully
+        400:
+          description: Invalid input
+        500:
+          description: Server error
+  /api/getRetirementList:
+    get:
+      summary: Get Retirement List
+      description: Returns a list of retired or replacement filters based on block and barcode.
+      tags:
+        - Filter
+      produces:
+        - application/json
+      parameters:
+        - name: BlockId
+          in: query
+          required: true
+          type: integer
+          description: ID of the block (use 0 for all blocks)
+          example: 0
+        - name: Barcode
+          in: query
+          required: true
+          type: string
+          description: Barcode of the filter (use "0" for all)
+          example: "0"
+      responses:
+        200:
+          description: Successful response with list of retired or replaced filters
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    FilterId:
+                      type: string
+                      example: "FLT123456"
+                    AHUId:
+                      type: integer
+                      example: 5
+                    Code:
+                      type: string
+                      example: "A100"
+                    Manufacturer:
+                      type: string
+                      example: "Blue Star"
+                    InstalledOn:
+                      type: string
+                      format: date
+                      example: "2024-06-15"
+                    Location:
+                      type: string
+                      example: "Bangalore Plant"
+                    Barcode:
+                      type: string
+                      example: "12345678"
+                    Status:
+                      type: integer
+                      example: 104  # 104 = Retired, 105 = Replacement
+        500:
+          description: Internal Server Error
+  /api/getReplacementList:
+    get:
+      summary: Get Replacement List
+      description: Returns a list of filters marked for replacement (Status = 105), based on BlockId and Barcode.
+      tags:
+        - Filter
+      produces:
+        - application/json
+      parameters:
+        - name: BlockId
+          in: query
+          required: true
+          type: integer
+          description: ID of the block (use 0 for all blocks)
+          example: 0
+        - name: Barcode
+          in: query
+          required: true
+          type: string
+          description: Barcode of the filter (use "0" for all)
+          example: "0"
+      responses:
+        200:
+          description: Successful response with list of replacement filters
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    FilterId:
+                      type: string
+                      example: "FLT789123"
+                    AHUId:
+                      type: integer
+                      example: 8
+                    Code:
+                      type: string
+                      example: "R105"
+                    Manufacturer:
+                      type: string
+                      example: "Voltas"
+                    InstalledOn:
+                      type: string
+                      format: date
+                      example: "2023-12-10"
+                    Location:
+                      type: string
+                      example: "Hyderabad Plant"
+                    Barcode:
+                      type: string
+                      example: "99887766"
+                    Status:
+                      type: integer
+                      example: 105  # Replacement
+        500:
+          description: Internal Server Error
+  /api/AddprinterIpAdress:
+    post:
+      summary: Add Printer IP Address
+      description: Adds a new printer IP address entry to the system.
+      tags:
+        - Printer
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          description: Printer IP Address data
+          schema:
+            type: object
+            required:
+              - name
+              - ipadress
+              - createdby
+            properties:
+              name:
+                type: string
+                example: "ZebraPrinter1"
+              ipadress:
+                type: string
+                example: "192.168.1.3"
+              createdby:
+                type: integer
+                example: 1
+      responses:
+        200:
+          description: Printer IP address added successfully
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              message:
+                type: string
+                example: "Printer added successfully"
+        400:
+          description: Invalid input or duplicate name
+        500:
+          description: Server error
+  /api/EditprinterIpAdress:
+    post:
+      summary: Edit Printer IP Address
+      description: Updates the printer name and IP address by ID.
+      tags:
+        - Printer
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          description: Updated printer details
+          schema:
+            type: object
+            required:
+              - id
+              - name
+              - ipadress
+              - updatedby
+            properties:
+              id:
+                type: integer
+                example: 1
+              name:
+                type: string
+                example: "ZebraPrinter1"
+              ipadress:
+                type: string
+                example: "192.168.1.3"
+              updatedby:
+                type: integer
+                example: 1
+      responses:
+        200:
+          description: Printer IP address updated successfully
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              message:
+                type: string
+                example: "Printer updated successfully"
+        400:
+          description: Invalid input or duplicate name
+        404:
+          description: Printer ID not found
+        500:
+          description: Server error
+  /api/deleteprinterIpAdress:
+    post:
+      summary: Delete Printer IP Address (Soft Delete)
+      description: Performs a soft delete by marking the printer record as inactive (isactive = 1).
+      tags:
+        - Printer
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          description: ID of the printer to deactivate
+          schema:
+            type: object
+            required:
+              - id
+              - updatedby
+            properties:
+              id:
+                type: integer
+                example: 1
+              updatedby:
+                type: integer
+                example: 1
+      responses:
+        200:
+          description: Printer marked as inactive successfully
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              message:
+                type: string
+                example: "Printer deleted successfully"
+        404:
+          description: Printer ID not found
+        500:
+          description: Server error
+  /api/getprinterIpAdress:
+    get:
+      summary: Get All Active Printer IP Addresses
+      description: Returns a list of all active printers (isactive = 1).
+      tags:
+        - Printer
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Successfully retrieved list of active printers
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    name:
+                      type: string
+                      example: "ZebraPrinter1"
+                    ipadress:
+                      type: string
+                      example: "192.168.1.3"
+                    isactive:
+                      type: integer
+                      example: 1
+                    createdby:
+                      type: integer
+                      example: 1
+                    creatdon:
+                      type: string
+                      format: date-time
+                      example: "2024-07-25T14:00:00"
+                    updatedby:
+                      type: string
+                      example: "admin"
+                    updatedon:
+                      type: string
+                      format: date-time
+                      example: "2024-07-26T10:15:00"
+        500:
+          description: Internal Server Error

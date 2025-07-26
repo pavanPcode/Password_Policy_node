@@ -64,6 +64,13 @@ function OperationEnums() {
     GetSchedules:700,
     GetTasks:710,
     canceltasks:711,
+    addFilterReplaceOrRetirement:210,
+    getReplacementList:211,
+    getRetirementList:212,
+    AddprinterIpAdress:800,
+    EditprinterIpAdress:801,
+    getprinterIpAdress:802,
+    deleteprinterIpAdress:803,
 
 
   };
