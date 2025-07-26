@@ -6,6 +6,7 @@ const YAML = require("yamljs");
 const cors = require("cors"); // ✅ Import CORS
 const screenRoutes = require("./server");
 require('dotenv').config(); // load environment variables from .env
+const net = require('net');
 
 const app = express();
 app.use(express.json());
@@ -501,9 +502,10 @@ app.get('/getActivities', async (req, res) => {
     await sql.connect(dbConfig);
 
     const result = await sql.query(`
-      SELECT ActivityType, PerformedBy, PerformedOn, Notes, Location ,IsSucces,LogType
-      FROM [dbo].[pereco_ActivityLog] 
-      ORDER BY PerformedOn DESC
+      SELECT p.ActivityType, p.PerformedBy, p.PerformedOn, p.Notes, p.Location ,p.IsSucces,p.LogType,pu.Name,pu.Email username
+      FROM [dbo].[pereco_ActivityLog]  p
+	  left join [dbo].[pereco_Users] pu on pu.UserID = p.PerformedBy
+      ORDER BY p.PerformedOn DESC
     `);
 
     res.json({
@@ -1076,7 +1078,46 @@ app.get('/runScheduleJob', async (req, res) => {
   }
 });
 
+app.get('/api/printLabel', (req, res) => {
+  const { ip, barcode_number, label_text } = req.query;
 
+  if (!ip || !barcode_number || !label_text) {
+    return res.status(400).json({ success: false, message: 'Missing required fields' });
+  }
+
+//   const zpl = `
+// ^XA
+// ^FO50,30^ADN,36,20^FD${label_text}^FS
+// ^FO50,80^BY2
+// ^BCN,100,Y,N,N
+// ^FD${barcode_number}^FS
+// ^XZ
+// `;
+const zpl = `
+^XA
+^PW812
+^LL406
+^LH0,0
+
+^FO290,30^ADN,36,20^FD${label_text}^FS        ; Moved left by 20 dots
+^FO290,80^BY2
+^BCN,100,Y,N,N
+^FD${barcode_number}^FS
+^XZ
+`;
+
+  const client = new net.Socket();
+
+  client.connect(9100, ip, () => {
+    client.write(zpl);
+    client.end();
+    res.json({ success: true, message: '✅ ZPL print job sent successfully.' });
+  });
+
+  client.on('error', (err) => {
+    res.status(500).json({ success: false, message: '❌ Failed to print', error: err.message });
+  });
+});
 
 // host = '0.0.0.0'
 
