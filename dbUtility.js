@@ -43,6 +43,7 @@ async function executeQuery(query) {
   try {
     await initializePool(); // Ensure the pool is initialized
     const result = await pool.request().query(query);
+    // console.log('initializePool',result)
     console.log(query);
     return result.recordset;
   } catch (err) {

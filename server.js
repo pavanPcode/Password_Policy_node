@@ -49,6 +49,7 @@ const handleRecord = (req, res, data, operationId) => {
 
 
 const handleResponseWithOutRes = (error, results) => {
+    // console.log('handleResponseWithOutRes',results)
   if (error) {
     console.error("Error:", error);
     return { error: "Internal Server Error", Status: false };
@@ -78,6 +79,8 @@ const executeStoredProcedureWithOutRes = (data, operationId) => {
     .then((results) => handleResponseWithOutRes(null, results))
     .catch((error) => handleResponseWithOutRes(error, null));
 };
+
+
 
 const handleRecordWithOutRes = (data, operationId) => {
   executeStoredProcedureWithOutRes(data, operationId);
@@ -142,6 +145,7 @@ router.get('/getmenu', (req, res) => {
         if (error) {
             return res.status(500).json({ error: error.message });
         }
+        console.log('results :',results)
         //console.log(results);
         exeQuery.GetMenuNodes(results, (err, MenuList) => {
             if (err) {
@@ -154,6 +158,8 @@ router.get('/getmenu', (req, res) => {
         });
     });
 });
+
+
 
 router.get('/GetBarcodeType', (req, res) => {
     const data = req.query;
@@ -516,25 +522,25 @@ router.get('/getbarGraph', (req, res) => {
 });
 
 
-router.get('/getmenu', (req, res) => {
-    const {RoleId } = req.query;
-    const JsonData = { "RoleId":RoleId };
-    exeQuery.GetMenu(JsonData, (error, results) => {
-        if (error) {
-            return res.status(500).json({ error: error.message });
-        }
-        //console.log(results);
-        exeQuery.GetMenuNodes(results, (err, MenuList) => {
-            if (err) {
-                return res.status(500).json({ error: err.message, Status: false });
-            }
-            res.json({
-                ResultData: MenuList,
-                Status: true
-            });
-        });
-    });
-});
+// router.get('/getmenu', (req, res) => {
+//     const {RoleId } = req.query;
+//     const JsonData = { "RoleId":RoleId };
+//     exeQuery.GetMenu(JsonData, (error, results) => {
+//         if (error) {
+//             return res.status(500).json({ error: error.message });
+//         }
+//         //console.log(results);
+//         exeQuery.GetMenuNodes(results, (err, MenuList) => {
+//             if (err) {
+//                 return res.status(500).json({ error: err.message, Status: false });
+//             }
+//             res.json({
+//                 ResultData: MenuList,
+//                 Status: true
+//             });
+//         });
+//     });
+// });
 
 
 router.post('/updatePressure', (req, res) => {
