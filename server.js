@@ -689,7 +689,12 @@ router.get('/getRoles', (req, res) => {
 });
 
 router.get('/GetSchedules', (req, res) => {
-    const data = {};
+    let { BlockId } = req.query;
+
+    if (BlockId == 0 || BlockId === undefined) {
+        BlockId = 'b.BlockId';
+    }
+    const data = { BlockId };
     handleRecord(req, res, data, OperationEnums().GetSchedules);
 });
 

@@ -4171,6 +4171,13 @@ paths:
         - schedule
       produces:
         - application/json
+      parameters:
+        - name: BlockId
+          in: query
+          required: true
+          type: integer
+          description: ID of the block (use 0 for all blocks)
+          example: 0
       responses:
         200:
           description: "List of schedules"
