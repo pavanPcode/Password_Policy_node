@@ -332,6 +332,15 @@ router.get('/getAllUsers', (req, res) => {
     handleRecord(req, res, data, OperationEnums().getAllUsers);
 });
 
+router.get('/updateTermination', (req, res) => {
+    const data = {};
+    handleRecord(req, res, data, OperationEnums().updateTermination);
+});
+
+router.get('/updateUserInfo', (req, res) => {
+    const data = {};
+    handleRecord(req, res, data, OperationEnums().updateuser);
+});
 
 router.get('/getStageCount', (req, res) => {
     const data = {};

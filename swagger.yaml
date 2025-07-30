@@ -4656,4 +4656,69 @@ paths:
           description: Missing query parameters
         500:
           description: Printer connection or print error
+  /api/updateTermination:
+    post:
+      summary: "Update User Termination Status"
+      description: "Set isTerminated to 0 (terminate) or 1 (activate) for a specific user"
+      tags:
+        - User
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            required:
+              - UserID
+              - isTerminated
+            properties:
+              UserID:
+                type: integer
+                example: 123
+              isTerminated:
+                type: integer
+                enum: [0, 1]
+                example: 0
+                description: "0 = Terminate, 1 = Activate"
+      responses:
+        200:
+          description: "User status updated successfully"
+        400:
+          description: "Invalid request"
+        500:
+          description: "Server error"
 
+  /api/updateUserInfo:
+      post:
+        summary: "Update User Name and RoleID"
+        description: "Update Name and RoleID of a user based on UserID"
+        tags:
+        - User
+        parameters:
+          - in: body
+            name: body
+            required: true
+            schema:
+              type: object
+              required:
+                - UserID
+                - Name
+                - Role
+              properties:
+                UserID:
+                  type: integer
+                  example: 101
+                Name:
+                  type: string
+                  example: "Alice Smith"
+                Role:
+                  type: integer
+                  example: 2
+                  description: "Role ID (e.g., 1 = Admin, 2 = Manager, etc.)"
+        responses:
+          200:
+            description: "User information updated successfully"
+          400:
+            description: "Invalid request"
+          500:
+            description: "Server error"

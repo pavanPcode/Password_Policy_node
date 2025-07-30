@@ -72,6 +72,8 @@ function OperationEnums() {
     getprinterIpAdress:802,
     deleteprinterIpAdress:803,
     getmenu:604,
+    updateTermination:31,
+    updateuser:32,
 
 
   };

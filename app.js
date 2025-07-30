@@ -270,7 +270,7 @@ app.post("/login", async (req, res) => {
 
       FROM dbo.pereco_Users u
       JOIN psw.UserSecurity s ON u.UserID = s.UserID
-      WHERE u.Email = ${username}`;
+      WHERE u.Email = ${username} and u.isTerminate = 0;`;
 
     const row = result.recordset[0];
     if (!row) return res.status(404).json({ Message: "User not found", status: false, ResultData: [] });
