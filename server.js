@@ -332,12 +332,12 @@ router.get('/getAllUsers', (req, res) => {
     handleRecord(req, res, data, OperationEnums().getAllUsers);
 });
 
-router.get('/updateTermination', (req, res) => {
+router.post('/updateTermination', (req, res) => {
     const data = {};
     handleRecord(req, res, data, OperationEnums().updateTermination);
 });
 
-router.get('/updateUserInfo', (req, res) => {
+router.post('/updateUserInfo', (req, res) => {
     const data = {};
     handleRecord(req, res, data, OperationEnums().updateuser);
 });
