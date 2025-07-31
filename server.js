@@ -793,7 +793,16 @@ router.get('/getbarcodereport', (req, res) => {
     console.log('Query Data:', data);
     handleRecord(req, res, data, OperationEnums().getbarcodereport);
 });
+router.get('/getAuditReport', (req, res) => {
+    let { PerformedBy, startdate, enddate } = req.query;
 
+    PerformedBy = (PerformedBy == 0 || PerformedBy === undefined) ? 'p.PerformedBy' : PerformedBy;
+
+
+    const data = { PerformedBy, startdate, enddate };
+    console.log('Query Data:', data);
+    handleRecord(req, res, data, OperationEnums().getAuditReport);
+});
 
 // module.exports = router;
 module.exports = {

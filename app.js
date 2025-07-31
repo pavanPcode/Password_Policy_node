@@ -505,7 +505,7 @@ app.get('/getActivities', async (req, res) => {
     await sql.connect(dbConfig);
 
     const result = await sql.query(`
-      SELECT p.ActivityType, p.PerformedBy, p.PerformedOn, p.Notes, p.Location ,p.IsSucces,p.LogType,pu.Name,pu.Email username
+      SELECT TOP 500 p.ActivityType, p.PerformedBy, p.PerformedOn, p.Notes, p.Location ,p.IsSucces,p.LogType,pu.Name,pu.Email username
       FROM [dbo].[pereco_ActivityLog]  p
 	  left join [dbo].[pereco_Users] pu on pu.UserID = p.PerformedBy
       ORDER BY p.PerformedOn DESC

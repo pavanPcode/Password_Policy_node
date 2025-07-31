@@ -76,6 +76,7 @@ function OperationEnums() {
     updateuser:32,
     BarCodePrintingHistory:804,
     getbarcodereport:900,
+    getAuditReport:901
 
 
   };

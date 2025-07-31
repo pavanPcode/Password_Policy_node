@@ -4818,3 +4818,50 @@ paths:
           description: Invalid parameters
         500:
           description: Internal server error
+  /api/getAuditReport:
+    get:
+      tags:
+        - Reports
+      summary: Get audit report
+      description: Returns audit activity performed by a user within a date range.
+      parameters:
+        - name: PerformedBy
+          in: query
+          description: User ID of the person who performed the activity
+          required: true
+          type: integer
+        - name: startdate
+          in: query
+          description: Start date in format YYYY-MM-DD
+          required: true
+          type: string
+          format: date
+        - name: enddate
+          in: query
+          description: End date in format YYYY-MM-DD
+          required: true
+          type: string
+          format: date
+      responses:
+        200:
+          description: Successful response
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                Action:
+                  type: string
+                PerformedBy:
+                  type: integer
+                Username:
+                  type: string
+                Timestamp:
+                  type: string
+                  format: date-time
+                Description:
+                  type: string
+        400:
+          description: Invalid parameters
+        500:
+          description: Internal server error
