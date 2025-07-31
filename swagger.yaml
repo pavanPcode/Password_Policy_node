@@ -4669,6 +4669,18 @@ paths:
           type: string
           example: "PFI/AHU-060/SA/FAF/10µ/01-01/00"
           description: Text to display above the barcode
+        - name: Remarks
+          in: query
+          required: true
+          type: string
+          example: "First barcode printed for order #123"
+          description: Remarks
+        - name: CreatedBy
+          in: query
+          required: true
+          type: integer
+          example: 2
+          description: CreatedBy
       responses:
         200:
           description: ZPL print job sent successfully
@@ -4751,3 +4763,58 @@ paths:
             description: "Invalid request"
           500:
             description: "Server error"
+  /api/getbarcodereport:
+    get:
+      tags:
+        - Reports
+      summary: Get barcode report
+      description: Returns barcode printing report between a date range. Use FilterId = 0 to fetch all filters.
+      parameters:
+        - name: FilterId
+          in: query
+          description: Filter ID (0 for all filters)
+          required: true
+          type: integer
+        - name: startdate
+          in: query
+          description: Start date in format YYYY-MM-DD
+          required: true
+          type: string
+          format: date
+        - name: enddate
+          in: query
+          description: End date in format YYYY-MM-DD
+          required: true
+          type: string
+          format: date
+      responses:
+        200:
+          description: Successful response
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                BarCode:
+                  type: string
+                Remarks:
+                  type: string
+                isPrinted:
+                  type: boolean
+                username:
+                  type: string
+                Name:
+                  type: string
+                FilterId:
+                  type: integer
+                assettype:
+                  type: integer
+                assettypename:
+                  type: string
+                createdon:
+                  type: string
+                  format: date-time
+        400:
+          description: Invalid parameters
+        500:
+          description: Internal server error

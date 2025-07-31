@@ -333,12 +333,12 @@ router.get('/getAllUsers', (req, res) => {
 });
 
 router.post('/updateTermination', (req, res) => {
-    const data = {};
+    const data = req.body;
     handleRecord(req, res, data, OperationEnums().updateTermination);
 });
 
 router.post('/updateUserInfo', (req, res) => {
-    const data = {};
+    const data =  req.body;
     handleRecord(req, res, data, OperationEnums().updateuser);
 });
 
@@ -783,5 +783,20 @@ router.get('/getprinterIpAdress', (req, res) => {
     handleRecord(req, res, data, OperationEnums().getprinterIpAdress);
 });
 
+router.get('/getbarcodereport', (req, res) => {
+    let { FilterId, startdate, enddate } = req.query;
 
-module.exports = router;
+    FilterId = (FilterId == 0 || FilterId === undefined) ? 'pa.FilterId' : FilterId;
+
+
+    const data = { FilterId, startdate, enddate };
+    console.log('Query Data:', data);
+    handleRecord(req, res, data, OperationEnums().getbarcodereport);
+});
+
+
+// module.exports = router;
+module.exports = {
+  router,
+  handleRecordWithOutRes,
+};

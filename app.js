@@ -4,7 +4,10 @@ const bcrypt = require("bcryptjs");
 const swaggerUi = require("swagger-ui-express");
 const YAML = require("yamljs");
 const cors = require("cors"); // ✅ Import CORS
-const screenRoutes = require("./server");
+const { router:screenRoutes} = require("./server");
+const { handleRecordWithOutRes:handleRecordWithOutRes } = require('./server');
+const { OperationEnums } = require("./utilityEnum.js");
+
 require('dotenv').config(); // load environment variables from .env
 const net = require('net');
 
@@ -1403,8 +1406,8 @@ app.get('/runScheduleJob', async (req, res) => {
 //   app.listen(8080,host, () => console.log("Server running on port 8080 : http://localhost:8080/api-docs"));
 // }).catch(err => console.log("DB Connection failed:", err));
 
-app.get('/api/printLabel', (req, res) => {
-  const { ip, barcode_number, label_text } = req.query;
+app.get('/api/printLabel',  (req, res) => {
+  const { ip, barcode_number, label_text,Remarks ,CreatedBy} = req.query;
 
   // Validate required fields
   if (!ip || !barcode_number || !label_text) {
@@ -1459,10 +1462,14 @@ app.get('/api/printLabel', (req, res) => {
   client.connect(9100, ip, () => {
     client.write(zpl);
     client.end();
+    data = {BarCode:barcode_number,Remarks:Remarks,CreatedBy:CreatedBy,isPrinted:1}
+    handleRecordWithOutRes( data, OperationEnums().BarCodePrintingHistory);
     res.json({ success: true, message: '✅ ZPL print job sent successfully.' });
   });
 
   client.on('error', (err) => {
+    data = {BarCode:barcode_number,Remarks:'Failed to send print job',CreatedBy:CreatedBy,isPrinted:0}
+    handleRecordWithOutRes( data, OperationEnums().BarCodePrintingHistory);
     res.status(500).json({
       success: false,
       message: '❌ Failed to send print job',

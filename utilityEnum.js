@@ -74,6 +74,8 @@ function OperationEnums() {
     getmenu:604,
     updateTermination:31,
     updateuser:32,
+    BarCodePrintingHistory:804,
+    getbarcodereport:900,
 
 
   };
