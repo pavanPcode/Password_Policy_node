@@ -699,7 +699,18 @@ router.get('/GetSchedules', (req, res) => {
 });
 
 router.get('/GetTasks', (req, res) => {
-    const data = {};
+    let { BlockId, startdate, enddate } = req.query;
+
+    // Default fallback if value is 0 or undefined
+    BlockId = (BlockId == 0 || BlockId === undefined) ? 'b.BlockId' : BlockId;
+
+    // // Wrap dates in single quotes only if valid, else use column reference
+    // startdate = (startdate == 0 || startdate === undefined) ? 'acs.ScheduledDate' : startdate;
+    // enddate = (enddate == 0 || enddate === undefined) ? 'acs.ScheduledDate' : enddate;
+
+    const data = { BlockId, startdate, enddate };
+    console.log('Query Data:', data);
+
     handleRecord(req, res, data, OperationEnums().GetTasks);
 });
 

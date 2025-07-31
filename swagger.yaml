@@ -4201,11 +4201,29 @@ paths:
   /api/GetTasks:
     get:
       summary: "Get Cleaning Tasks"
-      description: "Returns a list of scheduled cleaning tasks."
+      description: "Returns a list of scheduled cleaning tasks. Pass `0` for BlockId, startdate, or enddate to get all."
       tags:
         - Tasks
       produces:
         - application/json
+      parameters:
+        - name: BlockId
+          in: query
+          required: true
+          type: integer
+          description: "ID of the block. Use 0 to get tasks from all blocks."
+        - name: startdate
+          in: query
+          required: true
+          type: string
+          format: date
+          description: "Start date in YYYY-MM-DD format. "
+        - name: enddate
+          in: query
+          required: true
+          type: string
+          format: date
+          description: "End date in YYYY-MM-DD format."
       responses:
         200:
           description: "List of tasks"
@@ -4245,6 +4263,7 @@ paths:
             required:
               - id
               - updatedby
+              - remarks
             properties:
               id:
                 type: integer
@@ -4252,6 +4271,9 @@ paths:
               updatedby:
                 type: integer
                 example: 101
+              remarks:
+                type: string
+                example: test
       responses:
         200:
           description: Task cancel successfully
