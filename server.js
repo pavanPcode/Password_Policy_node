@@ -786,7 +786,7 @@ router.get('/getprinterIpAdress', (req, res) => {
 router.get('/getbarcodereport', (req, res) => {
     let { FilterId, startdate, enddate } = req.query;
 
-    FilterId = (FilterId == 0 || FilterId === undefined) ? 'pa.FilterId' : FilterId;
+    FilterId = (FilterId == 0 || FilterId === undefined) ? 'pa.id' : FilterId;
 
 
     const data = { FilterId, startdate, enddate };
@@ -802,6 +802,27 @@ router.get('/getAuditReport', (req, res) => {
     const data = { PerformedBy, startdate, enddate };
     console.log('Query Data:', data);
     handleRecord(req, res, data, OperationEnums().getAuditReport);
+});
+
+router.get('/getFilterCleaningReport', (req, res) => {
+    let { Filterid, startdate, enddate } = req.query;
+
+    Filterid = (Filterid == 0 || Filterid === undefined) ? 'pa.id' : Filterid;
+
+    const data = { Filterid, startdate, enddate };
+    console.log('Query Data:', data);
+    handleRecord(req, res, data, OperationEnums().getFilterCleaningReport);
+});
+
+router.get('/getFilterHistoryReport', (req, res) => {
+    let { Filterid, startdate, enddate } = req.query;
+
+    Filterid = (Filterid == 0 || Filterid === undefined) ? 'pa.id' : Filterid;
+
+
+    const data = { Filterid, startdate, enddate };
+    console.log('Query Data:', data);
+    handleRecord(req, res, data, OperationEnums().getFilterHistoryReport);
 });
 
 // module.exports = router;

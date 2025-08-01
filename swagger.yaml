@@ -4244,7 +4244,7 @@ paths:
                   type: string
         500:
           description: "Internal Server Error"
-  /api/api/canceltasks:
+  /api/canceltasks:
     post:
       tags:
         - Tasks
@@ -4865,3 +4865,122 @@ paths:
           description: Invalid parameters
         500:
           description: Internal server error
+  /api/getFilterCleaningReport:
+    get:
+      summary: "Get Filter Cleaning Report"
+      description: "Returns filter cleaning report data for given Filter ID and date range."
+      tags:
+        - Reports
+      parameters:
+        - name: Filterid
+          in: query
+          description: "Filter ID (0 for all filters)"
+          required: true
+          type: integer
+        - name: startdate
+          in: query
+          description: "Start date (format: yyyy-mm-dd)"
+          required: true
+          type: string
+          format: date
+        - name: enddate
+          in: query
+          description: "End date (format: yyyy-mm-dd)"
+          required: true
+          type: string
+          format: date
+      responses:
+        200:
+          description: "Successful response"
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                FilterId:
+                  type: integer
+                AssetName:
+                  type: string
+                CleanedOn:
+                  type: string
+                  format: date-time
+                PerformedBy:
+                  type: string
+        400:
+          description: "Invalid request"
+        500:
+          description: "Internal server error"
+  /api/getFilterHistoryReport:
+    get:
+      summary: Get Filter History Report
+      description: Returns filter history report for the specified filter ID and date range.
+      tags:
+        - Reports
+      parameters:
+        - name: Filterid
+          in: query
+          required: true
+          type: integer
+          format: int32
+          description: Filter ID (0 for all filters)
+        - name: startdate
+          in: query
+          required: true
+          type: string
+          format: date
+          description: Start date in YYYY-MM-DD format
+        - name: enddate
+          in: query
+          required: true
+          type: string
+          format: date
+          description: End date in YYYY-MM-DD format
+      responses:
+        200:
+          description: Successful response with filter history data
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                barcode:
+                  type: string
+                status:
+                  type: integer
+                AirPressure:
+                  type: number
+                RoWaterPressure:
+                  type: number
+                Duration:
+                  type: number
+                CreatedOn:
+                  type: string
+                  format: date-time
+                CreatedBy:
+                  type: string
+                StageName:
+                  type: string
+                filterid:
+                  type: integer
+                MicronRating:
+                  type: number
+                username:
+                  type: string
+                name:
+                  type: string
+                washingEquipmentName:
+                  type: string
+                washingEquipId:
+                  type: integer
+                dryerEquipmentName:
+                  type: string
+                DryerEquipId:
+                  type: integer
+                washingreason:
+                  type: string
+                washingreasonid:
+                  type: integer
+        400:
+          description: Bad request
+        500:
+          description: Server error

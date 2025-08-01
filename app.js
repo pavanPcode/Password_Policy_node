@@ -1413,7 +1413,7 @@ app.get('/api/printLabel',  (req, res) => {
   if (!ip || !barcode_number || !label_text) {
     return res.status(400).json({
       success: false,
-      message: '❌ Missing required fields: ip, barcode_number, label_text',
+      message: 'Missing required fields: ip, barcode_number, label_text',
     });
   }
 
@@ -1435,7 +1435,8 @@ app.get('/api/printLabel',  (req, res) => {
   }
 
   // === Generate ZPL ===
-  let zpl = `^XA
+let zpl = `^XA
+^CI28
 ^PW${labelWidth}
 ^LL${labelHeight}
 ^LH0,0
