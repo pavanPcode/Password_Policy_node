@@ -4984,3 +4984,137 @@ paths:
           description: Bad request
         500:
           description: Server error
+  /api/addDeviations:
+    post:
+      summary: "Add a deviation"
+      description: "Inserts a deviation record into the database"
+      tags:
+        - Deviations
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            required:
+              - filterId
+              - blockid
+              - AHUId
+              - Current_Stage
+              - remarks
+              - CreatedBy
+              - New_Stage
+            properties:
+              filterId:
+                type: integer
+              blockid:
+                type: integer
+              AHUId:
+                type: integer
+              Current_Stage:
+                type: integer
+              remarks:
+                type: string
+              CreatedBy:
+                type: integer
+              New_Stage:
+                type: integer
+      responses:
+        200:
+          description: "Deviation added successfully"
+        400:
+          description: "Invalid input"
+        500:
+          description: "Server error"
+  /api/getDeviationsReport:
+    get:
+      summary: "Get Deviations Report"
+      description: "Fetches deviation report for specified filter, date range, and user"
+      tags:
+        - Reports
+      produces:
+        - application/json
+      parameters:
+        - name: Filterid
+          in: query
+          required: true
+          type: integer
+          description: "Filter ID (0 for all)"
+        - name: startdate
+          in: query
+          required: true
+          type: string
+          format: date
+          description: "Start date in YYYY-MM-DD format"
+        - name: enddate
+          in: query
+          required: true
+          type: string
+          format: date
+          description: "End date in YYYY-MM-DD format"
+        - name: userid
+          in: query
+          required: true
+          type: integer
+          description: "User ID (0 for all)"
+      responses:
+        200:
+          description: "Successful response with deviation report"
+        400:
+          description: "Invalid parameters"
+        500:
+          description: "Internal server error"
+  /api/getFilterDryingReport:
+    get:
+      summary: "Get Filter Drying Report"
+      description: "Returns drying report details for filters in the given date range"
+      tags:
+        - Reports
+      parameters:
+        - name: Filterid
+          in: query
+          description: "Filter ID (use 0 for all)"
+          required: true
+          type: integer
+        - name: startdate
+          in: query
+          description: "Start date (format: yyyy-mm-dd)"
+          required: true
+          type: string
+          format: date
+        - name: enddate
+          in: query
+          description: "End date (format: yyyy-mm-dd)"
+          required: true
+          type: string
+          format: date
+      responses:
+        200:
+          description: "Successful response"
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                FilterId:
+                  type: integer
+                Barcode:
+                  type: string
+                DryingStartTime:
+                  type: string
+                  format: date-time
+                DryingEndTime:
+                  type: string
+                  format: date-time
+                Duration:
+                  type: string
+                Remarks:
+                  type: string
+        400:
+          description: "Invalid parameters"
+        500:
+          description: "Internal server error"

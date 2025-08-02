@@ -825,6 +825,35 @@ router.get('/getFilterHistoryReport', (req, res) => {
     handleRecord(req, res, data, OperationEnums().getFilterHistoryReport);
 });
 
+router.post('/addDeviations', (req, res) => {
+    const data = req.body;
+    handleRecord(req, res, data, OperationEnums().addDeviations);
+});
+
+router.get('/getDeviationsReport', (req, res) => {
+    let { Filterid, startdate, enddate,userid } = req.query;
+
+    filterId = (Filterid == 0 || Filterid === undefined) ? 'd.filterId' : Filterid;
+    userid = (userid == 0 || userid === undefined) ? 'pu.userid' : userid;
+
+
+    const data = { filterId, startdate, enddate,userid };
+    console.log('Query Data:', data);
+    handleRecord(req, res, data, OperationEnums().getDeviationsReport);
+});
+
+router.get('/getFilterDryingReport', (req, res) => {
+    let { Filterid, startdate, enddate,userid } = req.query;
+
+    FilterId = (Filterid == 0 || Filterid === undefined) ? 'fh3.FilterId' : Filterid;
+
+
+    const data = { FilterId, startdate, enddate,userid };
+    console.log('Query Data:', data);
+    handleRecord(req, res, data, OperationEnums().getFilterDryingReport);
+});
+
+
 // module.exports = router;
 module.exports = {
   router,

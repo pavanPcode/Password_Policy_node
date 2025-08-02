@@ -79,8 +79,9 @@ function OperationEnums() {
     getAuditReport:901,
     getFilterCleaningReport:902,
     getFilterHistoryReport:903,
-
-
+    addDeviations:904,
+    getDeviationsReport:905,
+    getFilterDryingReport:906,
   };
   return Operations;
 }
