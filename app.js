@@ -10,7 +10,7 @@ const { OperationEnums } = require("./utilityEnum.js");
 const sampleExcelRoute = require('./Excel');
 const dbUtility = require("./dbUtility.js");
 
-require('dotenv').config(); // load environment variables from .env
+require('dotenv').config(); // load environment variables from .env.
 const net = require('net');
 
 const app = express();
