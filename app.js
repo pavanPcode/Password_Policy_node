@@ -7,6 +7,7 @@ const cors = require("cors"); // ✅ Import CORS
 const { router:screenRoutes} = require("./server");
 const { handleRecordWithOutRes:handleRecordWithOutRes } = require('./server');
 const { OperationEnums } = require("./utilityEnum.js");
+const sampleExcelRoute = require('./Excel');
 
 require('dotenv').config(); // load environment variables from .env
 const net = require('net');
@@ -22,6 +23,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Mount all routes under /api
 app.use("/api", screenRoutes);
+app.use("/api", sampleExcelRoute);
 
 const dbConfig = {
   user: "RNDAdmin",
@@ -280,6 +282,21 @@ app.post("/login", async (req, res) => {
 
     let { UserID, PasswordHash, FailedLoginAttempts, IsLocked, PasswordExpiryDate, LastFailedAttempt,isTemporaryPassword,Role,Name,sessionTimeoutMinutes,UserName } = row;
 
+    //forget password check
+    // Block login if user requested forgot password
+    const forgotReqResult = await sql.query`
+      SELECT COUNT(*) AS count 
+      FROM psw.ForgotPasswordRequests 
+      WHERE UserID = ${UserID} AND IsResolved = 0`;
+
+    if (forgotReqResult.recordset[0].count > 0) {
+      return res.status(403).json({
+        Message: "Password reset request is pending. Contact admin to get temporary password.",
+        status: false,
+        ResultData: []
+      });
+    }
+
     // if (IsLocked) {
     //   if (LastFailedAttempt && new Date() - new Date(LastFailedAttempt) > policy.LockoutDurationMinutes * 60000) {
     //     await sql.query`UPDATE psw.UserSecurity SET IsLocked = 0, FailedLoginAttempts = 0 WHERE UserID = ${UserID}`;
@@ -363,6 +380,13 @@ app.post("/adminChangePassword", async (req, res) => {
     await sql.query`UPDATE psw.UserSecurity SET PasswordChangedOn = GETDATE(), PasswordExpiryDate = ${expiryDate},isTemporaryPassword = 1,IsLocked=0 WHERE UserID = ${user_id}`;
     await sql.query`INSERT INTO psw.PasswordHistory (UserID, PasswordHash) VALUES (${user_id}, ${new_hash})`;
 
+    // forget pasword update
+    await sql.query`
+  UPDATE psw.ForgotPasswordRequests 
+  SET IsResolved = 1 
+  WHERE UserID = ${user_id} AND IsResolved = 0`;
+
+
     res.json({ message: "Password changed successfully.", status: true, ResultData:  {TemporaryPassword:new_password} });
   } catch (e) {
     console.log("Change password error:", e);
@@ -434,6 +458,58 @@ app.post("/UserChangePassword", async (req, res) => {
   } catch (e) {
     console.log("Change password error:", e);
     res.status(500).json({ message: "Failed to change password", status: false, ResultData: [] });
+  }
+});
+
+
+app.post("/forgotPassword", async (req, res) => {
+  try {
+    const { username } = req.body;
+
+    const userResult = await sql.query`
+      SELECT UserID, Email FROM dbo.pereco_Users WHERE Email = ${username} AND isTerminated = 0`;
+
+    if (userResult.recordset.length === 0) {
+      return res.status(404).json({ Message: "User not found", status: false, ResultData: [] });
+    }
+
+    const { UserID, Email } = userResult.recordset[0];
+
+    // Check if already requested and unresolved
+    const existingReq = await sql.query`
+      SELECT COUNT(*) as count 
+      FROM psw.ForgotPasswordRequests 
+      WHERE UserID = ${UserID} AND IsResolved = 0`;
+
+    if (existingReq.recordset[0].count > 0) {
+      return res.status(400).json({ Message: "Already requested. Please wait for admin response.", status: false, ResultData: [] });
+    }
+
+    // Insert request
+    await sql.query`
+      INSERT INTO psw.ForgotPasswordRequests (UserID, Email) 
+      VALUES (${UserID}, ${Email})`;
+
+    res.json({ Message: "Forgot password request submitted successfully.", status: true, ResultData: [] });
+
+  } catch (e) {
+    console.log("Forgot Password Error:", e);
+    res.status(500).json({ Message: "Failed to submit request.", status: false, ResultData: [] });
+  }
+});
+
+app.get("/getForgotPasswordRequests", async (req, res) => {
+  try {
+    const result = await sql.query`
+      SELECT f.Id, f.UserID, f.Email, f.RequestedOn, u.Name
+      FROM psw.ForgotPasswordRequests f
+      JOIN dbo.pereco_Users u ON u.UserID = f.UserID
+      WHERE f.IsResolved = 0`;
+
+    res.json({ Message: "Fetched requests", status: true, ResultData: result.recordset });
+  } catch (e) {
+    console.log("Fetch forgot requests error:", e);
+    res.status(500).json({ Message: "Failed to fetch requests", status: false, ResultData: [] });
   }
 });
 

@@ -82,6 +82,7 @@ function OperationEnums() {
     addDeviations:904,
     getDeviationsReport:905,
     getFilterDryingReport:906,
+    getnotifications:1100,
   };
   return Operations;
 }

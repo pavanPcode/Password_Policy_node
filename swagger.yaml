@@ -4113,7 +4113,7 @@ paths:
           description: Invalid input
         500:
           description: Server error
-  /getRoles:
+  /api/getRoles:
     get:
       summary: Get all roles
       description: Returns a list of roles from the system.
@@ -5118,3 +5118,222 @@ paths:
           description: "Invalid parameters"
         500:
           description: "Internal server error"
+  /api/getnotifications:
+    get:
+      tags:
+        - Notifications
+      summary: Get notifications by Role ID
+      description: Returns a list of notifications based on the given Role ID
+      parameters:
+        - name: Roleid
+          in: query
+          description: Role ID to filter notifications
+          required: true
+          type: integer
+      responses:
+        200:
+          description: Successful response
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  example: 101
+                message:
+                  type: string
+                  example: "You have a new message"
+                date:
+                  type: string
+                  format: date-time
+                  example: "2025-08-04T10:00:00Z"
+        400:
+          description: Bad Request (Missing or invalid Roleid)
+        500:
+          description: Internal Server Error
+  /forgotPassword:
+    post:
+      tags:
+        - auth
+      summary: Submit a forgot-password request
+      description: Logs that a user wants to reset their password. Admin will later resolve via `adminChangePassword`.
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            required:
+              - username
+            properties:
+              username:
+                type: string
+                format: email
+                example: user@example.com
+      responses:
+        200:
+          description: Request submitted
+          schema:
+            type: object
+            properties:
+              Message:
+                type: string
+                example: "Forgot password request submitted successfully."
+              status:
+                type: boolean
+                example: true
+              ResultData:
+                type: array
+                items: {}
+        400:
+          description: Already requested or bad input
+          schema:
+            type: object
+            properties:
+              Message:
+                type: string
+                example: "Already requested. Please wait for admin response."
+              status:
+                type: boolean
+                example: false
+              ResultData:
+                type: array
+                items: {}
+        404:
+          description: User not found
+          schema:
+            type: object
+            properties:
+              Message:
+                type: string
+                example: "User not found"
+              status:
+                type: boolean
+                example: false
+              ResultData:
+                type: array
+                items: {}
+        500:
+          description: Server error
+          schema:
+            type: object
+            properties:
+              Message:
+                type: string
+                example: "Failed to submit request."
+              status:
+                type: boolean
+                example: false
+              ResultData:
+                type: array
+                items: {}
+
+  /getForgotPasswordRequests:
+    get:
+      tags:
+        - auth
+      summary: List pending forgot-password requests
+      description: Returns all unresolved password-reset requests for admin.
+      responses:
+        200:
+          description: Array of requests
+          schema:
+            type: object
+            properties:
+              Message:
+                type: string
+                example: "Fetched requests"
+              status:
+                type: boolean
+                example: true
+              ResultData:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    Id:
+                      type: integer
+                      example: 1
+                    UserID:
+                      type: integer
+                      example: 42
+                    Email:
+                      type: string
+                      format: email
+                      example: user@example.com
+                    Name:
+                      type: string
+                      example: "John Doe"
+                    RequestedOn:
+                      type: string
+                      format: date-time
+                      example: "2025-08-04T10:15:30Z"
+        500:
+          description: Server error
+          schema:
+            type: object
+            properties:
+              Message:
+                type: string
+                example: "Failed to fetch requests"
+              status:
+                type: boolean
+                example: false
+              ResultData:
+                type: array
+                items: {}
+  /api/upload-ahu-excel:
+    post:
+      summary: Upload AHU Excel file
+      tags:
+        - ahu-excel
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - in: formData
+          name: file
+          type: file
+          required: true
+          description: Excel file to upload (e.g., ahu_sample.xlsx)
+        - in: formData
+          name: UserID
+          type: string
+          required: true
+          description: ID of the user uploading the file
+      responses:
+        200:
+          description: Upload successful
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              total:
+                type: integer
+              data:
+                type: array
+                items:
+                  type: object
+        400:
+          description: Bad Request (e.g., missing file or UserID)
+        401:
+          description: Unauthorized (UserID missing)
+        500:
+          description: Internal Server Error
+  /api/sample-ahu-excel:
+    get:
+      summary: Download Sample AHU Excel
+      tags:
+        - ahu-excel
+      produces:
+        - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+      responses:
+        200:
+          description: Excel file download
+          schema:
+            type: file
+        500:
+          description: Internal Server Error

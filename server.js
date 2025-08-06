@@ -854,6 +854,18 @@ router.get('/getFilterDryingReport', (req, res) => {
 });
 
 
+router.get('/getnotifications', (req, res) => {
+    // let { Roleid, startdate, enddate,userid } = req.query;
+
+    // FilterId = (Filterid == 0 || Filterid === undefined) ? 'fh3.FilterId' : Filterid;
+
+
+    // const data = { FilterId, startdate, enddate,userid };
+    // console.log('Query Data:', data);
+    let data = req.query;
+    handleRecord(req, res, data, OperationEnums().getnotifications);
+});
+
 // module.exports = router;
 module.exports = {
   router,
