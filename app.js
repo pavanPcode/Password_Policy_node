@@ -1,5 +1,5 @@
 const express = require("express");
-const sql = require("mssql");
+// const sql = require("mssql");
 const bcrypt = require("bcryptjs");
 const swaggerUi = require("swagger-ui-express");
 const YAML = require("yamljs");
@@ -26,7 +26,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/api", screenRoutes);
 app.use("/api", sampleExcelRoute);
 
-const dbConfig = dbUtility.config;
+// const dbConfig = dbUtility.config;
 
 // const dbConfig = {
 //   user: "RNDAdmin",
@@ -52,7 +52,12 @@ const dbConfig = dbUtility.config;
 
 const getPolicy = async () => {
   try {
-    const result = await sql.query`SELECT TOP 1 * FROM psw.PasswordPolicy`;
+    await dbUtility.initializePool();
+    const pool = await dbUtility.getPool(); 
+
+    
+    const result = await pool.request().query`SELECT TOP 1 * FROM psw.PasswordPolicy`;
+    // const result = await sql.query`SELECT TOP 1 * FROM psw.PasswordPolicy`;
     const row = result.recordset[0];
     console.log('row"-----',row)
     return row || {
@@ -210,15 +215,21 @@ function generateRandomPassword(policy) {
 
 
 async function addActivityLog(ActivityType, PerformedBy, Notes, Location = '') {
-  console.log(ActivityType, PerformedBy, Notes, Location = '')
+  // console.log(ActivityType, PerformedBy, Notes, Location = '')
   if (!ActivityType || !PerformedBy ) {
     return { success: false, message: 'Missing required fields' };
   }
   let PerformedOn = new Date(); // assuming current timestamp
 
   try {
-    await sql.connect(dbConfig);
-    await sql.query`
+    // await sql.connect(dbConfig);
+    // await sql.query
+    // ✅ Ensure pool is initialized
+    await dbUtility.initializePool();
+    // pool = await sql.connect(dbConfig);
+    const pool = await dbUtility.getPool(); // use your shared/global pool
+
+    await pool.request().query`
       INSERT INTO [dbo].[pereco_ActivityLog] (ActivityType, PerformedBy, PerformedOn, Notes, Location)
       VALUES (${ActivityType}, ${PerformedBy}, ${PerformedOn}, ${Notes}, ${Location})
     `;
@@ -237,7 +248,11 @@ app.post("/register", async (req, res) => {
     const { username, name, role } = req.body;
     const policy = await getPolicy();
 
-    const existing = await sql.query`SELECT COUNT(*) as count FROM dbo.pereco_Users WHERE Email = ${username}`;
+    await dbUtility.initializePool();
+    const pool = await dbUtility.getPool(); 
+
+    const existing = await pool.request().query`SELECT COUNT(*) as count FROM dbo.pereco_Users WHERE Email = ${username}`;
+    // const existing = await sql.query`SELECT COUNT(*) as count FROM dbo.pereco_Users WHERE Email = ${username}`;
     if (existing.recordset[0].count > 0)
       return res.status(400).json({ Message: "username already exists", status: false, ResultData: [] });
 
@@ -250,14 +265,19 @@ app.post("/register", async (req, res) => {
     if (!isValid) return res.status(400).json({ Message: msg, status: false, ResultData: [] });
 
     const hash_pw = await bcrypt.hash(randomPassword, 10);
-    await sql.query`INSERT INTO dbo.pereco_Users (Name, Email, Role, PasswordHash) VALUES (${name}, ${username}, ${role}, ${hash_pw})`;
+    // await sql.query`INSERT INTO dbo.pereco_Users (Name, Email, Role, PasswordHash) VALUES (${name}, ${username}, ${role}, ${hash_pw})`;
+    await pool.request().query`INSERT INTO dbo.pereco_Users (Name, Email, Role, PasswordHash) VALUES (${name}, ${username}, ${role}, ${hash_pw})`;
 
-    const userIdResult = await sql.query`SELECT UserID FROM dbo.pereco_Users WHERE Email = ${username}`;
+    // const userIdResult = await sql.query`SELECT UserID FROM dbo.pereco_Users WHERE Email = ${username}`;
+    const userIdResult = await pool.request().query`SELECT UserID FROM dbo.pereco_Users WHERE Email = ${username}`;
+
     const user_id = userIdResult.recordset[0].UserID;
 
     const expiryDate = new Date(Date.now() + policy.ExpiryDays * 86400000);
-    await sql.query`INSERT INTO psw.UserSecurity (UserID, PasswordChangedOn, PasswordExpiryDate) VALUES (${user_id}, GETDATE(), ${expiryDate})`;
-    await sql.query`INSERT INTO psw.PasswordHistory (UserID, PasswordHash) VALUES (${user_id}, ${hash_pw})`;
+    // await sql.query`INSERT INTO psw.UserSecurity (UserID, PasswordChangedOn, PasswordExpiryDate) VALUES (${user_id}, GETDATE(), ${expiryDate})`;
+    // await sql.query`INSERT INTO psw.PasswordHistory (UserID, PasswordHash) VALUES (${user_id}, ${hash_pw})`;
+    await pool.request().query`INSERT INTO psw.UserSecurity (UserID, PasswordChangedOn, PasswordExpiryDate) VALUES (${user_id}, GETDATE(), ${expiryDate})`;
+    await pool.request().query`INSERT INTO psw.PasswordHistory (UserID, PasswordHash) VALUES (${user_id}, ${hash_pw})`;
 
     res.status(201).json({ Message: "User registered successfully.", status: true, ResultData:  {TemporaryPassword:randomPassword} });
   } catch (e) {
@@ -272,7 +292,11 @@ app.post("/login", async (req, res) => {
     const { username, password } = req.body;
     const policy = await getPolicy();
 
-    const result = await sql.query`
+    await dbUtility.initializePool();
+    const pool = await dbUtility.getPool(); 
+
+    // const result = await sql.query
+    const result =   await pool.request().query`
       SELECT u.UserID, u.PasswordHash, s.FailedLoginAttempts, s.IsLocked,
              s.PasswordExpiryDate, s.LastFailedAttempt,s.isTemporaryPassword,u.Role,u.Name,u.email  UserName,  (SELECT TOP 1 sessionTimeoutMinutes FROM psw.PasswordPolicy) AS sessionTimeoutMinutes
 
@@ -287,7 +311,11 @@ app.post("/login", async (req, res) => {
 
     //forget password check
     // Block login if user requested forgot password
-    const forgotReqResult = await sql.query`
+    // const forgotReqResult = await sql.query`
+    //   SELECT COUNT(*) AS count 
+    //   FROM psw.ForgotPasswordRequests 
+    //   WHERE UserID = ${UserID} AND IsResolved = 0`;
+    const forgotReqResult = await pool.request().query`
       SELECT COUNT(*) AS count 
       FROM psw.ForgotPasswordRequests 
       WHERE UserID = ${UserID} AND IsResolved = 0`;
@@ -320,9 +348,16 @@ app.post("/login", async (req, res) => {
 
     const isMatch = await bcrypt.compare(password, PasswordHash);
     if (isMatch) {
-      await sql.query`UPDATE psw.UserSecurity SET FailedLoginAttempts = 0, LastLogin = GETDATE() WHERE UserID = ${UserID}`;
-        // Fetch RoleMenu data
-      const roleMenuResult = await sql.query`
+      // await sql.query`UPDATE psw.UserSecurity SET FailedLoginAttempts = 0, LastLogin = GETDATE() WHERE UserID = ${UserID}`;
+      await pool.request().query`UPDATE psw.UserSecurity SET FailedLoginAttempts = 0, LastLogin = GETDATE() WHERE UserID = ${UserID}`;
+  
+      // Fetch RoleMenu data
+      // const roleMenuResult = await sql.query`
+      //   SELECT   rm.RoleId, rm.AppMenuId, rm.[Read], rm.[Write],  rm.[Delete], rm.[Export],  am.MenuName, am.MenuPath, am.IconName,rm.id RoleMenuid
+      //     FROM [dbo].[RoleMenu] rm
+      //     INNER JOIN [dbo].[AppMenu] am ON am.id = rm.AppMenuId
+      //   WHERE rm.RoleId = ${Role} and rm.IsActive = 1 and am.IsActive = 1`;
+      const roleMenuResult = await pool.request().query`
         SELECT   rm.RoleId, rm.AppMenuId, rm.[Read], rm.[Write],  rm.[Delete], rm.[Export],  am.MenuName, am.MenuPath, am.IconName,rm.id RoleMenuid
           FROM [dbo].[RoleMenu] rm
           INNER JOIN [dbo].[AppMenu] am ON am.id = rm.AppMenuId
@@ -335,7 +370,9 @@ app.post("/login", async (req, res) => {
     } else {
       FailedLoginAttempts += 1;
       const isLocked = FailedLoginAttempts >= policy.MaxFailedAttempts ? 1 : 0;
-      await sql.query`UPDATE psw.UserSecurity SET FailedLoginAttempts = ${FailedLoginAttempts}, IsLocked = ${isLocked}, LastFailedAttempt = GETDATE() WHERE UserID = ${UserID}`;
+      // await sql.query`UPDATE psw.UserSecurity SET FailedLoginAttempts = ${FailedLoginAttempts}, IsLocked = ${isLocked}, LastFailedAttempt = GETDATE() WHERE UserID = ${UserID}`;
+      await pool.request().query`UPDATE psw.UserSecurity SET FailedLoginAttempts = ${FailedLoginAttempts}, IsLocked = ${isLocked}, LastFailedAttempt = GETDATE() WHERE UserID = ${UserID}`;
+
       if (isLocked)
         // return res.status(403).json({ Message: `Account is locked due to too many failed attempts. Try again after ${policy.LockoutDurationMinutes} minutes.`, status: false, ResultData: [] }).;
         return res.status(403).json({ Message: `Account is locked due to too many failed attempts.  Contact Admin to Unlock.`, status: false, ResultData: [] });
@@ -362,15 +399,21 @@ app.post("/adminChangePassword", async (req, res) => {
 
     const [isValid, msg] = validatePassword(new_password, policy);
     if (!isValid) return res.status(400).json({ Message: msg, status: false, ResultData: [] });
+    
+    await dbUtility.initializePool();
+    const pool = await dbUtility.getPool(); 
+    // const result = await sql.query`SELECT UserID FROM dbo.pereco_Users WHERE Email = ${username}`;
+    const result = await pool.request().query`SELECT UserID FROM dbo.pereco_Users WHERE Email = ${username}`;
 
-    const result = await sql.query`SELECT UserID FROM dbo.pereco_Users WHERE Email = ${username}`;
     const row = result.recordset[0];
     if (!row) return res.status(404).json({ Message: "User not found", status: false, ResultData: [] });
 
     const user_id = row.UserID;
     const new_hash = await bcrypt.hash(new_password, 10);
 
-    const historyResult = await sql.query`SELECT TOP (${policy.ReuseHistoryCount}) PasswordHash FROM psw.PasswordHistory WHERE UserID = ${user_id} ORDER BY ChangedOn DESC`;
+    // const historyResult = await sql.query`SELECT TOP (${policy.ReuseHistoryCount}) PasswordHash FROM psw.PasswordHistory WHERE UserID = ${user_id} ORDER BY ChangedOn DESC`;
+    const historyResult = await pool.request().query`SELECT TOP (${policy.ReuseHistoryCount}) PasswordHash FROM psw.PasswordHistory WHERE UserID = ${user_id} ORDER BY ChangedOn DESC`;
+
     for (let r of historyResult.recordset) {
       if (await bcrypt.compare(new_password, r.PasswordHash)) {
         return res.status(400).json({ Message: "Cannot reuse a recently used password.", status: false, ResultData: [] });
@@ -378,16 +421,25 @@ app.post("/adminChangePassword", async (req, res) => {
     }
 
     const expiryDate = new Date(Date.now() + policy.ExpiryDays * 86400000);
-    console.log('user_id',user_id)
-    await sql.query`UPDATE dbo.pereco_Users SET PasswordHash = ${new_hash} WHERE UserID = ${user_id}`;
-    await sql.query`UPDATE psw.UserSecurity SET PasswordChangedOn = GETDATE(), PasswordExpiryDate = ${expiryDate},isTemporaryPassword = 1,IsLocked=0 WHERE UserID = ${user_id}`;
-    await sql.query`INSERT INTO psw.PasswordHistory (UserID, PasswordHash) VALUES (${user_id}, ${new_hash})`;
+    // console.log('user_id',user_id)
+    // await sql.query`UPDATE dbo.pereco_Users SET PasswordHash = ${new_hash} WHERE UserID = ${user_id}`;
+    // await sql.query`UPDATE psw.UserSecurity SET PasswordChangedOn = GETDATE(), PasswordExpiryDate = ${expiryDate},isTemporaryPassword = 1,IsLocked=0 WHERE UserID = ${user_id}`;
+    // await sql.query`INSERT INTO psw.PasswordHistory (UserID, PasswordHash) VALUES (${user_id}, ${new_hash})`;
+    await pool.request().query`UPDATE dbo.pereco_Users SET PasswordHash = ${new_hash} WHERE UserID = ${user_id}`;
+    await pool.request().query`UPDATE psw.UserSecurity SET PasswordChangedOn = GETDATE(), PasswordExpiryDate = ${expiryDate},isTemporaryPassword = 1,IsLocked=0 WHERE UserID = ${user_id}`;
+    await pool.request().query`INSERT INTO psw.PasswordHistory (UserID, PasswordHash) VALUES (${user_id}, ${new_hash})`;
 
-    // forget pasword update
-    await sql.query`
+  //   // forget pasword update
+  //   await sql.query`
+  // UPDATE psw.ForgotPasswordRequests 
+  // SET IsResolved = 1 
+  // WHERE UserID = ${user_id} AND IsResolved = 0`;
+  // forget pasword update
+  await pool.request().query`
   UPDATE psw.ForgotPasswordRequests 
   SET IsResolved = 1 
   WHERE UserID = ${user_id} AND IsResolved = 0`;
+
 
 
     res.json({ message: "Password changed successfully.", status: true, ResultData:  {TemporaryPassword:new_password} });
@@ -410,9 +462,14 @@ app.post("/UserChangePassword", async (req, res) => {
     const [isValid, msg] = validatePassword(new_password, policy);
     if (!isValid)
       return res.status(400).json({ Message: msg, status: false, ResultData: [] });
-
+    await dbUtility.initializePool();
+    const pool = await dbUtility.getPool(); 
     // Get user and password hash
-    const result = await sql.query`
+    // const result = await sql.query`
+    //   SELECT UserID, PasswordHash 
+    //   FROM dbo.pereco_Users 
+    //   WHERE Email = ${username}`;
+    const result = await pool.request().query`
       SELECT UserID, PasswordHash 
       FROM dbo.pereco_Users 
       WHERE Email = ${username}`;
@@ -430,7 +487,12 @@ app.post("/UserChangePassword", async (req, res) => {
       return res.status(400).json({ Message: "Old password is incorrect", status: false, ResultData: [] });
 
     // Check if new password is in password history
-    const historyResult = await sql.query`
+    // const historyResult = await sql.query`
+    //   SELECT TOP (${policy.ReuseHistoryCount}) PasswordHash 
+    //   FROM psw.PasswordHistory 
+    //   WHERE UserID = ${user_id} 
+    //   ORDER BY ChangedOn DESC`;
+        const historyResult = await pool.request().query`
       SELECT TOP (${policy.ReuseHistoryCount}) PasswordHash 
       FROM psw.PasswordHistory 
       WHERE UserID = ${user_id} 
@@ -449,13 +511,22 @@ app.post("/UserChangePassword", async (req, res) => {
     const new_hash = await bcrypt.hash(new_password, 10);
     const expiryDate = new Date(Date.now() + policy.ExpiryDays * 86400000);
 
-    await sql.query`UPDATE dbo.pereco_Users SET PasswordHash = ${new_hash} WHERE UserID = ${user_id}`;
-    await sql.query`UPDATE psw.UserSecurity 
+    // await sql.query`UPDATE dbo.pereco_Users SET PasswordHash = ${new_hash} WHERE UserID = ${user_id}`;
+    // await sql.query`UPDATE psw.UserSecurity 
+    //                 SET PasswordChangedOn = GETDATE(), 
+    //                     PasswordExpiryDate = ${expiryDate}, 
+    //                     isTemporaryPassword = 0 
+    //                 WHERE UserID = ${user_id}`;
+    // await sql.query`INSERT INTO psw.PasswordHistory (UserID, PasswordHash) VALUES (${user_id}, ${new_hash})`;
+
+    await pool.request().query`UPDATE dbo.pereco_Users SET PasswordHash = ${new_hash} WHERE UserID = ${user_id}`;
+    await pool.request().query`UPDATE psw.UserSecurity 
                     SET PasswordChangedOn = GETDATE(), 
                         PasswordExpiryDate = ${expiryDate}, 
                         isTemporaryPassword = 0 
                     WHERE UserID = ${user_id}`;
-    await sql.query`INSERT INTO psw.PasswordHistory (UserID, PasswordHash) VALUES (${user_id}, ${new_hash})`;
+    await pool.request().query`INSERT INTO psw.PasswordHistory (UserID, PasswordHash) VALUES (${user_id}, ${new_hash})`;
+
 
     res.json({ message: "Password changed successfully.", status: true, ResultData: [] });
   } catch (e) {
@@ -468,8 +539,11 @@ app.post("/UserChangePassword", async (req, res) => {
 app.post("/forgotPassword", async (req, res) => {
   try {
     const { username } = req.body;
+    await dbUtility.initializePool();
+    const pool = await dbUtility.getPool(); 
 
-    const userResult = await sql.query`
+    // const userResult = await sql.query
+    const userResult = await pool.request().query`
       SELECT UserID, Email FROM dbo.pereco_Users WHERE Email = ${username} AND isTerminated = 0`;
 
     if (userResult.recordset.length === 0) {
@@ -479,7 +553,8 @@ app.post("/forgotPassword", async (req, res) => {
     const { UserID, Email } = userResult.recordset[0];
 
     // Check if already requested and unresolved
-    const existingReq = await sql.query`
+    // const existingReq = await sql.query
+    const existingReq = await pool.request().query`
       SELECT COUNT(*) as count 
       FROM psw.ForgotPasswordRequests 
       WHERE UserID = ${UserID} AND IsResolved = 0`;
@@ -489,7 +564,8 @@ app.post("/forgotPassword", async (req, res) => {
     }
 
     // Insert request
-    await sql.query`
+    // await sql.query
+    await pool.request().query`
       INSERT INTO psw.ForgotPasswordRequests (UserID, Email) 
       VALUES (${UserID}, ${Email})`;
 
@@ -503,7 +579,11 @@ app.post("/forgotPassword", async (req, res) => {
 
 app.get("/getForgotPasswordRequests", async (req, res) => {
   try {
-    const result = await sql.query`
+    // const result = await sql.query
+    await dbUtility.initializePool();
+    const pool = await dbUtility.getPool(); 
+
+    const result =   await pool.request().query`
       SELECT f.Id, f.UserID, f.Email, f.RequestedOn, u.Name
       FROM psw.ForgotPasswordRequests f
       JOIN dbo.pereco_Users u ON u.UserID = f.UserID
@@ -521,14 +601,16 @@ app.post("/updatepasswordPolicy", async (req, res) => {
   try {
     const PerformedBy = req.body.PerformedBy || '2'; // default to '2' if not provided
     addActivityLog('30',PerformedBy,'updatepasswordPolicy' ,'');
+    await dbUtility.initializePool();
+    const pool = await dbUtility.getPool(); 
     const d = req.body;
-    const result = await sql.query`SELECT COUNT(*) as count FROM psw.PasswordPolicy`;
+    const result = await pool.request().query`SELECT COUNT(*) as count FROM psw.PasswordPolicy`;
     const count = result.recordset[0].count;
 
     if (count === 0) {
-      await sql.query`INSERT INTO psw.PasswordPolicy (MinLength, RequireUppercase, RequireLowercase, RequireDigit, RequireSpecialChar, ExpiryDays, MaxFailedAttempts, ReuseHistoryCount, LockoutDurationMinutes,sessionTimeoutMinutes) VALUES (${d.MinLength || 8}, ${d.RequireUppercase || 1}, ${d.RequireLowercase || 1}, ${d.RequireDigit || 1}, ${d.RequireSpecialChar || 1}, ${d.ExpiryDays || 90}, ${d.MaxFailedAttempts || 5}, ${d.ReuseHistoryCount || 5}, ${d.LockoutDurationMinutes || 15}, ${d.sessionTimeoutMinutes || 5})`;
+      await pool.request().query`INSERT INTO psw.PasswordPolicy (MinLength, RequireUppercase, RequireLowercase, RequireDigit, RequireSpecialChar, ExpiryDays, MaxFailedAttempts, ReuseHistoryCount, LockoutDurationMinutes,sessionTimeoutMinutes) VALUES (${d.MinLength || 8}, ${d.RequireUppercase || 1}, ${d.RequireLowercase || 1}, ${d.RequireDigit || 1}, ${d.RequireSpecialChar || 1}, ${d.ExpiryDays || 90}, ${d.MaxFailedAttempts || 5}, ${d.ReuseHistoryCount || 5}, ${d.LockoutDurationMinutes || 15}, ${d.sessionTimeoutMinutes || 5})`;
     } else {
-      await sql.query`UPDATE psw.PasswordPolicy SET MinLength = ${d.MinLength || 8}, RequireUppercase = ${d.RequireUppercase || 1}, RequireLowercase = ${d.RequireLowercase || 1}, RequireDigit = ${d.RequireDigit || 1}, RequireSpecialChar = ${d.RequireSpecialChar || 1}, ExpiryDays = ${d.ExpiryDays || 90}, MaxFailedAttempts = ${d.MaxFailedAttempts || 5}, ReuseHistoryCount = ${d.ReuseHistoryCount || 5}, LockoutDurationMinutes = ${d.LockoutDurationMinutes || 15}, sessionTimeoutMinutes = ${d.sessionTimeoutMinutes || 5}`;
+      await pool.request().query`UPDATE psw.PasswordPolicy SET MinLength = ${d.MinLength || 8}, RequireUppercase = ${d.RequireUppercase || 1}, RequireLowercase = ${d.RequireLowercase || 1}, RequireDigit = ${d.RequireDigit || 1}, RequireSpecialChar = ${d.RequireSpecialChar || 1}, ExpiryDays = ${d.ExpiryDays || 90}, MaxFailedAttempts = ${d.MaxFailedAttempts || 5}, ReuseHistoryCount = ${d.ReuseHistoryCount || 5}, LockoutDurationMinutes = ${d.LockoutDurationMinutes || 15}, sessionTimeoutMinutes = ${d.sessionTimeoutMinutes || 5}`;
     }
 
     res.json({ message: "Password policy saved successfully.", status: true, ResultData: [] });
@@ -542,7 +624,11 @@ app.get("/getPasswordPolicy", async (req, res) => {
   try {
     const PerformedBy = req.query.PerformedBy || '2'; // default to '2' if not provided
     addActivityLog('31',PerformedBy,'getPasswordPolicy' ,'');
-    const result = await sql.query`SELECT TOP 1 * FROM psw.PasswordPolicy`;
+    // const result = await sql.query`SELECT TOP 1 * FROM psw.PasswordPolicy`;
+    await dbUtility.initializePool();
+    const pool = await dbUtility.getPool(); 
+
+    const result = await pool.request().query`SELECT TOP 1 * FROM psw.PasswordPolicy`;
     const row = result.recordset[0];
 
     if (!row) return res.status(404).json({ error: "No password policy configured.", status: false, ResultData: [] });
@@ -556,9 +642,9 @@ app.get("/getPasswordPolicy", async (req, res) => {
 
 app.post('/addActivity', async (req, res) => {
   try {
-    console.log(req.body)
+    // console.log(req.body)
     const { ActivityType, PerformedBy, PerformedOn, Notes, Location,IsSucces } = req.body;
-    console.log(ActivityType, PerformedBy, PerformedOn, Notes, Location,IsSucces)
+    // console.log(ActivityType, PerformedBy, PerformedOn, Notes, Location,IsSucces)
     if (!ActivityType  || !PerformedOn) {
       return res.status(400).json({ message: 'Missing required fields', status: false, ResultData: []  });
     }
@@ -566,8 +652,14 @@ app.post('/addActivity', async (req, res) => {
     const safeNotes = Notes || '';
     const safeLocation = Location || '';
 
-    await sql.connect(dbConfig);
-    await sql.query`
+    // await sql.connect(dbConfig);
+    // await sql.query
+    // ✅ Ensure pool is initialized
+    await dbUtility.initializePool();
+    // pool = await sql.connect(dbConfig);
+    const pool = await dbUtility.getPool(); // use your shared/global pool
+
+    await pool.request().query`
       INSERT INTO [dbo].[pereco_ActivityLog] (ActivityType, PerformedBy, PerformedOn, Notes, Location,IsSucces,LogType)
       VALUES (${ActivityType}, ${PerformedBy}, ${PerformedOn}, ${safeNotes}, ${safeLocation}, ${IsSucces}, 2)
     `;
@@ -581,9 +673,15 @@ app.post('/addActivity', async (req, res) => {
 
 app.get('/getActivities', async (req, res) => {
   try {
-    await sql.connect(dbConfig);
+    // await sql.connect(dbConfig);
 
-    const result = await sql.query(`
+    // const result = await sql.query(
+    // ✅ Ensure pool is initialized
+    await dbUtility.initializePool();
+    // pool = await sql.connect(dbConfig);
+    const pool = await dbUtility.getPool(); // use your shared/global pool
+
+    const result =  await pool.request().query(`
       SELECT TOP 500 p.ActivityType, p.PerformedBy, p.PerformedOn, p.Notes, p.Location ,p.IsSucces,p.LogType,pu.Name,pu.Email username
       FROM [dbo].[pereco_ActivityLog]  p
 	  left join [dbo].[pereco_Users] pu on pu.UserID = p.PerformedBy
@@ -1563,11 +1661,16 @@ let zpl = `^XA
   });
 });
 
-sql.connect(dbConfig).then(() => {
-  const port = process.env.PORT || 8080;
+// sql.connect(dbConfig).then(() => {
+//   const port = process.env.PORT || 8080;
+//   app.listen(port, () => {
+//     console.log(`Server running on port ${port}`);
+//   });
+// }).catch(err => {
+//   console.log("DB Connection failed:", err);
+// });
+
+const port = process.env.PORT || 8080;
   app.listen(port, () => {
     console.log(`Server running on port ${port}`);
   });
-}).catch(err => {
-  console.log("DB Connection failed:", err);
-});
