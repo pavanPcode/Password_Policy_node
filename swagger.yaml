@@ -4138,7 +4138,7 @@ paths:
         500:
           description: Internal server error
   /runScheduleJob:
-    post:
+    get:
       summary: "Insert cleaning schedules"
       description: "Triggers the logic to insert new cleaning schedules for eligible filters."
       tags:

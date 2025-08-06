@@ -8,6 +8,7 @@ const { router:screenRoutes} = require("./server");
 const { handleRecordWithOutRes:handleRecordWithOutRes } = require('./server');
 const { OperationEnums } = require("./utilityEnum.js");
 const sampleExcelRoute = require('./Excel');
+const dbUtility = require("./dbUtility.js");
 
 require('dotenv').config(); // load environment variables from .env
 const net = require('net');
@@ -25,16 +26,18 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/api", screenRoutes);
 app.use("/api", sampleExcelRoute);
 
-const dbConfig = {
-  user: "RNDAdmin",
-  password: "0f8$4rfT1",
-  server: "132.148.105.23",
-  database: "RND_HR",
-  options: {
-    encrypt: false,
-    trustServerCertificate: true,
-  },
-};
+const dbConfig = dbUtility.config;
+
+// const dbConfig = {
+//   user: "RNDAdmin",
+//   password: "0f8$4rfT1",
+//   server: "132.148.105.23",
+//   database: "RND_HR",
+//   options: {
+//     encrypt: false,
+//     trustServerCertificate: true,
+//   },
+// };
 // const dbConfig = {
 //   user: process.env.DB_USER,
 //   password: process.env.DB_PASSWORD,
@@ -1060,13 +1063,18 @@ app.get('/getSidebar', async (req, res) => {
 
 
 app.get('/runScheduleJob', async (req, res) => {
-  let pool;
+  // let pool;
   const today = new Date();
   const todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
   const inserted = [];
 
   try {
-    pool = await sql.connect(dbConfig);
+        // ✅ Ensure pool is initialized
+    await dbUtility.initializePool();
+
+    // pool = await sql.connect(dbConfig);
+    const pool = await dbUtility.getPool(); // use your shared/global pool
+
 
     const ahus = await pool.request().query(`
       SELECT id, InstalledOn, cleaningFreqAllowance, cleaningdays
@@ -1151,9 +1159,9 @@ app.get('/runScheduleJob', async (req, res) => {
     console.error('Error:', err);
     res.status(500).send('Internal server error');
   } finally {
-    if (pool) {
-      await pool.close();
-    }
+    // if (pool) {
+    //   await pool.close();
+    // }
   }
 });
 
