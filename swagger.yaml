@@ -5337,3 +5337,78 @@ paths:
             type: file
         500:
           description: Internal Server Error
+  /api/sample-filter-excel:
+    get:
+      tags:
+        - Filter-excel
+      summary: Download sample filter Excel file
+      produces:
+        - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+      responses:
+        200:
+          description: Sample Excel file downloaded
+          schema:
+            type: file
+        500:
+          description: Server error
+
+  /api/upload-filter-excel:
+    post:
+      tags:
+        - Filter-excel
+      summary: Upload Excel file with filter data
+      consumes:
+        - multipart/form-data
+      parameters:
+        - in: formData
+          name: file
+          type: file
+          required: true
+          description: Excel file to upload
+        - in: formData
+          name: UserID
+          type: integer
+          required: true
+          description: ID of the user uploading the file
+      responses:
+        200:
+          description: Upload result
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              total:
+                type: integer
+              successCount:
+                type: integer
+              failedCount:
+                type: integer
+              success:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    row:
+                      type: integer
+                    FilterId:
+                      type: string
+              failed:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    row:
+                      type: integer
+                    reason:
+                      type: string
+                    AHUCode:
+                      type: string
+                    FilterType:
+                      type: string
+                    LocationName:
+                      type: string
+        400:
+          description: Invalid input
+        500:
+          description: Server error

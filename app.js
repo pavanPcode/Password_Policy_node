@@ -26,29 +26,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/api", screenRoutes);
 app.use("/api", sampleExcelRoute);
 
-// const dbConfig = dbUtility.config;
 
-// const dbConfig = {
-//   user: "RNDAdmin",
-//   password: "0f8$4rfT1",
-//   server: "132.148.105.23",
-//   database: "RND_HR",
-//   options: {
-//     encrypt: false,
-//     trustServerCertificate: true,
-//   },
-// };
-// const dbConfig = {
-//   user: process.env.DB_USER,
-//   password: process.env.DB_PASSWORD,
-//   server: process.env.DB_SERVER,
-//   database: process.env.DB_DATABASE,
-//   port: parseInt(process.env.DB_PORT, 10),
-//   options: {
-//     encrypt: false,
-//     trustServerCertificate: true,
-//   },
-// };
 
 const getPolicy = async () => {
   try {
@@ -1263,293 +1241,38 @@ app.get('/runScheduleJob', async (req, res) => {
   }
 });
 
-// app.get('/api/printLabel', (req, res) => {
-//   const { ip, barcode_number, label_text } = req.query;
 
+// app.get('/api/printLabel',  (req, res) => {
+//   const { ip, barcode_number, label_text,Remarks ,CreatedBy} = req.query;
+
+//   // Validate required fields
 //   if (!ip || !barcode_number || !label_text) {
-//     return res.status(400).json({ success: false, message: 'Missing required fields' });
+//     return res.status(400).json({
+//       success: false,
+//       message: 'Missing required fields: ip, barcode_number, label_text',
+//     });
 //   }
 
-// //   const zpl = `
-// // ^XA
-// // ^FO50,30^ADN,36,20^FD${label_text}^FS
-// // ^FO50,80^BY2
-// // ^BCN,100,Y,N,N
-// // ^FD${barcode_number}^FS
-// // ^XZ
-// // `;
-// const zpl = `
-// ^XA
-// ^PW812
-// ^LL406
-// ^LH0,0
+//   // === Label Setup for 2" x 2" at 203 DPI ===
+//   const labelWidth = 406;          // 2 inches wide
+//   const labelHeight = 406;         // 2 inches tall
+//   const maxCharsPerLine = 15;      // Wrapping threshold
+//   const charWidth = 11;            // Width of a character in dots
+//   const fontHeight = 25;           // Font height in dots
+//   const fontWidth = 15;            // Font width in dots
+//   const topPadding = 70;           // Y-offset for first line
+//   const lineSpacing = 28;          // Space between lines
+//   const leftMargin = 20;           // Reduced left margin (was centered before)
 
-// ^FO290,30^ADN,36,20^FD${label_text}^FS        ; Moved left by 20 dots
-// ^FO290,80^BY2
-// ^BCN,100,Y,N,N
-// ^FD${barcode_number}^FS
-// ^XZ
-// `;
-
-//   const client = new net.Socket();
-
-//   client.connect(9100, ip, () => {
-//     client.write(zpl);
-//     client.end();
-//     res.json({ success: true, message: '✅ ZPL print job sent successfully.' });
-//   });
-
-//   client.on('error', (err) => {
-//     res.status(500).json({ success: false, message: '❌ Failed to print', error: err.message });
-//   });
-// });
-
-
-//region working
-// app.get('/api/printLabel', (req, res) => {
-//   const { ip, barcode_number, label_text } = req.query;
-
-//   if (!ip || !barcode_number || !label_text) {
-//     return res.status(400).json({ success: false, message: 'Missing required fields' });
-//   }
-
-//   const maxCharsPerLine = 9;
-//   let line1 = label_text.slice(0, maxCharsPerLine);
-//   let line2 = label_text.length > maxCharsPerLine ? label_text.slice(maxCharsPerLine) : '';
-
-//   // Label width in dots for 2"
-//   const labelWidth = 406;
-//   const charWidth = 10; // Approx width per char with ADN,18,10
-
-//   // Center X position for text
-//   const calcX = (text) => Math.floor((labelWidth - (text.length * charWidth)) / 2);
-
-//   const zpl = `
-// ^XA
-// ^PW406
-// ^LL406
-// ^LH0,0
-
-// ^FO${calcX(line1)},30^ADN,18,10^FD${line1}^FS
-// ${line2 ? `^FO${calcX(line2)},60^ADN,18,10^FD${line2}^FS` : ''}
-
-// ^FO${Math.floor((406 - 200) / 2)},120^BY2
-// ^BCN,80,Y,N,N
-// ^FD${barcode_number}^FS
-
-// ^XZ
-// `;
-
-//   const client = new net.Socket();
-
-//   client.connect(9100, ip, () => {
-//     client.write(zpl);
-//     client.end();
-//     res.json({ success: true, message: '✅ ZPL print job sent successfully.' });
-//   });
-
-//   client.on('error', (err) => {
-//     res.status(500).json({ success: false, message: '❌ Failed to print', error: err.message });
-//   });
-// });
-
-//region working but smaller font 
-// app.get('/api/printLabel', (req, res) => {
-//   const { ip, barcode_number, label_text } = req.query;
-
-//   if (!ip || !barcode_number || !label_text) {
-//     return res.status(400).json({ success: false, message: 'Missing required fields' });
-//   }
-
-//   // Wrap long label text into lines of 13 characters
-//   const maxCharsPerLine = 18;
+//   // === Wrap Text into Lines ===
 //   const lines = [];
 //   for (let i = 0; i < label_text.length; i += maxCharsPerLine) {
 //     lines.push(label_text.slice(i, i + maxCharsPerLine));
 //   }
 
-//   const labelWidth = 366;
-//   const charWidth = 14; // ADN,28,14
-//   const labelHeight = 280;
-
-//   const calcX = (text) => Math.floor((labelWidth - (text.length * charWidth)) / 2);
-
-//   let zpl = `
-// ^XA
-// ^PW${labelWidth}
-// ^LL${labelHeight}
-// ^LH0,0
-// `;
-
-//   // Text lines
-//   lines.forEach((line, index) => {
-//     const y = 10 + index * 30;
-//     zpl += `^FO${calcX(line)},${y}^ADN,28,14^FD${line}^FS\n`;
-//   });
-
-//   // Barcode starts below last text line
-//   const barcodeY = 10 + lines.length * 30 + 10;
-
-//   zpl += `
-// ^FO50,${barcodeY}^BY2,2,60
-// ^BCN,60,Y,N,N
-// ^FD${barcode_number}^FS
-// ^XZ
-// `;
-
-//   const client = new net.Socket();
-
-//   client.connect(9100, ip, () => {
-//     client.write(zpl);
-//     client.end();
-//     res.json({ success: true, message: '✅ ZPL print job sent successfully.' });
-//   });
-
-//   client.on('error', (err) => {
-//     res.status(500).json({ success: false, message: '❌ Failed to print', error: err.message });
-//   });
-// });
-
-//region best so far
-// app.get('/api/printLabel', (req, res) => {
-//   const { ip, barcode_number, label_text } = req.query;
-
-//   if (!ip || !barcode_number || !label_text) {
-//     return res.status(400).json({ success: false, message: 'Missing required fields' });
-//   }
-
-//   const maxCharsPerLine = 16;
-//   const lines = [];
-//   for (let i = 0; i < label_text.length; i += maxCharsPerLine) {
-//     lines.push(label_text.slice(i, i + maxCharsPerLine));
-//   }
-
-//   const labelWidth = 366;
-//   const labelHeight = 260;
-//   const charWidth = 10; // ADN,20,10 = ~10 dots wide per char
-//   const topPadding = 45;
-
-//   const calcX = (text) => Math.floor((labelWidth - (text.length * charWidth)) / 2);
-
-//   let zpl = `
-// ^XA
-// ^PW${labelWidth}
-// ^LL${labelHeight}
-// ^LH0,0
-// `;
-
-//   // Render each line of label text
-//   lines.forEach((line, index) => {
-//     const y = topPadding + index * 30;
-//     zpl += `^FO${calcX(line)},${y}^ADN,20,10^FD${line}^FS\n`;
-//   });
-
-//   // Barcode position after text
-//   const barcodeY = topPadding + lines.length * 30 + 5;
-
-//   zpl += `
-// ^FO50,${barcodeY}^BY3,3,100
-// ^BCN,100,Y,N,N
-// ^FD${barcode_number}^FS
-// ^XZ
-// `;
-
-//   const client = new net.Socket();
-
-//   client.connect(9100, ip, () => {
-//     client.write(zpl);
-//     client.end();
-//     res.json({ success: true, message: '✅ ZPL print job sent successfully.' });
-//   });
-
-//   client.on('error', (err) => {
-//     res.status(500).json({ success: false, message: '❌ Failed to print', error: err.message });
-//   });
-// });
-
-
-//region best so far 2
-// app.get('/api/printLabel', (req, res) => {
-//   const { ip, barcode_number, label_text } = req.query;
-
-//   if (!ip || !barcode_number || !label_text) {
-//     return res.status(400).json({ success: false, message: 'Missing required fields' });
-//   }
-
-//   const maxCharsPerLine = 16;
-//   const lines = [];
-//   for (let i = 0; i < label_text.length; i += maxCharsPerLine) {
-//     lines.push(label_text.slice(i, i + maxCharsPerLine));
-//   }
-
-//   const labelWidth = 366;
-//   const labelHeight = 260;
-//   const charWidth = 10; // ADN,20,10 = ~10 dots wide per char
-//   const topPadding = 85;
-
-//   const calcX = (text) => Math.floor((labelWidth - (text.length * charWidth)) / 2);
-
-//   let zpl = `
-// ^XA
-// ^PW${labelWidth}
-// ^LL${labelHeight}
-// ^LH0,0
-// `;
-
-//   // Render each line of label text
-//   lines.forEach((line, index) => {
-//     const y = topPadding + index * 30;
-//     zpl += `^FO${calcX(line)},${y}^ADN,20,10^FD${line}^FS\n`;
-//   });
-
-//   // Barcode position after text
-//   const barcodeY = topPadding + lines.length * 30 + 5;
-
-// zpl += `
-// ^FO20,${barcodeY}^BY3,3,100
-// ^BCN,100,Y,N,N
-// ^FD${barcode_number}^FS
-// ^XZ
-// `;
-
-//   const client = new net.Socket();
-
-//   client.connect(9100, ip, () => {
-//     client.write(zpl);
-//     client.end();
-//     res.json({ success: true, message: '✅ ZPL print job sent successfully.' });
-//   });
-
-//   client.on('error', (err) => {
-//     res.status(500).json({ success: false, message: '❌ Failed to print', error: err.message });
-//   });
-// });
-
-
-//region perfect 
-// app.get('/api/printLabel', (req, res) => {
-//   const { ip, barcode_number, label_text } = req.query;
-
-//   if (!ip || !barcode_number || !label_text) {
-//     return res.status(400).json({ success: false, message: 'Missing required fields' });
-//   }
-
-//   // Adjusted values
-//   const labelWidth = 406;   // Increased from 366
-//   const labelHeight = 350;  // Increased from 260
-//   const maxCharsPerLine = 14; // Reduced from 16
-//   const charWidth = 10;
-//   const topPadding = 85;
-//   const lineSpacing = 35;
-
-//   const lines = [];
-//   for (let i = 0; i < label_text.length; i += maxCharsPerLine) {
-//     lines.push(label_text.slice(i, i + maxCharsPerLine));
-//   }
-
-//   const calcX = (text) => Math.floor((labelWidth - (text.length * charWidth)) / 2);
-
-//   let zpl = `^XA
+//   // === Generate ZPL ===
+// let zpl = `^XA
+// ^CI28
 // ^PW${labelWidth}
 // ^LL${labelHeight}
 // ^LH0,0
@@ -1557,109 +1280,40 @@ app.get('/runScheduleJob', async (req, res) => {
 
 //   lines.forEach((line, index) => {
 //     const y = topPadding + index * lineSpacing;
-//     zpl += `^FO${calcX(line)},${y}^ADN,20,10^FD${line}^FS\n`;
+//     zpl += `^FO${leftMargin},${y}^ADN,${fontHeight},${fontWidth}^FD${line}^FS\n`;
 //   });
 
+//   // Barcode just below text
 //   const barcodeY = topPadding + lines.length * lineSpacing + 10;
 
-//   zpl += `^FO20,${barcodeY}^BY3,3,100
+//   zpl += `
+// ^FO${leftMargin},${barcodeY}
+// ^BY3,3,100
 // ^BCN,100,Y,N,N
 // ^FD${barcode_number}^FS
 // ^XZ`;
 
+//   // === Send to Zebra Printer ===
 //   const client = new net.Socket();
 
 //   client.connect(9100, ip, () => {
 //     client.write(zpl);
 //     client.end();
+//     data = {BarCode:barcode_number,Remarks:Remarks,CreatedBy:CreatedBy,isPrinted:1}
+//     handleRecordWithOutRes( data, OperationEnums().BarCodePrintingHistory);
 //     res.json({ success: true, message: '✅ ZPL print job sent successfully.' });
 //   });
 
 //   client.on('error', (err) => {
-//     res.status(500).json({ success: false, message: '❌ Failed to print', error: err.message });
+//     data = {BarCode:barcode_number,Remarks:'Failed to send print job',CreatedBy:CreatedBy,isPrinted:0}
+//     handleRecordWithOutRes( data, OperationEnums().BarCodePrintingHistory);
+//     res.status(500).json({
+//       success: false,
+//       message: '❌ Failed to send print job',
+//       error: err.message,
+//     });
 //   });
 // });
-
-
-
-// host = '0.0.0.0'
-
-// sql.connect(dbConfig).then(() => {
-//   app.listen(8080,host, () => console.log("Server running on port 8080 : http://localhost:8080/api-docs"));
-// }).catch(err => console.log("DB Connection failed:", err));
-
-app.get('/api/printLabel',  (req, res) => {
-  const { ip, barcode_number, label_text,Remarks ,CreatedBy} = req.query;
-
-  // Validate required fields
-  if (!ip || !barcode_number || !label_text) {
-    return res.status(400).json({
-      success: false,
-      message: 'Missing required fields: ip, barcode_number, label_text',
-    });
-  }
-
-  // === Label Setup for 2" x 2" at 203 DPI ===
-  const labelWidth = 406;          // 2 inches wide
-  const labelHeight = 406;         // 2 inches tall
-  const maxCharsPerLine = 15;      // Wrapping threshold
-  const charWidth = 11;            // Width of a character in dots
-  const fontHeight = 25;           // Font height in dots
-  const fontWidth = 15;            // Font width in dots
-  const topPadding = 70;           // Y-offset for first line
-  const lineSpacing = 28;          // Space between lines
-  const leftMargin = 20;           // Reduced left margin (was centered before)
-
-  // === Wrap Text into Lines ===
-  const lines = [];
-  for (let i = 0; i < label_text.length; i += maxCharsPerLine) {
-    lines.push(label_text.slice(i, i + maxCharsPerLine));
-  }
-
-  // === Generate ZPL ===
-let zpl = `^XA
-^CI28
-^PW${labelWidth}
-^LL${labelHeight}
-^LH0,0
-`;
-
-  lines.forEach((line, index) => {
-    const y = topPadding + index * lineSpacing;
-    zpl += `^FO${leftMargin},${y}^ADN,${fontHeight},${fontWidth}^FD${line}^FS\n`;
-  });
-
-  // Barcode just below text
-  const barcodeY = topPadding + lines.length * lineSpacing + 10;
-
-  zpl += `
-^FO${leftMargin},${barcodeY}
-^BY3,3,100
-^BCN,100,Y,N,N
-^FD${barcode_number}^FS
-^XZ`;
-
-  // === Send to Zebra Printer ===
-  const client = new net.Socket();
-
-  client.connect(9100, ip, () => {
-    client.write(zpl);
-    client.end();
-    data = {BarCode:barcode_number,Remarks:Remarks,CreatedBy:CreatedBy,isPrinted:1}
-    handleRecordWithOutRes( data, OperationEnums().BarCodePrintingHistory);
-    res.json({ success: true, message: '✅ ZPL print job sent successfully.' });
-  });
-
-  client.on('error', (err) => {
-    data = {BarCode:barcode_number,Remarks:'Failed to send print job',CreatedBy:CreatedBy,isPrinted:0}
-    handleRecordWithOutRes( data, OperationEnums().BarCodePrintingHistory);
-    res.status(500).json({
-      success: false,
-      message: '❌ Failed to send print job',
-      error: err.message,
-    });
-  });
-});
 
 // sql.connect(dbConfig).then(() => {
 //   const port = process.env.PORT || 8080;
@@ -1669,6 +1323,85 @@ let zpl = `^XA
 // }).catch(err => {
 //   console.log("DB Connection failed:", err);
 // });
+app.get("/api/printLabel", (req, res) => {
+  const { ip, barcode_number, label_text, Remarks, CreatedBy } = req.query;
+
+  // Validate required fields
+  if (!ip || !barcode_number || !label_text) {
+    return res.status(400).json({
+      success: false,
+      message: "Missing required fields: ip, barcode_number, label_text",
+    });
+  }
+
+  // === Label Setup for 2" x 2" at 203 DPI ===
+  const labelWidth = 406; // 2 inches wide
+  const labelHeight = 406; // 2 inches tall
+  const maxCharsPerLine = 33; // Slightly reduced to better fit font A
+  const topPadding = 70; // Y-offset for first line
+  const lineSpacing = 30; // Space between lines
+  const leftMargin = 30; // Left margin
+
+  // === Wrap Text into Lines ===
+  const lines = [];
+  for (let i = 0; i < label_text.length; i += maxCharsPerLine) {
+    lines.push(label_text.slice(i, i + maxCharsPerLine));
+  }
+
+  // === Generate ZPL ===
+  let zpl = `^XA
+^CI28
+^PW${labelWidth}
+^LL${labelHeight}
+^LH0,0
+`;
+
+  lines.forEach((line, index) => {
+    const y = topPadding + index * lineSpacing;
+    zpl += `^FO${leftMargin},${y}^A0N,30,20^FD${line}^FS\n`;
+  });
+
+  // Barcode just below text
+  const barcodeY = topPadding + lines.length * lineSpacing + 30;
+
+  zpl += `
+^FO${leftMargin},${barcodeY}
+^BY2.5,2.5,90
+^BCN,90,Y,N,N
+^FD${barcode_number}^FS
+^XZ`;
+
+  // === Send to Zebra Printer ===
+  const client = new net.Socket();
+
+  client.connect(9100, ip, () => {
+    client.write(zpl);
+    client.end();
+    const data = {
+      BarCode: barcode_number,
+      Remarks: Remarks,
+      CreatedBy: CreatedBy,
+      isPrinted: 1,
+    };
+    handleRecordWithOutRes(data, OperationEnums().BarCodePrintingHistory);
+    res.json({ success: true, message: "✅ ZPL print job sent successfully." });
+  });
+
+  client.on("error", (err) => {
+    const data = {
+      BarCode: barcode_number,
+      Remarks: "Failed to send print job",
+      CreatedBy: CreatedBy,
+      isPrinted: 0,
+    };
+    handleRecordWithOutRes(data, OperationEnums().BarCodePrintingHistory);
+    res.status(500).json({
+      success: false,
+      message: "❌ Failed to send print job",
+      error: err.message,
+    });
+  });
+});
 
 const port = process.env.PORT || 8080;
   app.listen(port, () => {

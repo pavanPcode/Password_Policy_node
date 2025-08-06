@@ -60,7 +60,8 @@ const handleResponseWithOutRes = (error, results) => {
   }
 };
 
-const executeStoredProcedureWithOutRes = (data, operationId) => {
+const executeStoredProcedureWithOutRes = async (data, operationId) => {
+    try {
   const jsonData = JSON.stringify(data);
   const sqlQuery = `
           DECLARE @ResultMessage NVARCHAR(MAX);
@@ -74,16 +75,23 @@ const executeStoredProcedureWithOutRes = (data, operationId) => {
       `;
 
   console.log(sqlQuery);
-  dbUtility
-    .executeQuery(sqlQuery)
-    .then((results) => handleResponseWithOutRes(null, results))
-    .catch((error) => handleResponseWithOutRes(error, null));
+      const results = await dbUtility.executeQuery(sqlQuery);
+    return handleResponseWithOutRes(null, results);
+  } catch (error) {
+    return handleResponseWithOutRes(error, null);
+  }
 };
+
+//   dbUtility
+//     .executeQuery(sqlQuery)
+//     .then((results) => handleResponseWithOutRes(null, results))
+//     .catch((error) => handleResponseWithOutRes(error, null));
+// };
 
 
 
 const handleRecordWithOutRes = (data, operationId) => {
-  executeStoredProcedureWithOutRes(data, operationId);
+  return executeStoredProcedureWithOutRes(data, operationId);
 };
 
 //region Filter types
@@ -865,6 +873,9 @@ router.get('/getnotifications', (req, res) => {
     let data = req.query;
     handleRecord(req, res, data, OperationEnums().getnotifications);
 });
+
+
+
 
 // module.exports = router;
 module.exports = {
