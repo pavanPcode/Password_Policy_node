@@ -727,7 +727,7 @@ router.post('/canceltasks', (req, res) => {
     handleRecord(req, res, data, OperationEnums().canceltasks);
 });
 
-router.post('/addFilterReplaceOrRetirement', (req, res) => {
+router.post('/addFilterRetirement', (req, res) => {
     const data = req.body;
     handleRecord(req, res, data, OperationEnums().addFilterReplaceOrRetirement);
 });
@@ -862,20 +862,158 @@ router.get('/getFilterDryingReport', (req, res) => {
 });
 
 
-router.get('/getnotifications', (req, res) => {
-    // let { Roleid, startdate, enddate,userid } = req.query;
+// router.get('/getnotifications', (req, res) => {
 
-    // FilterId = (Filterid == 0 || Filterid === undefined) ? 'fh3.FilterId' : Filterid;
+//     let data = req.query;
+//     handleRecord(req, res, data, OperationEnums().getnotifications);
+// });
+
+router.post('/updateFilterAvailabilityStatus', (req, res) => {
+    const data = req.body;
+    handleRecord(req, res, data, OperationEnums().updateFilterAvailabilityStatus);
+});
+
+// router.post('/filterReplace', async (req, res) => {
+//     try {
+//         const data = req.body;
+
+//         // ✅ Get location data from DB
+//         const filterdata = await handleRecordWithOutRes(data, OperationEnums().getfilterdetails);
+
+//         console.log('filterdata', filterdata);
+
+//         // ✅ Proceed only if first response Status is true
+//         if (filterdata && filterdata.Status === true) {
+//             const upfijson = {
+//                 id: data.id,
+//                 Status: 104,
+//                 remarks: "Retired due to replacement",
+//                 updatedby: data.updatedby
+//             };
+
+//             const updatefilter = await handleRecordWithOutRes(upfijson, OperationEnums().addFilterReplaceOrRetirement);
+//             res.json({ Status: true, message: "Filter updated successfully", updatefilter });
+//         } else {
+//             res.status(400).json({ Status: false, message: "Failed to fetch filter details" });
+//         }
+//     } catch (error) {
+//         console.error("Error in /filterReplace:", error);
+//         res.status(500).json({ Status: false, message: "Internal Server Error" });
+//     }
+// });
 
 
-    // const data = { FilterId, startdate, enddate,userid };
-    // console.log('Query Data:', data);
-    let data = req.query;
-    handleRecord(req, res, data, OperationEnums().getnotifications);
+router.post('/filterReplace', async (req, res) => {
+    try {
+        const data = req.body;
+
+        // Step 1: Get existing filter data
+        const filterdata = await handleRecordWithOutRes(data, OperationEnums().getfilterdetails);
+
+        console.log('filterdata', filterdata);
+
+        // Step 2: Proceed only if first response is successful
+        if (filterdata && filterdata.Status === true && filterdata.ResultData.length > 0) {
+            const existing = filterdata.ResultData[0];
+
+            // Step 3: Mark the existing filter as retired
+            const upfijson = {
+                id: data.id,
+                Status: 104,
+                remarks: data.remarks,
+                updatedby: data.updatedby
+            };
+            await handleRecordWithOutRes(upfijson, OperationEnums().addFilterReplaceOrRetirement);
+
+            // Step 4: Prepare new filter data
+            const pad = (n) => n.toString().padStart(2, '0');
+            const now = new Date();
+            const timestamp = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
+            const barcode = timestamp.slice(-8);
+
+            const newValues = {
+                ...existing,
+                FilterId: `FLT${barcode.slice(-4)}`,
+                Barcode: barcode,
+                Lable: `${data.Lable || existing.Lable}-01`,
+                InstalledOn: data.InstalledOn || new Date(), // Set new installed date
+                CreatedBy: data.updatedby,
+            };
+
+            const totaldata = {
+                ScreenName: "AddAHUFilter",
+                ApiName: "filterReplace",
+                NewValues: newValues,
+                UpdateValues: "Lable",
+                ScreenValues: "Lable",
+                CreatedBy: data.updatedby,
+                ScreenOperationId: OperationEnums().AddAHUFilter,
+                Approvaltype: 1,
+                OldValues: {}
+            };
+
+            console.log("New Filter Data:", totaldata.NewValues);
+
+            // Step 5: Call approval API to insert the new filter
+            await handleRecord(req, res, totaldata, OperationEnums().addApprovalSetting);
+        } else {
+            res.status(400).json({ Status: false, message: "Filter details not found." });
+        }
+    } catch (error) {
+        console.error("Error in /filterReplace:", error);
+        res.status(500).json({ Status: false, message: "Internal Server Error" });
+    }
 });
 
 
+router.post('/UpdateFilterStatusApproval', (req, res) => {
+    // Construct the full payload with ScreenOperationId and Approvaltype
+    const totaldata = {
+        ...req.body,
+        ScreenOperationId: OperationEnums().AddFilterHistory,
+        Approvaltype: 1,
+        OldValues: {}
+    };
 
+
+    handleRecord(req, res, totaldata, OperationEnums().addApprovalSetting);
+});
+
+router.get('/getFilterStatusApproval', (req, res) => {
+    let { userid } = req.query;
+    userid = (userid == 0 || userid === undefined) ? 'aps.CreatedBy' : userid;
+    const data = { userid };
+    handleRecord(req, res, data, OperationEnums().getFilterStatusApproval);
+});
+
+router.post('/addnotificationsToRole', (req, res) => {
+    let data = req.body;
+        data.Type = 'role'; // force role type
+    handleRecord(req, res, data, OperationEnums().addnotificationsToRole);
+});
+
+router.post('/addnotificationsToUser', (req, res) => {
+    let data = req.body;
+        data.Type = 'user'; // force role type
+    handleRecord(req, res, data, OperationEnums().addnotificationsToUser);
+});
+
+router.get('/getnotificationsToUser', (req, res) => {
+    let { UserID } = req.query;
+    const data = { UserID };
+    handleRecord(req, res, data, OperationEnums().getnotificationsToUser);
+});
+
+// router.get('/getnotificationsToRole', (req, res) => {
+//     let { RoleID } = req.query;
+//     const data = { RoleID };
+//     handleRecord(req, res, data, OperationEnums().getnotificationsToRole);
+// });
+
+router.post('/updatenotificationsIsRead', (req, res) => {
+    let data = req.body;
+    handleRecord(req, res, data, OperationEnums().updatenotificationsIsRead);
+});
 
 // module.exports = router;
 module.exports = {

@@ -4281,10 +4281,10 @@ paths:
           description: Invalid request data
         500:
           description: Internal server error
-  /api/addFilterReplaceOrRetirement:
+  /api/addFilterRetirement:
     post:
       summary: Update Asset Status
-      description: Updates the status of an asset to either Retired (104) or Replacement (105)
+      description: Updates the status of an asset to either Retired (104)
       tags:
         - Filter
       consumes:
@@ -4309,15 +4309,15 @@ paths:
                 example: 101
               Status:
                 type: integer
-                enum: [104, 105]
-                description: 104 for Retired, 105 for Replacement
+                enum: [104]
+                description: 104 for Retired
                 example: 104
               remarks:
                 type: string
                 example: "Retired due to condition"
               updatedby:
-                type: string
-                example: "admin"
+                type: integer
+                example: 1
       responses:
         200:
           description: Status updated successfully
@@ -5118,40 +5118,40 @@ paths:
           description: "Invalid parameters"
         500:
           description: "Internal server error"
-  /api/getnotifications:
-    get:
-      tags:
-        - Notifications
-      summary: Get notifications by Role ID
-      description: Returns a list of notifications based on the given Role ID
-      parameters:
-        - name: Roleid
-          in: query
-          description: Role ID to filter notifications
-          required: true
-          type: integer
-      responses:
-        200:
-          description: Successful response
-          schema:
-            type: array
-            items:
-              type: object
-              properties:
-                id:
-                  type: integer
-                  example: 101
-                message:
-                  type: string
-                  example: "You have a new message"
-                date:
-                  type: string
-                  format: date-time
-                  example: "2025-08-04T10:00:00Z"
-        400:
-          description: Bad Request (Missing or invalid Roleid)
-        500:
-          description: Internal Server Error
+  # /api/getnotifications:
+  #   get:
+  #     tags:
+  #       - Notifications
+  #     summary: Get notifications by Role ID
+  #     description: Returns a list of notifications based on the given Role ID
+  #     parameters:
+  #       - name: Roleid
+  #         in: query
+  #         description: Role ID to filter notifications
+  #         required: true
+  #         type: integer
+  #     responses:
+  #       200:
+  #         description: Successful response
+  #         schema:
+  #           type: array
+  #           items:
+  #             type: object
+  #             properties:
+  #               id:
+  #                 type: integer
+  #                 example: 101
+  #               message:
+  #                 type: string
+  #                 example: "You have a new message"
+  #               date:
+  #                 type: string
+  #                 format: date-time
+  #                 example: "2025-08-04T10:00:00Z"
+  #       400:
+  #         description: Bad Request (Missing or invalid Roleid)
+  #       500:
+  #         description: Internal Server Error
   /forgotPassword:
     post:
       tags:
@@ -5412,3 +5412,553 @@ paths:
           description: Invalid input
         500:
           description: Server error
+  /api/updateFilterAvailabilityStatus:
+    post:
+      summary: Update Availability Status
+      description: Updates the AvailabilityStatus for a specific asset item based on its ID.
+      tags:
+        - Filter
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: JSON object with AvailabilityStatus and ID.
+          required: true
+          schema:
+            type: object
+            required:
+              - AvailabilityStatus
+              - id
+            properties:
+              AvailabilityStatus:
+                type: string
+                example: Available
+              id:
+                type: integer
+                example: 123
+      responses:
+        200:
+          description: Status updated successfully
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Availability status updated successfully.
+        400:
+          description: Invalid input
+        500:
+          description: Internal server error
+  /api/filterReplace:
+    post:
+      summary: Retire an old filter and replace it with a new one
+      description: This API marks a filter as retired and creates a new one with generated FilterId and Barcode.
+      tags:
+        - Filter
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Input JSON with filter ID and updated by user
+          required: true
+          schema:
+            type: object
+            required:
+              - id
+              - updatedby
+              - remarks
+            properties:
+              id:
+                type: integer
+                example: 1
+              updatedby:
+                type: integer
+                example: 2
+              remarks:
+                type: string
+                example: Retired due to replacement
+      responses:
+        200:
+          description: Filter replaced successfully
+          schema:
+            type: object
+            properties:
+              Status:
+                type: boolean
+                example: true
+              message:
+                type: string
+                example: Filter updated successfully
+        400:
+          description: Bad request – missing or invalid input
+          schema:
+            type: object
+            properties:
+              Status:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: Filter details not found.
+        500:
+          description: Internal server error
+          schema:
+            type: object
+            properties:
+              Status:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: Internal Server Error
+  /api/uploadReportCopy:
+    post:
+      tags:
+        - uploadReportCopy
+      summary: Upload a file
+      description: Uploads a single file and saves it to a specific folder
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - in: formData
+          name: file
+          type: file
+          required: true
+          description: The file to upload
+      responses:
+        200:
+          description: File uploaded successfully
+          schema:
+            type: object
+            properties:
+              status:
+                type: boolean
+                example: true
+              message:
+                type: string
+                example: File uploaded successfully
+              filename:
+                type: string
+                example: file-1691425654982-123456789.png
+              path:
+                type: string
+                example: uploads/files/file-1691425654982-123456789.png
+        400:
+          description: No file uploaded
+          schema:
+            type: object
+            properties:
+              status:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: No file uploaded
+  /api/UpdateFilterStatusApproval:
+    post:
+      tags:
+        - Filter
+      summary: Submit filter status update for approval
+      description: Updates the filter status and submits it for approval with additional cleaning/drying info.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Filter update data for approval
+          required: true
+          schema:
+            type: object
+            required:
+              - ScreenName
+              - ApiName
+              - NewValues
+              - UpdateValues
+              - ScreenValues
+              - CreatedBy
+            properties:
+              ScreenName:
+                type: string
+                example: UpdateFilterStatusApproval
+              ApiName:
+                type: string
+                example: UpdateFilterStatusApproval
+              NewValues:
+                type: object
+                properties:
+                  FilterId:
+                    type: integer
+                    example: 102
+                  StageId:
+                    type: integer
+                    example: 3
+                  Remarks:
+                    type: string
+                    example: Filter cleaned and dried
+                  Status:
+                    type: integer
+                    example: 1
+                  washingEquipId:
+                    type: integer
+                    example: 5
+                  AirPressure:
+                    type: string
+                    example: 80 PSI
+                  RoWaterPressure:
+                    type: string
+                    example: 60 PSI
+                  Duration:
+                    type: integer
+                    example: 30
+                  DryerEquipId:
+                    type: string
+                    example: DRY-01
+                  DryerTemp:
+                    type: string
+                    example: 70°C
+                  performedBy:
+                    type: integer
+                    example: 1001
+                  Barcode:
+                    type: string
+                    example: BARCODE12345
+                  WashingReasonId:
+                    type: integer
+                    example: 1001
+              UpdateValues:
+                type: string
+                example: ' '
+              ScreenValues:
+                type: string
+                example: ' '
+              CreatedBy:
+                type: integer
+                example: 1
+      responses:
+        200:
+          description: Submitted successfully
+          schema:
+            type: object
+            properties:
+              Status:
+                type: boolean
+                example: true
+              message:
+                type: string
+                example: Filter update submitted for approval
+        400:
+          description: Invalid request data
+          schema:
+            type: object
+            properties:
+              Status:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: Missing required fields
+        500:
+          description: Server error
+          schema:
+            type: object
+            properties:
+              Status:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: Internal Server Error
+  /api/getFilterStatusApproval:
+    get:
+      tags:
+        - Approval 
+      summary: Get Filter Status Approvals (0 FOR ALL)
+      description: Returns a list of filter status approvals assigned to the specified user.
+      produces:
+        - application/json
+      parameters:
+        - name: userid
+          in: query
+          description: ID of the user to fetch approval records for
+          required: true
+          type: integer
+          example: 1
+      responses:
+        200:
+          description: Successful response with list of approvals
+          schema:
+            type: object
+            properties:
+              Status:
+                type: boolean
+                example: true
+              ResultData:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    FilterId:
+                      type: integer
+                      example: 102
+                    Status:
+                      type: integer
+                      example: 1
+                    Remarks:
+                      type: string
+                      example: Filter cleaned and dried
+                    Barcode:
+                      type: string
+                      example: BARCODE12345
+                    StageId:
+                      type: integer
+                      example: 3
+        400:
+          description: Missing or invalid userid
+          schema:
+            type: object
+            properties:
+              Status:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: Invalid userid
+        500:
+          description: Internal server error
+          schema:
+            type: object
+            properties:
+              Status:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: Internal Server Error
+  /api/addnotificationsToRole:
+    post:
+      summary: Add Role-based Notification
+      description: Creates a notification for all users in a specific role.
+      tags:
+        - Notifications
+      parameters:
+        - in: body
+          name: body
+          description: Role-based notification details
+          required: true
+          schema:
+            type: object
+            required:
+              - Title
+              - Message
+              - RoleID
+            properties:
+              Title:
+                type: string
+                example: Password Expiry
+              Message:
+                type: string
+                example: Your password will expire in 5 days
+              RoleID:
+                type: integer
+                example: 2
+      responses:
+        201:
+          description: Role-based notification created successfully
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              notification_id:
+                type: integer
+                example: 101
+        400:
+          description: Invalid request
+  /api/addnotificationsToUser:
+    post:
+      summary: Add User-based Notification
+      description: Creates a notification for a specific user.
+      tags:
+        - Notifications
+      parameters:
+        - in: body
+          name: body
+          description: User-based notification details
+          required: true
+          schema:
+            type: object
+            required:
+              - Title
+              - Message
+              - UserID
+            properties:
+              Title:
+                type: string
+                example: Account Locked
+              Message:
+                type: string
+                example: Your account has been locked due to multiple failed attempts
+              UserID:
+                type: integer
+                example: 55
+      responses:
+        201:
+          description: User-based notification created successfully
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              notification_id:
+                type: integer
+                example: 102
+        400:
+          description: Invalid request
+  # /api/getnotificationsToRole:
+  #   get:
+  #     summary: Get Role-based Notifications
+  #     description: Retrieves all notifications for a specific role.
+  #     tags:
+  #       - Notifications
+  #     parameters:
+  #       - name: RoleID
+  #         in: query
+  #         required: true
+  #         type: integer
+  #         example: 2
+  #         description: Role ID for which to retrieve notifications
+  #     responses:
+  #       200:
+  #         description: List of role-based notifications
+  #         schema:
+  #           type: array
+  #           items:
+  #             type: object
+  #             properties:
+  #               id:
+  #                 type: integer
+  #                 example: 101
+  #               Title:
+  #                 type: string
+  #                 example: Password Expiry
+  #               Message:
+  #                 type: string
+  #                 example: Your password will expire in 5 days
+  #               RoleID:
+  #                 type: integer
+  #                 example: 2
+  #               Type:
+  #                 type: string
+  #                 example: role
+  #               CreatedAt:
+  #                 type: string
+  #                 format: date-time
+  #                 example: 2025-08-08T12:00:00Z
+  #               IsRead:
+  #                 type: boolean
+  #                 example: false
+  #               ReadAt:
+  #                 type: string
+  #                 format: date-time
+  #                 nullable: true
+  #                 example: null
+  #       400:
+  #         description: Invalid RoleID supplied
+
+  /api/getnotificationsToUser:
+    get:
+      summary: Get User-based Notifications
+      description: Retrieves all notifications for a specific user.
+      tags:
+        - Notifications
+      parameters:
+        - name: UserID
+          in: query
+          required: true
+          type: integer
+          example: 55
+          description: User ID for which to retrieve notifications
+      responses:
+        200:
+          description: List of user-based notifications
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  example: 102
+                Title:
+                  type: string
+                  example: Account Locked
+                Message:
+                  type: string
+                  example: Your account has been locked due to multiple failed attempts
+                UserID:
+                  type: integer
+                  example: 55
+                Type:
+                  type: string
+                  example: user
+                CreatedAt:
+                  type: string
+                  format: date-time
+                  example: 2025-08-08T12:00:00Z
+                IsRead:
+                  type: boolean
+                  example: false
+                ReadAt:
+                  type: string
+                  format: date-time
+                  nullable: true
+                  example: null
+        400:
+          description: Invalid UserID supplied
+  /api/updatenotificationsIsRead:
+    post:
+      summary: Mark notification as read
+      description: Updates the IsRead flag and ReadAt timestamp for a notification by ID.
+      tags:
+        - Notifications
+      parameters:
+        - in: body
+          name: body
+          description: Notification ID to mark as read
+          required: true
+          schema:
+            type: object
+            required:
+              - id
+            properties:
+              id:
+                type: integer
+                example: 1
+      responses:
+        200:
+          description: Notification marked as read
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              message:
+                type: string
+                example: Notification updated successfully
+        400:
+          description: Invalid notification ID supplied
+        404:
+          description: Notification not found

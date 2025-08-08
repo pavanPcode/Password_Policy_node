@@ -1,5 +1,5 @@
 const express = require("express");
-// const sql = require("mssql");
+const sql = require("mssql");
 const bcrypt = require("bcryptjs");
 const swaggerUi = require("swagger-ui-express");
 const YAML = require("yamljs");
@@ -9,6 +9,7 @@ const { handleRecordWithOutRes:handleRecordWithOutRes } = require('./server');
 const { OperationEnums } = require("./utilityEnum.js");
 const sampleExcelRoute = require('./Excel');
 const dbUtility = require("./dbUtility.js");
+const uploadRoutes = require('./uploadReportCopy'); // adjust path if needed
 
 require('dotenv').config(); // load environment variables from .env.
 const net = require('net');
@@ -25,6 +26,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 // Mount all routes under /api
 app.use("/api", screenRoutes);
 app.use("/api", sampleExcelRoute);
+app.use('/api', uploadRoutes);
 
 
 
@@ -352,8 +354,46 @@ app.post("/login", async (req, res) => {
       await pool.request().query`UPDATE psw.UserSecurity SET FailedLoginAttempts = ${FailedLoginAttempts}, IsLocked = ${isLocked}, LastFailedAttempt = GETDATE() WHERE UserID = ${UserID}`;
 
       if (isLocked)
+        {
+        // Check if a lock notification was sent in the last hour
+        const recentNotification = await pool.request().query`
+          SELECT TOP 1 CreatedAt 
+          FROM Notifications 
+          WHERE Type = 'role' 
+            AND RoleID = 2 
+            AND Title = 'Account Locked'
+            AND Message LIKE '%${UserName}%'
+          ORDER BY CreatedAt DESC`;
+
+        let sendNotification = true;
+        if (recentNotification.recordset.length > 0) {
+          const lastSent = new Date(recentNotification.recordset[0].CreatedAt);
+          const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
+          if (lastSent > oneHourAgo) {
+            sendNotification = false;
+          }
+        }
+
+        if (sendNotification) {
+          await pool.request()
+            .input('Title', sql.NVarChar(255), 'Account Locked')
+            .input('Message', sql.NVarChar(sql.MAX), `User ${UserName} account has been locked due to too many failed attempts.`)
+            .input('RoleID', sql.Int, 2) // Admin Role
+            .input('Type', sql.NVarChar(20), 'role')
+            .query(`
+              INSERT INTO Notifications (Title, Message, RoleID, Type, CreatedAt)
+              VALUES (@Title, @Message, @RoleID, @Type, GETDATE())
+            `);
+        }
+
+        return res.status(403).json({
+          Message: `Account is locked due to too many failed attempts. Contact Admin to Unlock.`,
+          status: false,
+          ResultData: []
+        });
+      }
         // return res.status(403).json({ Message: `Account is locked due to too many failed attempts. Try again after ${policy.LockoutDurationMinutes} minutes.`, status: false, ResultData: [] }).;
-        return res.status(403).json({ Message: `Account is locked due to too many failed attempts.  Contact Admin to Unlock.`, status: false, ResultData: [] });
+        // return res.status(403).json({ Message: `Account is locked due to too many failed attempts.  Contact Admin to Unlock.`, status: false, ResultData: [] });
 
       return res.status(401).json({ Message: "Incorrect password", status: false, ResultData: [] });
     }
@@ -546,6 +586,18 @@ app.post("/forgotPassword", async (req, res) => {
     await pool.request().query`
       INSERT INTO psw.ForgotPasswordRequests (UserID, Email) 
       VALUES (${UserID}, ${Email})`;
+
+    // 4. Create notification for Admin
+    const notificationMessage = `User ${Email} has requested a password reset.`;
+    await pool.request()
+      .input('Title', sql.NVarChar(255), 'Forgot Password Request')
+      .input('Message', sql.NVarChar(sql.MAX), notificationMessage)
+      .input('RoleID', sql.Int, 2) // Admin RoleID
+      .input('Type', sql.NVarChar(20), 'role')
+      .query(`
+        INSERT INTO Notifications (Title, Message, RoleID, Type)
+        VALUES (@Title, @Message, @RoleID, @Type)
+      `);
 
     res.json({ Message: "Forgot password request submitted successfully.", status: true, ResultData: [] });
 
@@ -1402,6 +1454,79 @@ app.get("/api/printLabel", (req, res) => {
     });
   });
 });
+
+app.get('/checkPasswordExpiry', async (req, res) => {
+    try {
+        await dbUtility.initializePool();
+        const pool = await dbUtility.getPool();
+
+        // Fetch users expiring in 2, 1, or 0 days
+        const result = await pool.request().query(`
+            SELECT 
+                pu.UserID,
+                pu.Email AS Username,
+                pu.Role,
+                r.Name AS RoleName,
+                us.PasswordExpiryDate,
+                DATEDIFF(DAY, GETDATE(), us.PasswordExpiryDate) AS DaysRemaining
+            FROM [dbo].[pereco_Users] pu
+            INNER JOIN [dbo].[Roles] r 
+                ON r.ID = pu.Role
+            INNER JOIN [psw].[UserSecurity] us 
+                ON us.UserID = pu.UserID
+            WHERE 
+                pu.IsActive = 1
+                AND pu.IsTerminated = 0
+                AND DATEDIFF(DAY, GETDATE(), us.PasswordExpiryDate) IN (2, 1, 0)
+        `);
+
+        const users = result.recordset;
+        let inserted = [];
+
+        for (const u of users) {
+            const expiryDate = u.PasswordExpiryDate.toISOString().split('T')[0];
+            const daysText = u.DaysRemaining === 0 ? 'today' : `${u.DaysRemaining} day(s)`;
+            
+            // Message for Admin
+            const adminMessage = `${u.Username} , ${expiryDate} , ${u.RoleName} password will expire in ${daysText}`;
+
+            // Message for User
+            const userMessage = `Your password will expire in ${daysText} (${expiryDate}). Please update it.`;
+
+            // Insert notification for Admin
+            await pool.request()
+                .input('Title', sql.NVarChar(255), 'Password Expiry')
+                .input('Message', sql.NVarChar(sql.MAX), adminMessage)
+                .input('RoleID', sql.Int, 2) // Admin RoleID
+                .input('Type', sql.NVarChar(20), 'role')
+                .query(`
+                    INSERT INTO Notifications (Title, Message, RoleID, Type)
+                    VALUES (@Title, @Message, @RoleID, @Type)
+                `);
+
+            // Insert notification for User
+            await pool.request()
+                .input('Title', sql.NVarChar(255), 'Password Expiry')
+                .input('Message', sql.NVarChar(sql.MAX), userMessage)
+                .input('UserID', sql.Int, u.UserID)
+                .input('Type', sql.NVarChar(20), 'user')
+                .query(`
+                    INSERT INTO Notifications (Title, Message, UserID, Type)
+                    VALUES (@Title, @Message, @UserID, @Type)
+                `);
+
+            inserted.push({ Username: u.Username, DaysRemaining: u.DaysRemaining });
+        }
+
+        res.json({ message: `${inserted.length} notifications added (Admin + User)`, data: inserted });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal server error');
+    }
+});
+
+
 
 const port = process.env.PORT || 8080;
   app.listen(port, () => {

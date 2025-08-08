@@ -224,8 +224,8 @@ router.post('/upload-ahu-excel', upload.single('file'), async (req, res) => {
         ScreenName: "AddAHU",
         ApiName: "AddAHU",
         NewValues,
-        UpdateValues: "Capacity",
-        ScreenValues: "Capacity",
+        UpdateValues: "",
+        ScreenValues: "",
         CreatedBy
       };
 
@@ -540,16 +540,17 @@ router.post('/upload-filter-excel', upload.single('file'), async (req, res) => {
         ScreenName: "AddAHUFilter",
         ApiName: "AddAHUFilter",
         NewValues,
-        UpdateValues: "Manufacturer",
-        ScreenValues: "Manufacturer",
+        UpdateValues: "",
+        ScreenValues: "",
         CreatedBy: 1
       };
 
       const totaldata = {
-        jsondata,
+        ...jsondata,
         ScreenOperationId: OperationEnums().AddAHUFilter,
         Approvaltype: 1,
         OldValues: {}
+        ,CreatedBy
       };
 
       const response = await handleRecordWithOutRes(totaldata, OperationEnums().addApprovalSetting);

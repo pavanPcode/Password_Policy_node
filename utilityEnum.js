@@ -83,6 +83,15 @@ function OperationEnums() {
     getDeviationsReport:905,
     getFilterDryingReport:906,
     getnotifications:1100,
+    updateFilterAvailabilityStatus:213,
+    getfilterdetails :214,
+    getFilterStatusApproval:1003,
+    addnotificationsToRole:1101,
+    addnotificationsToUser:1102,
+    getnotificationsToUser:1103,
+    // getnotificationsToRole:1104,
+    updatenotificationsIsRead:1105,
+
   };
   return Operations;
 }
